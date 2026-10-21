@@ -5,7 +5,7 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 - Group/tutorial: [response]
 - Members, GitHub usernames and cohorts: [response]
 - Repository URL: [response]
-- Starting SHA: [response]
+- Starting SHA: [79cad13]
 
 ## A Requirement to issue activities
 
