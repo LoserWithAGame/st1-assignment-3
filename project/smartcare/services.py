@@ -71,7 +71,7 @@ class PractitionerService:
         practitioner. The starter deliberately raises
         NotImplementedError.
         """
-         practitioner = self.data_store.find_practitioner(practitioner_id)
+        practitioner = self.data_store.find_practitioner(practitioner_id)
         if practitioner is None:
             raise LookupError(f"Practitioner not found: {practitioner_id}")
         return practitioner
