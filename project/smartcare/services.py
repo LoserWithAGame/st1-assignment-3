@@ -142,8 +142,13 @@ class AppointmentService:
 
         Return the cancelled object. Unknown IDs raise LookupError;
         invalid transitions raise ValueError and leave state unchanged.
+        
+        Raise LookupError when the appointment does not exist
+        Raise ValueError for an invalid ID or illegal status transition.
         """
-        raise NotImplementedError('Stage 6: appointment cancellation')
+        appointment = self.find_appointment(appointment_id)
+        appointment.cancel()
+        return appointment
 
     def list_practitioner_appointments(
         self,
