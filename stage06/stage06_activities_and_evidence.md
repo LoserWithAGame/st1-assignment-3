@@ -3,8 +3,8 @@
 Complete this one group record. Link actual issues, diffs, tests and reviews; avoid copying entire histories. Blank fields are intentional. Duplicate rows as needed. Use synthetic data only. Every member records their own meaningful contribution. Do not invent results, reviews or Copilot use.
 
 - Group/tutorial: [response]
-- Members, GitHub usernames and cohorts: [response]
-- Repository URL: [response]
+- Members, GitHub usernames and cohorts: [MastrRoshiiii - ]
+- Repository URL: [https://github.com/LoserWithAGame/st1-assignment-3]
 - Starting SHA: [79cad13]
 
 ## A Requirement to issue activities
@@ -22,24 +22,71 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 
 ### FR-06 Appointment Cancellation with FR-07 retained history
 
-- Title: [response]
-- Context: [response]
-- Requirement: [response]
-- Acceptance criteria: [response]
-- Scope: [response]
-- Definition of Done: [response]
-- Owner: [response]
-- Actual issue link: [response]
+Title: Implement appointment cancellation with retained history — FR-06/FR-07
+
+Context:AppointmentService.cancel_appointment currently raises NotImplementedError.
+The Appointment domain object already provides guarded cancellation, and the
+shared SmartCareDataStore retains appointment objects. The missing service
+workflow must locate the stored appointment, invoke the domain cancellation
+operation and return the same retained object.
+
+Requirement: FR-06 Appointment Cancellation and FR-07 Retained History.
+A user must be able to cancel an existing SCHEDULED appointment by its ID.
+Cancellation must change the appointment status to CANCELLED without deleting
+or replacing the appointment. Cancelled appointments must remain retrievable
+from the shared store during the current session.
+
+Acceptance criteria: A valid ID for a SCHEDULED appointment changes its status to CANCELLED.
+- The service returns the original stored Appointment object.
+- The cancelled appointment remains retrievable from the shared store.
+- A valid but unknown appointment ID raises LookupError.
+- A blank, whitespace-only or otherwise invalid ID raises ValueError.
+- Repeated cancellation raises ValueError.
+- Cancelling a COMPLETED appointment raises ValueError.
+- A rejected cancellation leaves the appointment status and stored records unchanged.
+- No appointment is deleted or replaced.
+- All existing and new tests pass.
+
+Scope: In scope:
+- AppointmentService.cancel_appointment in project/smartcare/services.py.
+- Focused cancellation service tests in project/tests/test_cancellation.py.
+- Necessary Stage 6 issue, PR, review and verification evidence.
+
+Out of scope:
+- Deleting appointments.
+- Rescheduling appointments.
+- Persistence or database changes.
+- Console/menu changes.
+- Notifications.
+- New dependencies.
+- Unrelated refactoring.
+
+Definition of Done: AppointmentService.cancel_appointment uses the existing appointment lookup and Appointment.cancel domain operation.
+- Positive, negative and boundary tests verify all acceptance criteria.
+- Existing tests are retained without weakened assertions.
+- The complete pytest suite passes from project/.
+- The test command, environment, result and tested commit SHA are recorded.
+- Another group member reviews the actual diff.
+- Human observations are recorded before the required Copilot comparison.
+- Significant AI assistance and human decisions are disclosed honestly.
+- Review feedback is resolved and rechecked before approval.
+- The feature branch is merged into main.
+- The integrated main branch is pulled and retested.
+- Stage 6 evidence is updated with the actual issue, PR, review and merge links.
+
+Owner: Daniel Spence (@MastrRoshiiii)
+
+Actual issue link: https://github.com/LoserWithAGame/st1-assignment-3/issues/7
 
 ## B Commit quality
 
-| Original example | Strong or Weak | Reason |
-|---|---|---|
-| changes | [select] | [response] |
-| final version | [select] | [response] |
-| Add patient search by ID | [select] | [response] |
-| fix stuff | [select] | [response] |
-| Prevent cancellation of completed appointments | [select] | [response] |
+| Original example                               | Strong or Weak | Reason     |
+| ---------------------------------------------- | -------------- | ---------- |
+| changes                                        | [select]       | [response] |
+| final version                                  | [select]       | [response] |
+| Add patient search by ID                       | [select]       | [response] |
+| fix stuff                                      | [select]       | [response] |
+| Prevent cancellation of completed appointments | [select]       | [response] |
 
 ## C Over scoped PR review
 
@@ -64,23 +111,23 @@ GitHub Copilot says: "Looks good; tests pass."
 
 ## E Team workflow agreement
 
-| Practice | Team agreement |
-|---|---|
-| Branch naming | [response] |
-| Commit message convention | [response] |
-| PR size | [response] |
-| Another-member review requirement | [response] |
-| Merge rule | [response] |
-| Significant Copilot disclosure rule | [response] |
+| Practice                            | Team agreement |
+| ----------------------------------- | -------------- |
+| Branch naming                       | [response]     |
+| Commit message convention           | [response]     |
+| PR size                             | [response]     |
+| Another-member review requirement   | [response]     |
+| Merge rule                          | [response]     |
+| Significant Copilot disclosure rule | [response]     |
 
 ## F Issue and backlog index
 
 Create at least two focused issues. Add a linked practitioner-lookup issue or an explicit supporting criterion with the tutor if needed to cover all three service targets.
 
-| Issue link | Requirement | Owner | Acceptance criteria or precise link | Status |
-|---|---|---|---|---|
-| [issue 1] | [response] | [response] | [response] | [response] |
-| [issue 2] | [response] | [response] | [response] | [response] |
+| Issue link | Requirement | Owner      | Acceptance criteria or precise link | Status     |
+| ---------- | ----------- | ---------- | ----------------------------------- | ---------- |
+| [issue 1]  | [response]  | [response] | [response]                          | [response] |
+| [issue 2]  | [response]  | [response] | [response]                          | [response] |
 
 ## G Pull request evidence
 
