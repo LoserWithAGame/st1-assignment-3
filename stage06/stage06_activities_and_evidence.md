@@ -2,8 +2,8 @@
 
 Complete this one group record. Link actual issues, diffs, tests and reviews; avoid copying entire histories. Blank fields are intentional. Duplicate rows as needed. Use synthetic data only. Every member records their own meaningful contribution. Do not invent results, reviews or Copilot use.
 
-- Group/tutorial: [response]
-- Members, GitHub usernames and cohorts: [MastrRoshiiii - ]
+- Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
+- Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie]
 - Repository URL: [https://github.com/LoserWithAGame/st1-assignment-3]
 - Starting SHA: [79cad13]
 
@@ -191,17 +191,17 @@ Repeat per member. Include only categories that describe actual work; write not 
 
 Why is a high commit count not necessarily evidence of strong contribution?
 
-[response]
+[The process of making a Commit is to add a change, this could be in the same task or in multiple different sections of the assignment. This is why having a high commit count is not evidence of strong contribution, as a single person could make multiple commits for the same section of the project, and thus not contribute to the rest of the project.]
 
 ## L Stage 6 formative questions
 
 1. What is version control?
 
-[response]
+[Version Control includes many functions, including making a history for any changes that are made, being able to change the file to a specific iteration of the project, and review changes before fully adding them to the project. This is especially good in the case that an unknown error appears, as the project can be reset to before the error to recreate the intended solution.]
 
 2. Why is a feature branch useful?
 
-[response]
+[A feature branch is useful because it allows the development and testing of a single aspect of program. This implements modularity into projects, and allows proper testing of a single feature individually, rather than collectively.]
 
 3. What makes a commit a good engineering commit?
 
@@ -209,15 +209,15 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 4. What is a pull request?
 
-[response]
+[A pull request is an attempt to merge an individual branch with the centralised Github Repository. The person makes a pull request with the changes made to their local files, then the moderator of the Repository can determine whether or not to follow through with the request.]
 
 5. What is the purpose of code review?
 
-[response]
+[The purpose of Code Review is to verify that a program is working properly before merging it with the overall project. The process allows the entire group to add any input and feedback for the program in question.]
 
 6. What does a Git diff show?
 
-[response]
+[Git Diff is an aspect of version control, as it shows the changes and differences between two commits. This is used to compare and contrast each commit to properly review the program.]
 
 7. What is a Definition of Done?
 
@@ -225,11 +225,11 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 8. What is the appropriate role of GitHub Copilot in pull-request review?
 
-[response]
+[The appropriate role of Github CoPilot should be to review the programs presented and offer suggestions for change. The changes suggested would not be an immediate implementation, rather a thought of if it needs changing. As CoPilot is unreliable in certain areas, it's word should never be taken at face value, and a person should be reviewing the suggested changes to identify the best course of action.]
 
 9. Why should individual contribution not be judged only by commit count?
 
-[response]
+[Commit count is a terrible way to determine individual contribution in a Git Group project, as one person could have multiple commits to update regarding a single issue rather than multiple contributions to the project.]
 
 10. What is the Stage 6 engineering rule?
 
