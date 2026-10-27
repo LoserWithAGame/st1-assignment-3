@@ -1,5 +1,4 @@
-
-"""Stage 6 patient and  practitioner lookup tests."""
+"""Stage 6 patient and practitioner lookup tests."""
 
 import pytest
 
