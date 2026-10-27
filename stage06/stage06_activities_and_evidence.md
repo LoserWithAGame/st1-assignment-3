@@ -24,7 +24,7 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 
 Title: Implement appointment cancellation with retained history — FR-06/FR-07
 
-Context:AppointmentService.cancel_appointment currently raises NotImplementedError.
+Context: AppointmentService.cancel_appointment currently raises NotImplementedError.
 The Appointment domain object already provides guarded cancellation, and the
 shared SmartCareDataStore retains appointment objects. The missing service
 workflow must locate the stored appointment, invoke the domain cancellation
@@ -47,7 +47,8 @@ Acceptance criteria: A valid ID for a SCHEDULED appointment changes its status t
 - No appointment is deleted or replaced.
 - All existing and new tests pass.
 
-Scope: In scope:
+Scope:
+In scope:
 - AppointmentService.cancel_appointment in project/smartcare/services.py.
 - Focused cancellation service tests in project/tests/test_cancellation.py.
 - Necessary Stage 6 issue, PR, review and verification evidence.
@@ -82,34 +83,41 @@ Actual issue link: https://github.com/LoserWithAGame/st1-assignment-3/issues/7
 
 | Original example                               | Strong or Weak | Reason     |
 | ---------------------------------------------- | -------------- | ---------- |
-| changes                                        | [select]       | [response] |
-| final version                                  | [select]       | [response] |
-| Add patient search by ID                       | [select]       | [response] |
-| fix stuff                                      | [select]       | [response] |
-| Prevent cancellation of completed appointments | [select]       | [response] |
+| changes                                        | [weak]       | [Not clearly identifying what was changed.] |
+| final version                                  | [weak]       | [It does not describe the behaviour changed and “final” may become inaccurate after later work.] |
+| Add patient search by ID                       | [Strong]       | [Clear identification of a FR.] |
+| fix stuff                                      | [weak]       | [Neither the defect nor the affected component is identified.] |
+| Prevent cancellation of completed appointments | [Strong]       | [Clearly stating which issue was addressed and what chnages were made.] |
 
 ## C Over scoped PR review
 
 A cancellation PR also renames unrelated patient fields, restructures unrelated code and adds a new dependency.
 
-- Scope concerns: [response]
-- Responsibility and architecture concerns: [response]
-- Testing and review concerns: [response]
-- Changes to remove or separate, with reasons: [response]
+- Scope concerns: [Patient-field renaming is unrelated to cancellation, restructuring and adding a dependency are not required by the FR.]
+- Responsibility and architecture concerns: [Cancellation should be handled by AppointmentService using the exisiting store lookup for the Appointment.cancel domain.
+Unrelated Patient changes could affect registration and lookup behaviour The new dependency also introduces unnecessary coupling unless a specific requirement justifies it.]
+- Testing and review concerns: [Cancellation tests would not provide sufficient evidence for unrelated patient, structural changes or a new dependency. Reviewers would need to
+verify several independent behaviours in one large diff.]
+- Changes to remove or separate, with reasons: [The cancellation PR should retain only the cancellation service implementation,
+its focused tests and directly related evidence. Patient-field renaming should e removed or placed in a separate requirement-linked issue and PR.
+Unrelated restructuring should be handled as a separate refactoring PR under passing before-and-after tests. 
+The dependency should be rejected unless a requirement demonstrates that it is necessary; if justified, it should receive its own review and dependency checks. Separating these changes keeps each PR focused, traceable, testable and easier to reverse.]
 
 ## D Challenge a weak Copilot review
 
 GitHub Copilot says: "Looks good; tests pass."
 
-- Missing evidence: [response]
-- Follow-up review question 1: [response]
-- Follow-up review question 2: [response]
-- Follow-up review question 3: [response]
-- Follow-up review question 4: [response]
-- Follow-up review question 5: [response]
-- Additional questions if useful: [response]
+- Missing evidence: [The Copilot review does not identify which requirement or acceptance criteria were checked, which files or lines were inspected or whether the changes respect the domain, store and services responsibilities.
+It does not provide any test details, the results. It provides no assertion quality, negative cases.]
+- Follow-up review question 1: [Which requirement and acceptance criteria does each changed behaviour satisfy.]
+- Follow-up review question 2: [Did you inspect every chnaged file, and did you identify any unrelated or unnecessary chnages?]
+- Follow-up review question 3: [Which test assertions prove that cancellation changes the status, returns the same object and retains the appointment in the store?]
+- Follow-up review question 4: [Which tests verify unknown or invalid IDs, repeated cancellation, completed appointments and unchanged state after rejection?]
+- Follow-up review question 5: [What exact test command, working directory, result and commit SHA support the claim that the tests pass?]
+- Additional questions if useful: [Were all supplied tests retained without weakened assertions? Were any new dependencies, real data or unnecessary files introduced? 
+Was the implementation checked against the existing domain and service boundaries? Did an independent human reviewer verify the actual diff and test evidence?]
 
-## E Team workflow agreement
+## E Team workflow agreement ##agree on during tutorial
 
 | Practice                            | Team agreement |
 | ----------------------------------- | -------------- |
@@ -126,8 +134,8 @@ Create at least two focused issues. Add a linked practitioner-lookup issue or an
 
 | Issue link | Requirement | Owner      | Acceptance criteria or precise link | Status     |
 | ---------- | ----------- | ---------- | ----------------------------------- | ---------- |
-| [issue 1]  | [response]  | [response] | [response]                          | [response] |
-| [issue 2]  | [response]  | [response] | [response]                          | [response] |
+| [https://github.com/LoserWithAGame/st1-assignment-3/issues/7]  | [FR-06 Appointment Cancellation and FR-07 Retained History] | [@MastrRoshiiii] | [Cancel a scheduled appointment; return and retain the same object; reject unknown/invalid IDs and illegal transitions; preserve state after failure.] | [Open — implementation and tests complete; PR review and merge pending] |
+| [https://github.com/LoserWithAGame/st1-assignment-3/issues/5]  | [FR-02 Patient Search]  | [@quiet-learner] | [Return the original patient; accept surrounding whitespace; retain case sensitivity; invalid IDs raise ValueError; unknown IDs raise LookupError; failed lookup preserves records] | [Open - PR #6 awaiting completetion and merge] |
 
 ## G Pull request evidence
 
