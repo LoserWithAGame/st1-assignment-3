@@ -155,13 +155,124 @@ Repeat this block per PR. Record actual events, not planned approvals.
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
 
-- Member and task: [response]
-- Prompt/purpose and relevant issue/diff: [response]
-- Summary of output: [response]
+- Member and task: [Liam Smilie, FR-02]
+- Prompt/purpose and relevant issue/diff: [
+    Act as a GitHub Copilot code-review assistant.
+
+Context: SmartCare uses domain objects, one SmartCareDataStore and service classes. The human reviewer
+has already recorded independent observations.
+
+Linked requirement and acceptance criteria: 
+Requirement: FR-02 Patient Search, including the published Stage 6 lookup contract.
+
+Acceptance criteria:
+    A registered ID returns the actual stored patient object.
+    Surrounding whitespace is accepted.
+    IDs remain case-sensitive.
+    A valid unknown ID raises LookupError.
+    Blank or invalid IDs raise ValueError.
+    Failed lookup preserves existing patient records.
+
+Task: Summarise the supplied PR diff, then review it against the linked requirement, acceptance criteria and
+SmartCare responsibilities. Identify correctness risks, responsibility violations, missing or weak tests,
+accidental unrelated changes and maintainability concerns. Suggest review questions.
+
+Constraints: Do not assume unstated requirements. Do not recommend deleting cancelled appointments.
+Do not introduce new frameworks or features. Separate each observed concern, question and suggestion.
+Cite the relevant diff lines and distinguish observed evidence from inference. Rank findings Critical,
+Important or Optional. If evidence is missing, say what must be checked; do not claim tests ran.
+
+PR diff and relevant synthetic project context: 
+Context: PatientService.find_patient needs to retrieve a registered patient
+through the existing shared data store.
+     ]
+- Summary of output: []
 - Human check against actual code, requirements and tests: [response]
 - Decision — Accept / Modify / Reject: [select]
 - Reason: [response]
 - Verification/evidence: [link and result]
+
+
+- Member and task: [Liam Smilie, Practitioner Lookup]
+- Prompt/purpose and relevant issue/diff: [
+    Act as a GitHub Copilot code-review assistant.
+
+Context: SmartCare uses domain objects, one SmartCareDataStore and service classes. The human reviewer
+has already recorded independent observations.
+
+Linked requirement and acceptance criteria: 
+Requirements: Return the existing practitioner when a valid ID is entered.
+            Remove surrounding spaces from the ID.
+            Raise ValueError for blank or invalid IDs.
+            Raise LookupError if the practitioner does not exist.
+            Keep practitioner IDs case-sensitive.
+            Do not modify existing practitioner records.
+Acceptance Criteria: An existing practitioner can be found using their ID.
+                    The original stored practitioner object is returned.
+                    Invalid and unknown IDs produce the correct errors.
+                    Existing application functionality remains unchanged.
+
+Task: Summarise the supplied PR diff, then review it against the linked requirement, acceptance criteria and
+SmartCare responsibilities. Identify correctness risks, responsibility violations, missing or weak tests,
+accidental unrelated changes and maintainability concerns. Suggest review questions.
+
+Constraints: Do not assume unstated requirements. Do not recommend deleting cancelled appointments.
+Do not introduce new frameworks or features. Separate each observed concern, question and suggestion.
+Cite the relevant diff lines and distinguish observed evidence from inference. Rank findings Critical,
+Important or Optional. If evidence is missing, say what must be checked; do not claim tests ran.
+
+PR diff and relevant synthetic project context: 
+Context: Implement the PractitionerService.find_practitioner() method so SmartCare can search for a registered practitioner using their unique ID.
+     ]
+- Summary of output: [The AI concluded that the program was implemented well, however, the test file needs change. The AI highlighted that the system tested for null inputs but not invalid inputs, as the input is a string, there needs to be a test for invalid input strings.]
+- Human check against actual code, requirements and tests: [The program for the Practitioner Lookup by ID was implemented well, the code has comments and is easy to read. The program functions as required by the requirements, and the tests reflect this.]
+- Decision — Accept / Modify / Reject: [Rejected]
+- Reason: [The only suggestion is to add a test for an ID that does not exist, to test invalid IDs, this is already implemented in the program, but specified under the function "test_unknown_practitioner_raises_lookup_error()".]
+- Verification/evidence: [https://github.com/copilot/share/c227500c-40e4-80a4-a952-14070025087d]
+
+
+
+- Member and task: [Liam Smilie, FR-06 and FR-07]
+- Prompt/purpose and relevant issue/diff: [
+    Act as a GitHub Copilot code-review assistant.
+
+Context: SmartCare uses domain objects, one SmartCareDataStore and service classes. The human reviewer
+has already recorded independent observations.
+
+Linked requirement and acceptance criteria: 
+Requirement: FR-06 Appointment Cancellation and FR-07 Retained History. A user must be able to cancel an existing SCHEDULED appointment by its ID. Cancellation must change the appointment status to CANCELLED without deleting or replacing the appointment. Cancelled appointments must remain retrievable from the shared store during the current session.
+
+Acceptance criteria: 
+        A valid ID for a SCHEDULED appointment changes its status to CANCELLED.
+
+        The service returns the original stored Appointment object.
+        The cancelled appointment remains retrievable from the shared store.
+        A valid but unknown appointment ID raises LookupError.
+        A blank, whitespace-only or otherwise invalid ID raises ValueError.
+        Repeated cancellation raises ValueError.
+        Cancelling a COMPLETED appointment raises ValueError.
+        A rejected cancellation leaves the appointment status and stored records unchanged.
+        No appointment is deleted or replaced.
+        All existing and new tests pass.
+
+Task: Summarise the supplied PR diff, then review it against the linked requirement, acceptance criteria and
+SmartCare responsibilities. Identify correctness risks, responsibility violations, missing or weak tests,
+accidental unrelated changes and maintainability concerns. Suggest review questions.
+
+Constraints: Do not assume unstated requirements. Do not recommend deleting cancelled appointments.
+Do not introduce new frameworks or features. Separate each observed concern, question and suggestion.
+Cite the relevant diff lines and distinguish observed evidence from inference. Rank findings Critical,
+Important or Optional. If evidence is missing, say what must be checked; do not claim tests ran.
+
+PR diff and relevant synthetic project context: 
+Context: AppointmentService.cancel_appointment currently raises NotImplementedError. The Appointment domain object already provides guarded cancellation, and the shared SmartCareDataStore retains appointment objects. The missing service workflow must locate the stored appointment, invoke the domain cancellation operation and return the same retained object.
+     ]
+- Summary of output: [The AI did not find any errors within the program for this section, however the AI in Github was unable to find the Testing file. The AI recommended checking the PyTest for the program before merging, but found no issues aside from that.]
+- Human check against actual code, requirements and tests: [To review the code: The program made by Daniel Spence was well structured and simplistic, it met all of the requirements listed. The tests revealed no errors.]
+- Decision — Accept / Modify / Reject: [Accepted]
+- Reason: [The program is fully functional, passing all the tests and operating properly, and the AI has verified this through the suggestions provided. Also accepting the AI suggestion to test before merging with the finalised project.]
+- Verification/evidence: [https://github.com/copilot/share/4a4e410c-00c4-8822-9142-864704a5012f]
+
 
 ## I Human versus Copilot review comparison
 
@@ -221,7 +332,7 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 7. What is a Definition of Done?
 
-[response]
+[The main Definition of Done is the set of requirements that indicate a finalised program. This could be based on functionality, design, modularity, testing capability, or any other requirements present.]
 
 8. What is the appropriate role of GitHub Copilot in pull-request review?
 
