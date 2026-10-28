@@ -241,7 +241,7 @@ Context: Implement the PractitionerService.find_practitioner() method so SmartCa
 
 
 
-Member and task: [AI Review: LoserWithAGame, Task: MastrRoshiiii, FR-06 and FR-07]
+Member and task: [AI Review: LoserWithAGame, Task: MastrRoshiiii, FR-06 and FR-07, Issue: https://github.com/LoserWithAGame/st1-assignment-3/issues/7, Pull Request: #12]
 - Prompt/purpose and relevant issue/diff: [
     Act as a GitHub Copilot code-review assistant.
 
@@ -306,7 +306,7 @@ Context: AppointmentService.cancel_appointment currently raises NotImplementedEr
 - Human reviewer noticed before consulting Copilot: [Before consulting CoPilot on the FR-06 and FR-07 programs I noticed no issues, the program was functional, the test cases were taken from the requirements list.]
 - Copilot noticed: [CoPilot's only suggestions were to provide evidence of the program in the test suite, and of the tests themselves.]
 - Overlap: [None, I did not notice what CoPilot mentioned]
-- What did the human reviewer notice that Copilot did not: [Nothing]
+- What did the human reviewer notice that Copilot did not: [Nothing, this was agreed upon by both CoPilot and I.]
 - What did Copilot identify that the human reviewer initially missed: [Nothing, for this section both CoPilot and I noticed the same things.]
 - Unsupported or incorrect Copilot suggestion: [CoPilot noticed that no evidence had been provided for the testing of this program. The test file had been provided, but CoPilot seemed to be unable to access it]
 - Human judgement accepted, modified or rejected, and why: [Accepted, because the small difference of the test file not being accessible is an AI issue, so the review was that there was nothing to change.]
@@ -380,7 +380,7 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 10. What is the Stage 6 engineering rule?
 
-[response]
+[The Stage 6 Engineering Rule is Maintenance and Evolution, this is when the system is already built but requires ongoing maintenance to keep it functional. Furthermore, this is developing the system after any bugs or errors in the software arise, and adding features to fit the growing need for the program.]
 
 ## M Completion and handover
 
