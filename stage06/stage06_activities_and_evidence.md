@@ -192,44 +192,6 @@ Repeat this block per PR. Record actual events, not planned approvals.
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
 
-- Member and task: [Liam Smilie, FR-02]
-- Prompt/purpose and relevant issue/diff: [
-    Act as a GitHub Copilot code-review assistant.
-
-Context: SmartCare uses domain objects, one SmartCareDataStore and service classes. The human reviewer
-has already recorded independent observations.
-
-Linked requirement and acceptance criteria: 
-Requirement: FR-02 Patient Search, including the published Stage 6 lookup contract.
-
-Acceptance criteria:
-    A registered ID returns the actual stored patient object.
-    Surrounding whitespace is accepted.
-    IDs remain case-sensitive.
-    A valid unknown ID raises LookupError.
-    Blank or invalid IDs raise ValueError.
-    Failed lookup preserves existing patient records.
-
-Task: Summarise the supplied PR diff, then review it against the linked requirement, acceptance criteria and
-SmartCare responsibilities. Identify correctness risks, responsibility violations, missing or weak tests,
-accidental unrelated changes and maintainability concerns. Suggest review questions.
-
-Constraints: Do not assume unstated requirements. Do not recommend deleting cancelled appointments.
-Do not introduce new frameworks or features. Separate each observed concern, question and suggestion.
-Cite the relevant diff lines and distinguish observed evidence from inference. Rank findings Critical,
-Important or Optional. If evidence is missing, say what must be checked; do not claim tests ran.
-
-PR diff and relevant synthetic project context: 
-Context: PatientService.find_patient needs to retrieve a registered patient
-through the existing shared data store.
-     ]
-     - Human check against actual code, requirements and tests: [response]
-- Decision — Accept / Modify / Reject: [select]
-- Reason: [response]
-- Verification/evidence: [link and result]
-- Summary of output: []
-
-
 - Member and task: [Quiet-learner - Copilot review of patient lookup, issue #5 and Pull Request #6]
 - Prompt/purpose and relevant issue/diff: [I Used the stage 6 part H review prompt with the patient-search acceptance criteria and the diff from commit e68f4ea. I asked Copilot to check the behaviour, responsibilities, tests and scope.]
 - Summary of output: [Copilot found no blocking bug. It raised two optional suggestions: serperate data-store tests and clarification of invalid IDs. It also reported no unrelated funcitonal changes.]
@@ -240,7 +202,7 @@ through the existing shared data store.
 
 
 
-- Member and task: [Liam Smilie, Practitioner Lookup]
+Member and task: [AI Review: LoserWithAGame, Task: warunabandara11-wq, Practitioner Lookup]
 - Prompt/purpose and relevant issue/diff: [
     Act as a GitHub Copilot code-review assistant.
 
@@ -271,15 +233,15 @@ Important or Optional. If evidence is missing, say what must be checked; do not 
 PR diff and relevant synthetic project context: 
 Context: Implement the PractitionerService.find_practitioner() method so SmartCare can search for a registered practitioner using their unique ID.
      ]
-- Summary of output: [The AI concluded that the program was implemented well, however, the test file needs change. The AI highlighted that the system tested for null inputs but not invalid inputs, as the input is a string, there needs to be a test for invalid input strings.]
-- Human check against actual code, requirements and tests: [The program for the Practitioner Lookup by ID was implemented well, the code has comments and is easy to read. The program functions as required by the requirements, and the tests reflect this.]
+- Summary of output: [The AI concluded that the program was implemented well, however, the test file needs change. The AI highlighted that the system tested for null inputs but not invalid inputs, as the input is a string, there needs to be a test for invalid inputs of all different types (Integer, None, List, Etc.).]
+- Human check against actual code, requirements and tests: [The program for the Practitioner Lookup by ID was implemented well, the code has comments and is easy to read. The program functions as required by the requirements, the tests check for Invalid and Empty inputs: "" and "    ".]
 - Decision — Accept / Modify / Reject: [Rejected]
 - Reason: [The only suggestion is to add a test for an ID that does not exist, to test invalid IDs, this is already implemented in the program, but specified under the function "test_unknown_practitioner_raises_lookup_error()".]
 - Verification/evidence: [https://github.com/copilot/share/c227500c-40e4-80a4-a952-14070025087d]
 
 
 
-- Member and task: [Liam Smilie, FR-06 and FR-07]
+Member and task: [AI Review: LoserWithAGame, Task: MastrRoshiiii, FR-06 and FR-07]
 - Prompt/purpose and relevant issue/diff: [
     Act as a GitHub Copilot code-review assistant.
 
@@ -331,6 +293,24 @@ Context: AppointmentService.cancel_appointment currently raises NotImplementedEr
 - Unsupported or incorrect Copilot suggestion: [Copilot quesitoned which ID types were allowed, but the stage 6 instructions already specify string IDs. Existing validation rejects blank and non-string inputs.]
 - Human judgement accepted, modified or rejected, and why: [I accepted the overall review after checking the code and test results. I left sperate store tests as a possible later improvment because my service tests already use the real store. I rejected chjanging ID validation because the existing rules already cover it.]
 - Which evidence justified merge approval: [MasterRoshiiii approved the original changes, and my full suite reported 24 passed. FInal merge is still pending verification of the formatting corrections and a teammate recheck of the updated branch.]
+
+- Human reviewer noticed before consulting Copilot: [Before consulting AI I read over the program and did not notice anything wrong with it. The logic of the program was as intended, and the tests were clear.]
+- Copilot noticed: [CoPilot noticed that there was not a test for an invalid condition that was not null.]
+- Overlap: [There is no overlap]
+- What did the human reviewer notice that Copilot did not: [CoPilot suggested adding a test for an invalid ID that was not null. This confused me, as this test case was already implemented, and thus CoPilot's suggestion was rejected.]
+- What did Copilot identify that the human reviewer initially missed: [CoPilot suggested adding a test for an invalid ID and invalid inputs that were of a datatype other than String. As the input could be given in Integer form, or None Type, there is a need to ensure the system can handle such errors.]
+- Unsupported or incorrect Copilot suggestion: [CoPilot suggested changing the project's Store-Driven Design, as it could cause maintainance issues in the future.]
+- Human judgement accepted, modified or rejected, and why: [response]
+- Which evidence justified merge approval: [response]
+
+- Human reviewer noticed before consulting Copilot: [Before consulting CoPilot on the FR-06 and FR-07 programs I noticed no issues, the program was functional, the test cases were taken from the requirements list.]
+- Copilot noticed: [CoPilot's only suggestions were to provide evidence of the program in the test suite, and of the tests themselves.]
+- Overlap: [None, I did not notice what CoPilot mentioned]
+- What did the human reviewer notice that Copilot did not: [Nothing]
+- What did Copilot identify that the human reviewer initially missed: [Nothing, for this section both CoPilot and I noticed the same things.]
+- Unsupported or incorrect Copilot suggestion: [CoPilot noticed that no evidence had been provided for the testing of this program. The test file had been provided, but CoPilot seemed to be unable to access it]
+- Human judgement accepted, modified or rejected, and why: [Accepted, because the small difference of the test file not being accessible is an AI issue, so the review was that there was nothing to change.]
+- Which evidence justified merge approval: [Merge approval was justified after three of our group members and CoPilot found zero errors with the program.]
 
 ## J Contributions
 
