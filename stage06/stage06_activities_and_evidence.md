@@ -142,8 +142,8 @@ Create at least two focused issues. Add a linked practitioner-lookup issue or an
 
 | Issue link | Requirement | Owner      | Acceptance criteria or precise link | Status     |
 | ---------- | ----------- | ---------- | ----------------------------------- | ---------- |
-| [https://github.com/LoserWithAGame/st1-assignment-3/issues/7]  | [FR-06 Appointment Cancellation and FR-07 Retained History] | [@MastrRoshiiii] | [Cancel a scheduled appointment; return and retain the same object; reject unknown/invalid IDs and illegal transitions; preserve state after failure.] | [Open — implementation and tests complete; PR review and merge pending] |
-| [https://github.com/LoserWithAGame/st1-assignment-3/issues/5]  | [FR-02 Patient Search]  | [@quiet-learner] | [Return the original patient; accept surrounding whitespace; retain case sensitivity; invalid IDs raise ValueError; unknown IDs raise LookupError; failed lookup preserves records] | [Open - PR #6 awaiting completetion and merge] |
+| [https://github.com/LoserWithAGame/st1-assignment-3/issues/7]  | [FR-06 Appointment Cancellation and FR-07 Retained History] | [@MastrRoshiiii] | [Cancel a scheduled appointment; return and retain the same object; reject unknown/invalid IDs and illegal transitions; preserve state after failure.] | [Closed - Merged onto Main.] |
+| [https://github.com/LoserWithAGame/st1-assignment-3/issues/5]  | [FR-02 Patient Search]  | [@quiet-learner] | [Return the original patient; accept surrounding whitespace; retain case sensitivity; invalid IDs raise ValueError; unknown IDs raise LookupError; failed lookup preserves records] | [Closed - Merged onot Main.] |
 
 
 ## G Pull request evidence
