@@ -57,11 +57,11 @@ GitHub Copilot generates five tests, all of which pass. Two only assert that obj
 
 | Candidate | What is wrong | Rewritten test intention |
 |---|---|---|
-| 1 | [response] | [response] |
-| 2 | [response] | [response] |
-| 3 | [response] | [response] |
-| 4 | [response] | [response] |
-| 5 | [response] | [response] |
+| 1 | [By checking an object is not None only proves that something was returned. it could still therefore be the wrong patient] | [Register a patient, look up their ID and verify that the results is the same exact registered patient that was registered.] |
+| 2 | [An object being not None does not prove the cancellation worked or history was retained.] | [Cancel a SCHEDULED appointment, then check its status is CANCELLED and that the lookup returns the same previusly stored appointment.] |
+| 3 | [Assert True checks nothing abuot the program's result, so incorrect bnehaviour could still pass if not checking other paremiters.] | [Attempt a booking that connflicts with a current appointment for the same practitioner at the same date and time. Check that a ValueError is raised and no new appointments were stored as a result.] |
+| 4 | [SMS notifications are not part of requirment scope of the program features. So its checking invented behaviour.] | [Reject the sms test. Change to an alternative test that validates the booking appointment status was changed to SCHEDULED and the actual registered patient and pratitioner objects exist.] |
+| 5 | [This also tests a feature called SMS notification that is assumed to exist. Passing this test does not establish that the rules are working correctly.] | [Reject the SMS test. An alternative test could be checking that repeated cancellations raises ValueError and leaves the cancelled appointment unchanged and retrievable as requested.] |
 
 ### Tutorial exit question
 
