@@ -41,7 +41,15 @@ Judgement: [Strong for stated behaviour]  Why: [Checks that finding (A1) returns
 ### Activity 3 Boundary thinking
 
 Design boundary or edge cases for blank identifiers, whitespace-only names, same-time practitioner bookings, cancelled appointments and invalid status transitions.
-For each input/state, expected result and supporting contract: [response]
+For each input/state, expected result and supporting contract:
+
+|Scenario|Input or starting state|Expected result|Supporting contract|
+|---|---|---|---|
+|Blank Identifiers|search using patient_id: "" (empty string)|Raise ValueError, with message saying this field cannot be empty.|The patient lookup requires IDs to be non-blank strings.|
+|Whitespace-only names|Attempting to register a new user with name as: "   " <- empty space OR "\n\n" <- new line|ValueError is raised and no new patient is stored.|patient name is a requirement so it must contain non whitespace text.|
+|Same-time practitioner bookings|IF  A1 <- appointment is SCHEDULED for pracitioner D1 at 10:00 AM. Try booking A2 for D1 at the same time and date.|ValueError is raised, A2 is not stored and A1 remains unchainged and still booked.|Fr-05 rejects a bookinjg if that doctor already has a SCHEDULED appointment at the same time.|
+|Cancelled appointments|Cancel SCHEDULED appointment A1, then attempt to find it|reutrn that same appointment but with cancelled status instead of booked. Hisotry needs to remain|FR-07 retain cancelled history|
+|Invalid status transitions|attempting to cancel a finished appointment.|Should give a ValueError and leave the appointment unchanged.|Only SCHEDULED appointments can be cancelled.|
 
 ### Activity 4 Critique GitHub Copilot tests
 
@@ -49,11 +57,11 @@ GitHub Copilot generates five tests, all of which pass. Two only assert that obj
 
 | Candidate | What is wrong | Rewritten test intention |
 |---|---|---|
-| 1 | [response] | [response] |
-| 2 | [response] | [response] |
-| 3 | [response] | [response] |
-| 4 | [response] | [response] |
-| 5 | [response] | [response] |
+| 1 | [By checking an object is not None only proves that something was returned. it could still therefore be the wrong patient] | [Register a patient, look up their ID and verify that the results is the same exact registered patient that was registered.] |
+| 2 | [An object being not None does not prove the cancellation worked or history was retained.] | [Cancel a SCHEDULED appointment, then check its status is CANCELLED and that the lookup returns the same previusly stored appointment.] |
+| 3 | [Assert True checks nothing abuot the program's result, so incorrect bnehaviour could still pass if not checking other paremiters.] | [Attempt a booking that connflicts with a current appointment for the same practitioner at the same date and time. Check that a ValueError is raised and no new appointments were stored as a result.] |
+| 4 | [SMS notifications are not part of requirment scope of the program features. So its checking invented behaviour.] | [Reject the sms test. Change to an alternative test that validates the booking appointment status was changed to SCHEDULED and the actual registered patient and pratitioner objects exist.] |
+| 5 | [This also tests a feature called SMS notification that is assumed to exist. Passing this test does not establish that the rules are working correctly.] | [Reject the SMS test. An alternative test could be checking that repeated cancellations raises ValueError and leaves the cancelled appointment unchanged and retrievable as requested.] |
 
 ### Tutorial exit question
 
@@ -155,10 +163,19 @@ Run python -m pytest from project/. Retain all accumulated tests. Record the tes
 
 | Command | Working directory | Code SHA | Passed | Failed | Failure summary | Product defect / test defect / unresolved | Evidence and interpretation |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [code used to test: python -m pytest -v] | [project/] | [2fba9705ec1baabf68b34fd0b74a200cd5bdca8b] | [32 passed] | [0 Failed] | [No failure observed] | [Current baseline: All collected cancellation, patient/practitioner lookup and starter test cases passed.] | [baseline run using puthon 3.14.7 and pytest 8.3.5. All 32 collected cases passed. REPLACE THIS PART -> PENDING comment of 32 passed tests to the comment section when uploading. then link that comment here <- pending] |
 
-Individual test runs and changed-order independence evidence: [commands, results, links]
-Optional tutor-led demonstration notes: [optional; leave blank if not used]
+Individual test runs and changed-order independence evidence
+
+|test|Command used|Results|link pending|
+|---|---|---|---|
+|Individual patient lookup|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient -v|1 Passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|Individual cancellation|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|1 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|Patient lookup followed by cancellation|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|2 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|CAncellation followed by patient lookup|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_services.py::test_find_patient_returns_registered_patient -v|2 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+
+
+Optional tutor-led demonstration notes: [optional; leave blank if not used] # not used as of 29/10/2026
 A meaningful test should detect a relevant incorrect result. Students do not have to perform the demonstration or submit failure/restoration evidence for assessment. The tutor restores the example and reruns its tests. This is not a Stage 8 fault activity.
 Requirement → test → failure/observation → diagnosis → change → verification: [concise links where applicable]
 
@@ -188,34 +205,34 @@ Record actual work in test design, implementation, review, traceability, diagnos
 ## N Formative Questions
 
 1. What question does verification answer?
-[response]
+[Is the program behaving according to its stated requirements? for example, does it reject a conflicting booking when someone attempts to book an appoitment with the same practitioner at the same date/time.]
 
 2. What question does validation answer?
-[response]
+[does the program meet the intented use of the users needs. for exampple can the staff that book appointments do those tasks effectively.]
 
 3. What is a unit test?
-[response]
+[A unit test is a small specific tesst to varify behaviour. for example, it should check that when registering a patient that the name field is not empty.]
 
 4. What is a pytest fixture?
-[response]
+[A fixture provides reusable setup for tests. IT can create fresh store and objects for each test, thus helping prevent tests from affecting one another.]
 
 5. What is parametrisation in pytest?
-[response]
+[Parametrisation runs the same test function multiple times using different set of data inputs. By providing a list of arguments you can test many variables.]
 
 6. What is regression testing?
-[response]
+[regression testing means rerunning tests that prevously done after adding changes to check that the behaviour still works as intended and nothing broke.]
 
 7. What does code coverage tell us, and what does it not prove?
-[response]
+[Code coverage shows witch parts of the code executed during testing. IT can help dientify untested areas. It does not prove that expected results are correct.]
 
 8. What makes an assertion weak?
-[response]
+[An assertion is weak when an incrorect results could still pass. When testing passes but fails to prove that the system is corking correctly or not.]
 
 9. What is the appropriate role of GitHub Copilot as a test assistant?
-[response]
+[Copilot can be used to suggest test cases and assertions. We must check that they match the correct checks that provide meaninful results. Github copilot can be used to brainstorm and apply critical thinking to the project.]
 
 10. What is the Stage 7 engineering rule?
-[response]
+[A passing test should contain meaninful assertions linked to the current requirements. Passing alone does not prove the test was good.]
 
 ## O Stage Completion
 
