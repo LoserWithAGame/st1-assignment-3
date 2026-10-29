@@ -152,7 +152,7 @@ Run python -m pytest from project/. Retain all accumulated tests. Record the tes
 
 | Command | Working directory | Code SHA | Passed | Failed | Failure summary | Product defect / test defect / unresolved | Evidence and interpretation |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [code used to test: python -m pytest -v] | [project/] | [2fba9705ec1baabf68b34fd0b74a200cd5bdca8b] | [32] | [0] | [No failure observed] | [Current baseline: All collected cancellation, patient/practitioner lookup and starter test cases passed.] | [baseline run using puthon 3.14.7 and pytest 8.3.5. All 32 collected cases passed. REPLACE THIS PART -> PENDING comment of 32 passed tests to the comment section when uploading. then link that comment here <- pending] |
 
 Individual test runs and changed-order independence evidence: [commands, results, links]
 Optional tutor-led demonstration notes: [optional; leave blank if not used]
