@@ -41,7 +41,15 @@ Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
 ### Activity 3 Boundary thinking
 
 Design boundary or edge cases for blank identifiers, whitespace-only names, same-time practitioner bookings, cancelled appointments and invalid status transitions.
-For each input/state, expected result and supporting contract: [response]
+For each input/state, expected result and supporting contract:
+
+|Scenario|Input or starting state|Expected result|Supporting contract|
+|---|---|---|---|
+|Blank Identifiers|search using patient_id: "" (empty string)|Raise ValueError, with message saying this field cannot be empty.|The patient lookup requires IDs to be non-blank strings.|
+|Whitespace-only names|Attempting to register a new user with name as: "   " <- empty space OR "\n\n" <- new line|ValueError is raised and no new patient is stored.|patient name is a requirement so it must contain non whitespace text.|
+|Same-time practitioner bookings|IF  A1 <- appointment is SCHEDULED for pracitioner D1 at 10:00 AM. Try booking A2 for D1 at the same time and date.|ValueError is raised, A2 is not stored and A1 remains unchainged and still booked.|Fr-05 rejects a bookinjg if that doctor already has a SCHEDULED appointment at the same time.|
+|Cancelled appointments|Cancel SCHEDULED appointment A1, then attempt to find it|reutrn that same appointment but with cancelled status instead of booked. Hisotry needs to remain|FR-07 retain cancelled history|
+|Invalid status transitions|attempting to cancel a finished appointment.|Should give a ValueError and leave the appointment unchanged.|Only SCHEDULED appointments can be cancelled.|
 
 ### Activity 4 Critique GitHub Copilot tests
 
