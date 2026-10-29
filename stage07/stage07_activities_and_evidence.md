@@ -16,32 +16,40 @@ For each requirement, propose one positive test, one negative test and the key a
 |---|---|---|---|
 | FR-01 Register patient | [response] | [response] | [response] |
 | FR-05 Prevent practitioner conflict | [response] | [response] | [response] |
-| FR-06 Cancel appointment | [response] | [response] | [response] |
-| FR-07 Retain cancelled history | [response] | [response] | [response] |
+| FR-06 Cancel appointment | [Cancel an exisiting SCHEDULED appointment using its ID] | [Attempt to cancel a COMPLETED or already CANCELLED appointment.] | [The successful call returns the original object with `status is AppointmentStatus.CANCELLED`, the invalid transition raises `ValueError` and leaves the status unchanged.] |
+| FR-07 Retain cancelled history | [Cancel an appointment and retrieve it again from the shared store using the same ID] | [Attempt to repeat a cancellation of the same appointment with the same ID] | [`store.find_appointment('A1') is appointment`, and the retained object remains `CANCELLED` even after the rejected repeated cancellation.] |
 
 ### Activity 2 Strong or weak assertion
 
 For each, select Strong for stated behaviour or Weak/unclear and explain why. State the behaviour and limits.
 
 `assert True`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [Always passes, even when the code is wrong.]
 
 `assert appointment is not None`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [Checks that an appointment exists, but not whether its details are correct.]
 
 `assert appointment.status == AppointmentStatus.CANCELLED`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Strong for stated behaviour]  Why: [Checks that the appointment is marked as cancelled. It does not check whther it is still retained.]
 
 `assert len(results) > 0`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [Checks whether there is at least one result, but does not check is the results are correct.]
 
 `assert data_store.find_appointment('A1') is appointment`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Strong for stated behaviour]  Why: [Checks that finding (A1) returns the same appointment object. It does not check its status.]
 
 ### Activity 3 Boundary thinking
 
 Design boundary or edge cases for blank identifiers, whitespace-only names, same-time practitioner bookings, cancelled appointments and invalid status transitions.
-For each input/state, expected result and supporting contract: [response]
+For each input/state, expected result and supporting contract:
+
+|Scenario|Input or starting state|Expected result|Supporting contract|
+|---|---|---|---|
+|Blank Identifiers|search using patient_id: "" (empty string)|Raise ValueError, with message saying this field cannot be empty.|The patient lookup requires IDs to be non-blank strings.|
+|Whitespace-only names|Attempting to register a new user with name as: "   " <- empty space OR "\n\n" <- new line|ValueError is raised and no new patient is stored.|patient name is a requirement so it must contain non whitespace text.|
+|Same-time practitioner bookings|IF  A1 <- appointment is SCHEDULED for pracitioner D1 at 10:00 AM. Try booking A2 for D1 at the same time and date.|ValueError is raised, A2 is not stored and A1 remains unchainged and still booked.|Fr-05 rejects a bookinjg if that doctor already has a SCHEDULED appointment at the same time.|
+|Cancelled appointments|Cancel SCHEDULED appointment A1, then attempt to find it|reutrn that same appointment but with cancelled status instead of booked. Hisotry needs to remain|FR-07 retain cancelled history|
+|Invalid status transitions|attempting to cancel a finished appointment.|Should give a ValueError and leave the appointment unchanged.|Only SCHEDULED appointments can be cancelled.|
 
 ### Activity 4 Critique GitHub Copilot tests
 
@@ -49,11 +57,11 @@ GitHub Copilot generates five tests, all of which pass. Two only assert that obj
 
 | Candidate | What is wrong | Rewritten test intention |
 |---|---|---|
-| 1 | [response] | [response] |
-| 2 | [response] | [response] |
-| 3 | [response] | [response] |
-| 4 | [response] | [response] |
-| 5 | [response] | [response] |
+| 1 | [By checking an object is not None only proves that something was returned. it could still therefore be the wrong patient] | [Register a patient, look up their ID and verify that the results is the same exact registered patient that was registered.] |
+| 2 | [An object being not None does not prove the cancellation worked or history was retained.] | [Cancel a SCHEDULED appointment, then check its status is CANCELLED and that the lookup returns the same previusly stored appointment.] |
+| 3 | [Assert True checks nothing abuot the program's result, so incorrect bnehaviour could still pass if not checking other paremiters.] | [Attempt a booking that connflicts with a current appointment for the same practitioner at the same date and time. Check that a ValueError is raised and no new appointments were stored as a result.] |
+| 4 | [SMS notifications are not part of requirment scope of the program features. So its checking invented behaviour.] | [Reject the sms test. Change to an alternative test that validates the booking appointment status was changed to SCHEDULED and the actual registered patient and pratitioner objects exist.] |
+| 5 | [This also tests a feature called SMS notification that is assumed to exist. Passing this test does not establish that the rules are working correctly.] | [Reject the SMS test. An alternative test could be checking that repeated cancellations raises ValueError and leaves the cancelled appointment unchanged and retrievable as requested.] |
 
 ### Tutorial exit question
 
@@ -66,7 +74,18 @@ Assign TEST IDs before implementation or generation. Use canonical AC IDs with t
 
 | Requirement | Acceptance criterion | Test ID | Test type | Test name / location | Expected behaviour | Result / observed status | Supplied or student-authored |
 |---|---|---|---|---|---|---|---|
+| [FR-07 Retain cancelled history] | [Cancelling an appointment must not delete or replace it.] | [TEST-FR07-01] | [Service-level unit test] | [test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object/tests/test_cancellation.py] | [The cancelled appointment remains retrievable from the store as the same object.] | [Passed] | [Student Authored] |
+| [FR-07 Retain cancelled history] | [A rejected repeated cancellation must not remove or replace the cancelled appointment.] | [TEST-FR07-02] | [Retained history service-level unit test] | [test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history/tests/test_cancellation.py] | [After the rejected second cancellation, the same CANCELLED object remains retrievable and remains the only stored appointment.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A known SCHEDULED appointment can be cancelled using its ID.] | [TEST-FR06-01] | [Service-level unit test] | [test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object/tests/test_cancellation.py] | [The service returns the original appointment and changes its status to CANCELLED.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A valid but unknown appointment ID must be rejected without changing existing appointments.] | [TEST-FR06-02] | [Negative service-level unit test] | [test_cancellation.py::test_unknown_appointment_raises_lookup_error_and_preserves_state/tests/test_cancellation.py] | [The service raises LookupError, the existing appointment remains SCHEDULED and the stored list remains unchanged.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [Blank, whitespace-only and non-text appointment IDs must be rejected without changing state.] | [TEST-FR06-03] | [Boundary and negative parametrised test] | [test_cancellation.py::test_invalid_appointment_id_raises_value_error/test/test_cancellation.py] | [Empty text, whitespace, None and 123 each raise ValueError. The existing appointment remains SCHEDULED and stored.] | [Passed — four parametrised cases] | [Student Authored] |
+| [FR-06 Cancel appointment] | [Only a SCHEDULED appointment may be cancelled; a second cancellation must be rejected.] | [TEST-FR06-04] | [Invalid-transition service-level unit test] | [test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history/tests/test_cancellation.py] | [The first cancellation succeeds, the second raises ValueError and the appointment remains CANCELLED.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A COMPLETED appointment cannot be cancelled, and a failed attempt must leave it unchanged.] | [TEST-FR06-05] | [Invalid-transition service-level unit test] | [test_cancellation.py::test_completed_appointment_cannot_be_cancelled/tests/test_cancellation.py] | [The service raises ValueError. The appointment remains COMPLETED, retrievable and stored as the same object.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A SCHEDULED appointment can be cancelled, and a repeated cancellation is rejected.] | [TEST-FR06-S01] | [Domain unit test] | [test_starter.py::test_domain_cancellation_and_guard/tests/test_starter.py] | [The first cancellation changes the status to CANCELLED. A second cancellation raises ValueError, and the status remains CANCELLED.] | [Passed] | [Supplied] |
 | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+
 
 ## C Test Design
 
@@ -144,10 +163,19 @@ Run python -m pytest from project/. Retain all accumulated tests. Record the tes
 
 | Command | Working directory | Code SHA | Passed | Failed | Failure summary | Product defect / test defect / unresolved | Evidence and interpretation |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [code used to test: python -m pytest -v] | [project/] | [2fba9705ec1baabf68b34fd0b74a200cd5bdca8b] | [32 passed] | [0 Failed] | [No failure observed] | [Current baseline: All collected cancellation, patient/practitioner lookup and starter test cases passed.] | [baseline run using puthon 3.14.7 and pytest 8.3.5. All 32 collected cases passed. REPLACE THIS PART -> PENDING comment of 32 passed tests to the comment section when uploading. then link that comment here <- pending] |
 
-Individual test runs and changed-order independence evidence: [commands, results, links]
-Optional tutor-led demonstration notes: [optional; leave blank if not used]
+Individual test runs and changed-order independence evidence
+
+|test|Command used|Results|link pending|
+|---|---|---|---|
+|Individual patient lookup|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient -v|1 Passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|Individual cancellation|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|1 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|Patient lookup followed by cancellation|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|2 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|CAncellation followed by patient lookup|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_services.py::test_find_patient_returns_registered_patient -v|2 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+
+
+Optional tutor-led demonstration notes: [optional; leave blank if not used] # not used as of 29/10/2026
 A meaningful test should detect a relevant incorrect result. Students do not have to perform the demonstration or submit failure/restoration evidence for assessment. The tutor restores the example and reruns its tests. This is not a Stage 8 fault activity.
 Requirement → test → failure/observation → diagnosis → change → verification: [concise links where applicable]
 
@@ -177,34 +205,34 @@ Record actual work in test design, implementation, review, traceability, diagnos
 ## N Formative Questions
 
 1. What question does verification answer?
-[response]
+[Is the program behaving according to its stated requirements? for example, does it reject a conflicting booking when someone attempts to book an appoitment with the same practitioner at the same date/time.]
 
 2. What question does validation answer?
-[response]
+[does the program meet the intented use of the users needs. for exampple can the staff that book appointments do those tasks effectively.]
 
 3. What is a unit test?
-[response]
+[A unit test is a small specific tesst to varify behaviour. for example, it should check that when registering a patient that the name field is not empty.]
 
 4. What is a pytest fixture?
-[response]
+[A fixture provides reusable setup for tests. IT can create fresh store and objects for each test, thus helping prevent tests from affecting one another.]
 
 5. What is parametrisation in pytest?
-[response]
+[Parametrisation runs the same test function multiple times using different set of data inputs. By providing a list of arguments you can test many variables.]
 
 6. What is regression testing?
-[response]
+[regression testing means rerunning tests that prevously done after adding changes to check that the behaviour still works as intended and nothing broke.]
 
 7. What does code coverage tell us, and what does it not prove?
-[response]
+[Code coverage shows witch parts of the code executed during testing. IT can help dientify untested areas. It does not prove that expected results are correct.]
 
 8. What makes an assertion weak?
-[response]
+[An assertion is weak when an incrorect results could still pass. When testing passes but fails to prove that the system is corking correctly or not.]
 
 9. What is the appropriate role of GitHub Copilot as a test assistant?
-[response]
+[Copilot can be used to suggest test cases and assertions. We must check that they match the correct checks that provide meaninful results. Github copilot can be used to brainstorm and apply critical thinking to the project.]
 
 10. What is the Stage 7 engineering rule?
-[response]
+[A passing test should contain meaninful assertions linked to the current requirements. Passing alone does not prove the test was good.]
 
 ## O Stage Completion
 

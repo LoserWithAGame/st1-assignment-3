@@ -4,6 +4,7 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 
 - Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
 - Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
+- Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
 - Repository URL: [https://github.com/LoserWithAGame/st1-assignment-3]
 - Starting SHA: [79cad13]
 
