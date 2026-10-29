@@ -3,7 +3,7 @@
 Complete this one group record. Link actual issues, diffs, tests and reviews; avoid copying entire histories. Blank fields are intentional. Duplicate rows as needed. Use synthetic data only. Every member records their own meaningful contribution. Do not invent results, reviews or Copilot use.
 
 - Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
-- Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie]
+- Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
 - Repository URL: [https://github.com/LoserWithAGame/st1-assignment-3]
 - Starting SHA: [79cad13]
 
@@ -142,8 +142,8 @@ Create at least two focused issues. Add a linked practitioner-lookup issue or an
 
 | Issue link | Requirement | Owner      | Acceptance criteria or precise link | Status     |
 | ---------- | ----------- | ---------- | ----------------------------------- | ---------- |
-| [https://github.com/LoserWithAGame/st1-assignment-3/issues/7]  | [FR-06 Appointment Cancellation and FR-07 Retained History] | [@MastrRoshiiii] | [Cancel a scheduled appointment; return and retain the same object; reject unknown/invalid IDs and illegal transitions; preserve state after failure.] | [Open — implementation and tests complete; PR review and merge pending] |
-| [https://github.com/LoserWithAGame/st1-assignment-3/issues/5]  | [FR-02 Patient Search]  | [@quiet-learner] | [Return the original patient; accept surrounding whitespace; retain case sensitivity; invalid IDs raise ValueError; unknown IDs raise LookupError; failed lookup preserves records] | [Open - PR #6 awaiting completetion and merge] |
+| [https://github.com/LoserWithAGame/st1-assignment-3/issues/7]  | [FR-06 Appointment Cancellation and FR-07 Retained History] | [@MastrRoshiiii] | [Cancel a scheduled appointment; return and retain the same object; reject unknown/invalid IDs and illegal transitions; preserve state after failure.] | [Closed - Merged onto Main.] |
+| [https://github.com/LoserWithAGame/st1-assignment-3/issues/5]  | [FR-02 Patient Search]  | [@quiet-learner] | [Return the original patient; accept surrounding whitespace; retain case sensitivity; invalid IDs raise ValueError; unknown IDs raise LookupError; failed lookup preserves records] | [Closed - Merged onot Main.] |
 
 
 ## G Pull request evidence
@@ -170,23 +170,23 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Integrated verification after merge: [command, directory, result and code SHA] <- pending merge
 
 
-- PR link and title: [response]
-- Linked issue and requirement: [response]
-- Feature branch: [response]
-- Changed behaviour: [response]
-- Meaningful commits: [links]
-- Test command, directory and observed result: [response]
-- Another-member reviewer: [response]
-- Human observations recorded before Copilot: [link and time]
-- Requirement, responsibilities, test assertions and unrelated-scope checks: [response]
-- Key feedback: [response]
-- Author response/change and verification: [response]
-- Reviewer recheck and approval: [link]
-- Merge outcome and SHA: [response]
-- Significant Copilot assistance: [summary or none]
-- Linked issue closure: [response]
-- Each member updated main: [member and confirmation]
-- Integrated verification after merge: [command, directory, result and code SHA]
+- PR link and title: [PR #8 — Feature/stage06 appointment cancellation](https://github.com/LoserWithAGame/st1-assignment-3/pull/8)]
+- Linked issue and requirement: [[Issue #7 — FR-06 Appointment Cancellation and FR-07 Retained History](https://github.com/LoserWithAGame/st1-assignment-3/issues/7)]
+- Feature branch: [feature/stage06-appointment-cancellation]
+- Changed behaviour: [AppointmentService.cancel_appointment now finds the stored appointment, calls its guarded domain cancel method, returns the same Appointment object and retains it in the shared store. Tests cover successful cancellation, invalid and unknown IDs, repeated cancellation, completed appointments and unchanged state after rejection.]
+- Meaningful commits: [  - [Implement appointment cancellation with retained history](https://github.com/LoserWithAGame/st1-assignment-3/commit/f4e4af4aae1703011f970df0fe6fca17fb73fba9) - [Update Stage 6 cancellation evidence](https://github.com/LoserWithAGame/st1-assignment-3/commit/962a8abe06019275fa217c312178d39f9af81640)]
+- Test command, directory and observed result: [python -m pytest from project/. [Insert the exact full-suite count you personally observed and the tested code SHA. Do not estimate.]]
+- Another-member reviewer: [No another-member review was recorded on GitHub before merge.]
+- Human observations recorded before Copilot: [No human-first review observations were recorded on the PR before merge.]
+- Requirement, responsibilities, test assertions and unrelated-scope checks: [The implementation was checked against FR-06/FR-07. AppointmentService coordinates lookup, Appointment.cancel enforces the state transition, and SmartCareDataStore retains the object. Tests assert object identity, CANCELLED status, retained history, correct exceptions and unchanged state. The production change is limited to the cancellation service method.]
+- Key feedback: [No reviewer feedback was recorded before merge.]
+- Author response/change and verification: [No reviewer-requested change was recorded before merge.]
+- Reviewer recheck and approval: [Appoved by @LoserWithAGame and approved.]
+- Merge outcome and SHA: [Merged into main as commit 86b3ac2ef33424e815e5f0f276d6b40add955eac.]
+- Significant Copilot assistance: [Copilot offered little to no assistance. Verified test cases worked and program functioned as it should.]
+- Linked issue closure: [https://github.com/LoserWithAGame/st1-assignment-3/pull/8]
+- Each member updated main: [All group members have updated main.]
+- Integrated verification after merge: [python -m pytest`, run from `project/`, 32 passed in 0.11s, 3e992e1128657d708db10ad36e1cd1654d45936e]
 
 ## H Copilot collaboration record
 
@@ -325,14 +325,14 @@ Repeat per member. Include only categories that describe actual work; write not 
 - Debugging or integration: [I corrected assertions that were incorrectly inside pytest.raises and reran the tests successfully. Integration into main is still pending.]
 - Documentation or team support: [I recorded the patient issue, Pull request, test results, review feedback and Copilot decisions in this shared record.]
 
-- Member: [LoserWithAGame]
-- Implementation: [Sections: H, I, K, L. Commits: 1acd50bee9d6a7cb2ca1ae38243b072a21ea7fde, ae192c285f2a039335bc201b1df32f8b96b5a50f, 9f799a90effdee826d48f636c918251a2f4198d2, 5197bfe33cdc46f6bf02f08b4ad832b61d68f994, 0a143c4b237b20f0ab3bfece737c0eacda3f6233]
-- Testing: [work and evidence]
-- Review: [Sections: H, I. Commits: 5197bfe33cdc46f6bf02f08b4ad832b61d68f994, 1acd50bee9d6a7cb2ca1ae38243b072a21ea7fde, ae192c285f2a039335bc201b1df32f8b96b5a50f. I reviewed and merged commits for code and writing from all members of the group, using CoPilot to assist me for parts of it.]
-- Issue refinement: [work and evidence]
-- Design and responsibility discussion: [work and evidence]
-- Debugging or integration: [work and evidence]
-- Documentation or team support: [I recorded Review Feedback, and CoPilot Decisions in this shared record. I reviewed each Pull Request made by the group, and merged them into the Repository after thorough evaluation.]
+- Member: [@MastrRoshiiii]
+- Implementation: [I implemented AppointmentService.cancel_appointment using the existing service lookup and Appointment.cancel domain method. The implementation returns the original stored appointment and retains its history. Evidence: [implementation commit](https://github.com/LoserWithAGame/st1-assignment-3/commit/f4e4af4aae1703011f970df0fe6fca17fb73fba9) and [PR #8](https://github.com/LoserWithAGame/st1-assignment-3/pull/8).]
+- Testing: [I created project/tests/test_cancellation.py with successful, unknown-ID, invalid-ID, repeated-cancellation and completed-appointment cases. The parametrised invalid-ID test covered blank text, whitespace, None and an integer. I ran the focused tests and the full suite. The later full-suite run collected 32 tests and reported 32 passed. Evidence: PR #8 and recorded terminal result]
+- Review: [Reviewed by @LoserWithAGame, approved and merged into main.]
+- Issue refinement: [I created and expanded [Issue #7](https://github.com/LoserWithAGame/st1-assignment-3/issues/7) with FR-06/FR-07 context, requirements, acceptance criteria, scope, Definition of Done and ownership.]
+- Design and responsibility discussion: [I kept cancellation responsibilities separated: AppointmentService locates and coordinates the operation, Appointment.cancel enforces the legal status transition, and SmartCareDataStore retains the appointment object.]
+- Debugging or integration: [I diagnosed a NameError in test_cancellation.py caused by missing imports, added the required SmartCareDataStore, service, datetime and AppointmentStatus imports, and reran the test successfully. I later ran the accumulated suite and observed 32 passed.]
+- Documentation or team support: [I updated the Stage 6 cancellation evidence and completed Sections C, D and F. Evidence includes [PR #11](https://github.com/LoserWithAGame/st1-assignment-3/pull/11) and the Stage 6 evidence commits.]
 
 ## K Exit question
 
