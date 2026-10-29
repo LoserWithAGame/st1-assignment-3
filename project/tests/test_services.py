@@ -1,9 +1,9 @@
 """Stage 6 patient and practitioner lookup tests."""
 
 import pytest
-
 from smartcare.data_store import SmartCareDataStore
-from smartcare.services import PatientService, PractitionerService
+from smartcare.services import PatientService, PractitionerService, Patient, Practitioner, AppointmentService
+import datetime
 
 # Practitioner tests
 
@@ -124,3 +124,44 @@ def test_failed_lookup_does_not_modify_patient():
     assert patient.patient_id == "P1"
     assert patient.name == "Burnt Peanut"
     assert len(store.list_patients()) == 1
+
+
+#   Practitioner Conflicts
+
+def foundation() -> tuple[
+    SmartCareDataStore,
+    Patient,
+    Practitioner,
+    AppointmentService,
+]:
+    """Create fresh registered participants and services for a supplied
+    check.
+    """
+    data_store = SmartCareDataStore()
+    patient = PatientService(data_store).register_patient('P1', 'Alex Example')
+    practitioner = PractitionerService(
+        data_store,
+    ).register_practitioner('D1', 'Taylor Example', 'General')
+    return (data_store, patient, practitioner, AppointmentService(data_store))
+
+def test_practitioner_conflict_prevents_appointments():
+    """Verify Duplicate Bookings Rejected - Duplicate Appointment Rejected."""
+    data_store, _, _, appointment_service = foundation()
+    PractitionerService(
+        data_store,
+    ).register_practitioner('D2', 'Morgan Example', 'General')
+    when = datetime(2026, 10, 1, 9)
+    appointment_service.book_appointment('A1', 'P1', 'D1', when)
+    with pytest.raises(ValueError):
+        appointment_service.book_appointment('A2', 'P1', 'D1', when)    
+
+def test_different_practitioner_books_appointment():
+    """Verify Different Practitioner Succeeds - Valid Input"""
+    data_store, _, _, appointment_service = foundation()
+    PractitionerService(
+        data_store,
+    ).register_practitioner('D2', 'Morgan Example', 'General')
+    when = datetime(2026, 10, 1, 9)
+    appointment_service.book_appointment('A1', 'P1', 'D1', when)
+    assert data_store.has_practitioner_conflict('A2', 'P1', 'D2', when) is False
+    
