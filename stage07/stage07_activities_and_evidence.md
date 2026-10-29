@@ -185,34 +185,34 @@ Record actual work in test design, implementation, review, traceability, diagnos
 ## N Formative Questions
 
 1. What question does verification answer?
-[response]
+[Is the program behaving according to its stated requirements? for example, does it reject a conflicting booking when someone attempts to book an appoitment with the same practitioner at the same date/time.]
 
 2. What question does validation answer?
-[response]
+[does the program meet the intented use of the users needs. for exampple can the staff that book appointments do those tasks effectively.]
 
 3. What is a unit test?
-[response]
+[A unit test is a small specific tesst to varify behaviour. for example, it should check that when registering a patient that the name field is not empty.]
 
 4. What is a pytest fixture?
-[response]
+[A fixture provides reusable setup for tests. IT can create fresh store and objects for each test, thus helping prevent tests from affecting one another.]
 
 5. What is parametrisation in pytest?
-[response]
+[Parametrisation runs the same test function multiple times using different set of data inputs. By providing a list of arguments you can test many variables.]
 
 6. What is regression testing?
-[response]
+[regression testing means rerunning tests that prevously done after adding changes to check that the behaviour still works as intended and nothing broke.]
 
 7. What does code coverage tell us, and what does it not prove?
-[response]
+[Code coverage shows witch parts of the code executed during testing. IT can help dientify untested areas. It does not prove that expected results are correct.]
 
 8. What makes an assertion weak?
-[response]
+[An assertion is weak when an incrorect results could still pass. When testing passes but fails to prove that the system is corking correctly or not.]
 
 9. What is the appropriate role of GitHub Copilot as a test assistant?
-[response]
+[Copilot can be used to suggest test cases and assertions. We must check that they match the correct checks that provide meaninful results. Github copilot can be used to brainstorm and apply critical thinking to the project.]
 
 10. What is the Stage 7 engineering rule?
-[response]
+[A passing test should contain meaninful assertions linked to the current requirements. Passing alone does not prove the test was good.]
 
 ## O Stage Completion
 
