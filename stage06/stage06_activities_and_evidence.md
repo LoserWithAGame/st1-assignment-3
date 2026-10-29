@@ -361,7 +361,7 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 3. What makes a commit a good engineering commit?
 
-[response]
+[A good engineering commit has the following qualities: Clear and Concise Commit Comment; Commit smaller changes rather than bigger changes; Commit changes after verification.]
 
 4. What is a pull request?
 
