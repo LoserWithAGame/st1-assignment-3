@@ -158,10 +158,10 @@ Individual test runs and changed-order independence evidence
 
 |test|Command used|Results|link pending|
 |---|---|---|---|
-|Individual patient lookup|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient -v|1 Passed, 0 failed|link pending|
-|Individual cancellation|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|1 passed, 0 failed|link pending|
-|Patient lookup followed by cancellation|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|2 passed, 0 failed|link pending|
-|CAncellation followed by patient lookup|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_services.py::test_find_patient_returns_registered_patient -v|2 passed, 0 failed|link pending|
+|Individual patient lookup|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient -v|1 Passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|Individual cancellation|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|1 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|Patient lookup followed by cancellation|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|2 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
+|CAncellation followed by patient lookup|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_services.py::test_find_patient_returns_registered_patient -v|2 passed, 0 failed|https://github.com/LoserWithAGame/st1-assignment-3/pull/15#issue-6094613216|
 
 
 Optional tutor-led demonstration notes: [optional; leave blank if not used] # not used as of 29/10/2026
