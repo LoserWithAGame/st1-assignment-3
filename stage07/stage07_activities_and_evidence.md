@@ -16,27 +16,27 @@ For each requirement, propose one positive test, one negative test and the key a
 |---|---|---|---|
 | FR-01 Register patient | [response] | [response] | [response] |
 | FR-05 Prevent practitioner conflict | [response] | [response] | [response] |
-| FR-06 Cancel appointment | [response] | [response] | [response] |
-| FR-07 Retain cancelled history | [response] | [response] | [response] |
+| FR-06 Cancel appointment | [Cancel an exisiting SCHEDULED appointment using its ID] | [Attempt to cancel a COMPLETED or already CANCELLED appointment.] | [The successful call returns the original object with `status is AppointmentStatus.CANCELLED`, the invalid transition raises `ValueError` and leaves the status unchanged.] |
+| FR-07 Retain cancelled history | [Cancel an appointment and retrieve it again from the shared store using the same ID] | [Attempt to repeat a cancellation of the same appointment with the same ID] | [`store.find_appointment('A1') is appointment`, and the retained object remains `CANCELLED` even after the rejected repeated cancellation.] |
 
 ### Activity 2 Strong or weak assertion
 
 For each, select Strong for stated behaviour or Weak/unclear and explain why. State the behaviour and limits.
 
 `assert True`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [Always passes, even when the code is wrong.]
 
 `assert appointment is not None`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [Checks that an appointment exists, but not whether its details are correct.]
 
 `assert appointment.status == AppointmentStatus.CANCELLED`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Strong for stated behaviour]  Why: [Checks that the appointment is marked as cancelled. It does not check whther it is still retained.]
 
 `assert len(results) > 0`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [Checks whether there is at least one result, but does not check is the results are correct.]
 
 `assert data_store.find_appointment('A1') is appointment`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Strong for stated behaviour]  Why: [Checks that finding (A1) returns the same appointment object. It does not check its status.]
 
 ### Activity 3 Boundary thinking
 
@@ -66,7 +66,18 @@ Assign TEST IDs before implementation or generation. Use canonical AC IDs with t
 
 | Requirement | Acceptance criterion | Test ID | Test type | Test name / location | Expected behaviour | Result / observed status | Supplied or student-authored |
 |---|---|---|---|---|---|---|---|
+| [FR-07 Retain cancelled history] | [Cancelling an appointment must not delete or replace it.] | [TEST-FR07-01] | [Service-level unit test] | [test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object/tests/test_cancellation.py] | [The cancelled appointment remains retrievable from the store as the same object.] | [Passed] | [Student Authored] |
+| [FR-07 Retain cancelled history] | [A rejected repeated cancellation must not remove or replace the cancelled appointment.] | [TEST-FR07-02] | [Retained history service-level unit test] | [test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history/tests/test_cancellation.py] | [After the rejected second cancellation, the same CANCELLED object remains retrievable and remains the only stored appointment.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A known SCHEDULED appointment can be cancelled using its ID.] | [TEST-FR06-01] | [Service-level unit test] | [test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object/tests/test_cancellation.py] | [The service returns the original appointment and changes its status to CANCELLED.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A valid but unknown appointment ID must be rejected without changing existing appointments.] | [TEST-FR06-02] | [Negative service-level unit test] | [test_cancellation.py::test_unknown_appointment_raises_lookup_error_and_preserves_state/tests/test_cancellation.py] | [The service raises LookupError, the existing appointment remains SCHEDULED and the stored list remains unchanged.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [Blank, whitespace-only and non-text appointment IDs must be rejected without changing state.] | [TEST-FR06-03] | [Boundary and negative parametrised test] | [test_cancellation.py::test_invalid_appointment_id_raises_value_error/test/test_cancellation.py] | [Empty text, whitespace, None and 123 each raise ValueError. The existing appointment remains SCHEDULED and stored.] | [Passed — four parametrised cases] | [Student Authored] |
+| [FR-06 Cancel appointment] | [Only a SCHEDULED appointment may be cancelled; a second cancellation must be rejected.] | [TEST-FR06-04] | [Invalid-transition service-level unit test] | [test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history/tests/test_cancellation.py] | [The first cancellation succeeds, the second raises ValueError and the appointment remains CANCELLED.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A COMPLETED appointment cannot be cancelled, and a failed attempt must leave it unchanged.] | [TEST-FR06-05] | [Invalid-transition service-level unit test] | [test_cancellation.py::test_completed_appointment_cannot_be_cancelled/tests/test_cancellation.py] | [The service raises ValueError. The appointment remains COMPLETED, retrievable and stored as the same object.] | [Passed] | [Student Authored] |
+| [FR-06 Cancel appointment] | [A SCHEDULED appointment can be cancelled, and a repeated cancellation is rejected.] | [TEST-FR06-S01] | [Domain unit test] | [test_starter.py::test_domain_cancellation_and_guard/tests/test_starter.py] | [The first cancellation changes the status to CANCELLED. A second cancellation raises ValueError, and the status remains CANCELLED.] | [Passed] | [Supplied] |
 | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+
 
 ## C Test Design
 
