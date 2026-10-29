@@ -3,7 +3,7 @@
 import pytest
 from smartcare.data_store import SmartCareDataStore
 from smartcare.services import PatientService, PractitionerService, Patient, Practitioner, AppointmentService
-import datetime
+from datetime import datetime
 
 # Practitioner tests
 
@@ -163,5 +163,5 @@ def test_different_practitioner_books_appointment():
     ).register_practitioner('D2', 'Morgan Example', 'General')
     when = datetime(2026, 10, 1, 9)
     appointment_service.book_appointment('A1', 'P1', 'D1', when)
-    assert data_store.has_practitioner_conflict('A2', 'P1', 'D2', when) is False
+    assert data_store.has_practitioner_conflict('D2', when, 'P2') is False
     
