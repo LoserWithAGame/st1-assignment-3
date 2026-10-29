@@ -152,10 +152,19 @@ Run python -m pytest from project/. Retain all accumulated tests. Record the tes
 
 | Command | Working directory | Code SHA | Passed | Failed | Failure summary | Product defect / test defect / unresolved | Evidence and interpretation |
 |---|---|---|---|---|---|---|---|
-| [code used to test: python -m pytest -v] | [project/] | [2fba9705ec1baabf68b34fd0b74a200cd5bdca8b] | [32] | [0] | [No failure observed] | [Current baseline: All collected cancellation, patient/practitioner lookup and starter test cases passed.] | [baseline run using puthon 3.14.7 and pytest 8.3.5. All 32 collected cases passed. REPLACE THIS PART -> PENDING comment of 32 passed tests to the comment section when uploading. then link that comment here <- pending] |
+| [code used to test: python -m pytest -v] | [project/] | [2fba9705ec1baabf68b34fd0b74a200cd5bdca8b] | [32 passed] | [0 Failed] | [No failure observed] | [Current baseline: All collected cancellation, patient/practitioner lookup and starter test cases passed.] | [baseline run using puthon 3.14.7 and pytest 8.3.5. All 32 collected cases passed. REPLACE THIS PART -> PENDING comment of 32 passed tests to the comment section when uploading. then link that comment here <- pending] |
 
-Individual test runs and changed-order independence evidence: [commands, results, links]
-Optional tutor-led demonstration notes: [optional; leave blank if not used]
+Individual test runs and changed-order independence evidence
+
+|test|Command used|Results|link pending|
+|---|---|---|---|
+|Individual patient lookup|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient -v|1 Passed, 0 failed|link pending|
+|Individual cancellation|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|1 passed, 0 failed|link pending|
+|Patient lookup followed by cancellation|python -m pytest tests/test_services.py::test_find_patient_returns_registered_patient tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object -v|2 passed, 0 failed|link pending|
+|CAncellation followed by patient lookup|python -m pytest tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_services.py::test_find_patient_returns_registered_patient -v|2 passed, 0 failed|link pending|
+
+
+Optional tutor-led demonstration notes: [optional; leave blank if not used] # not used as of 29/10/2026
 A meaningful test should detect a relevant incorrect result. Students do not have to perform the demonstration or submit failure/restoration evidence for assessment. The tutor restores the example and reruns its tests. This is not a Stage 8 fault activity.
 Requirement → test → failure/observation → diagnosis → change → verification: [concise links where applicable]
 
