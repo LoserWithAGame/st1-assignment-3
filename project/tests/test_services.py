@@ -45,7 +45,7 @@ def test_practitioner_id_is_case_sensitive():
         service.find_practitioner("d1")
 
 
-@pytest.mark.parametrize("invalid_id", ["", "   "])
+@pytest.mark.parametrize("invalid_id", ["", "   ", None, 123, True, [], {}])
 def test_blank_practitioner_id_raises_value_error(invalid_id):
     _, service, _ = create_practitioner()
 
