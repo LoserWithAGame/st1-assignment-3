@@ -344,6 +344,22 @@ Repeat per member. Include only categories that describe actual work; write not 
 - Debugging or integration: [Not Applicable]
 - Documentation or team support: [I recorded Review Feedback, and CoPilot Decisions in this shared record. I reviewed every Pull Request made by the group, and merged them into the Repository after thorough evaluation.]
 
+### Member: @warunabandara11-wq
+
+**Implementation:** I implemented the `PractitionerService.find_practitioner()` function in `project/smartcare/services.py`. It retrieves an existing practitioner using their ID and handles invalid or unknown IDs.
+
+**Testing:** I added seven practitioner lookup tests covering successful lookup, whitespace, case sensitivity, invalid IDs, unknown IDs and unchanged records after failed lookups. I also expanded the invalid-ID tests to include non-string inputs following the Copilot review feedback (PR #19).
+
+**Review:** I reviewed the feedback on practitioner lookup and submitted a correction through PR #19. Teammate review of this correction is pending.
+
+**Issue refinement:** I created Issue #3 with the practitioner lookup requirements, acceptance criteria and implementation tasks.
+
+**Design and responsibility discussion:** I used the existing shared data store rather than creating another storage method. This keeps the practitioner lookup consistent with the SmartCare application.
+
+**Debugging or integration:** I fixed an indentation issue in the practitioner lookup function, updated the documentation and checked the implementation against the Stage 6 requirements.
+
+**Documentation or team support:** I documented my contribution through Issue #3, PR #4 and PR #19.  CoPilot  assisted with implementing, debugging and developing tests for my practitioner lookup task.
+
 ## K Exit question
 
 Why is a high commit count not necessarily evidence of strong contribution?
