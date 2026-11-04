@@ -14,7 +14,7 @@ For each requirement, propose one positive test, one negative test and the key a
 
 | Requirement | Positive test | Negative test | Key assertion |
 |---|---|---|---|
-| FR-01 Register patient | [response] | [response] | [response] |
+| FR-01 Register patient | Register a new patient using a unique ID (`P1`) and name (`Alex Example`). | Attempt to register another patient using the same ID (`P1`). | The first registration returns the stored patient object. A duplicate ID raises `ValueError`, and the original record remains unchanged. |
 | FR-05 Prevent practitioner conflict | [response] | [response] | [response] |
 | FR-06 Cancel appointment | [Cancel an exisiting SCHEDULED appointment using its ID] | [Attempt to cancel a COMPLETED or already CANCELLED appointment.] | [The successful call returns the original object with `status is AppointmentStatus.CANCELLED`, the invalid transition raises `ValueError` and leaves the status unchanged.] |
 | FR-07 Retain cancelled history | [Cancel an appointment and retrieve it again from the shared store using the same ID] | [Attempt to repeat a cancellation of the same appointment with the same ID] | [`store.find_appointment('A1') is appointment`, and the retained object remains `CANCELLED` even after the rejected repeated cancellation.] |
