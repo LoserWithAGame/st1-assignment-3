@@ -149,7 +149,7 @@ def test_practitioner_conflict_prevents_appointments():
     data_store, _, _, appointment_service = foundation()
     PractitionerService(
         data_store,
-    ).register_practitioner('D2', 'Morgan Example', 'General')
+    ).register_practitioner('D2', 'John Doe', 'General')
     when = datetime(2026, 10, 1, 9)
     appointment_service.book_appointment('A1', 'P1', 'D1', when)
     with pytest.raises(ValueError):
@@ -160,7 +160,7 @@ def test_different_practitioner_books_appointment():
     data_store, _, _, appointment_service = foundation()
     PractitionerService(
         data_store,
-    ).register_practitioner('D2', 'Morgan Example', 'General')
+    ).register_practitioner('D2', 'Jane Doe', 'Dentist')
     when = datetime(2026, 10, 1, 9)
     appointment_service.book_appointment('A1', 'P1', 'D1', when)
     assert data_store.has_practitioner_conflict('D2', when, 'P2') is False
