@@ -4,7 +4,6 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
 
 - Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
 - Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
-- Members, GitHub usernames and cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
 - Repository URL: [https://github.com/LoserWithAGame/st1-assignment-3]
 - Starting SHA: [79cad13]
 
@@ -163,15 +162,15 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Requirement, responsibilities, test assertions and unrelated-scope checks: [The service uses the existing store instead of creating replacement patients or adding another storage system. The tests check the returned object, accepted whitespace, case sensitivity, errors and unchanged records after failure. I kept the practitioner tests.]
 - Key feedback: [Fix the double space, add the final newline and complete the required Copilot comparison.]
 - Author response/change and verification: [I fixed the double space missing final newline, completed the Copilot comparison, and brought the latest main into my patient branch. I resolved the shared evidence-file conflict while keeping both patient and cancellation entries. I ran python -m pytest from project/: 32 passed. The tested combined code is recorded in commit 713c17881bca272461c808cf7d3b2408e366078b]
-- Reviewer recheck and approval: [masterRoshiiii approved the original changes. A final recheck of the formatting and evidence updates is pending.]
-- Merge outcome and SHA: [pending]
+- Reviewer recheck and approval: [masterRoshiiii approved the original changes. A seperate final recheck was not recorded.]
+- Merge outcome and SHA: [Merged into main as commit. 8805a41]
 - Significant Copilot assistance: [Github Copilot reviewed commit e68f4ea and found no blocking bug. Its suggestions and my decisions are recorded in H and I.]
-- Linked issue closure: [pending]
-- Each member updated main: [member and confirmation] <- [pending]
-- Integrated verification after merge: [command, directory, result and code SHA] <- pending merge
+- Linked issue closure: [issue#5] [https://github.com/LoserWithAGame/st1-assignment-3/issues/5]
+- Each member updated main: [merges reviewed and done by Loserwithagame and quiet-learner]
+- Integrated verification after merge: [Integration verification after merge: The group recorded 32 passed on 'main' at '3e992e1128657d708db10ad36e1cd1654d45936e'. I have not confirmed whether that checkpoint includes the merge of PR]
 
 
-- PR link and title: [PR #8 — Feature/stage06 appointment cancellation](https://github.com/LoserWithAGame/st1-assignment-3/pull/8)]
+- PR link and title: [PR #8 — Feature/stage06 appointment cancellation][(https://github.com/LoserWithAGame/st1-assignment-3/pull/8)]
 - Linked issue and requirement: [[Issue #7 — FR-06 Appointment Cancellation and FR-07 Retained History](https://github.com/LoserWithAGame/st1-assignment-3/issues/7)]
 - Feature branch: [feature/stage06-appointment-cancellation]
 - Changed behaviour: [AppointmentService.cancel_appointment now finds the stored appointment, calls its guarded domain cancel method, returns the same Appointment object and retains it in the shared store. Tests cover successful cancellation, invalid and unknown IDs, repeated cancellation, completed appointments and unchanged state after rejection.]
@@ -293,7 +292,7 @@ Context: AppointmentService.cancel_appointment currently raises NotImplementedEr
 - What did Copilot identify that the human reviewer initially missed: [Copilot raised direct-store test coverage and inalid-ID clarification as optional suggestions. These were not confirmed bugs.]
 - Unsupported or incorrect Copilot suggestion: [Copilot quesitoned which ID types were allowed, but the stage 6 instructions already specify string IDs. Existing validation rejects blank and non-string inputs.]
 - Human judgement accepted, modified or rejected, and why: [I accepted the overall review after checking the code and test results. I left sperate store tests as a possible later improvment because my service tests already use the real store. I rejected chjanging ID validation because the existing rules already cover it.]
-- Which evidence justified merge approval: [MasterRoshiiii approved the original changes, and my full suite reported 24 passed. FInal merge is still pending verification of the formatting corrections and a teammate recheck of the updated branch.]
+- Which evidence justified merge approval: [MasterRoshiiii approved the original changes [https://github.com/LoserWithAGame/st1-assignment-3/pull/6#pullrequestreview-5650816620], and my full suite reported 24 passed. After I addressed the formatting feedback and brought main into my feature branch, the combined suite passed 32 tests. A seperate final review recheck is not recorded here.]
 
 - Human reviewer noticed before consulting Copilot: [Before consulting AI I read over the program and did not notice anything wrong with it. The logic of the program was as intended, and the tests were clear.]
 - Copilot noticed: [CoPilot noticed that there was not a test for an invalid condition that was not null.]
@@ -301,8 +300,8 @@ Context: AppointmentService.cancel_appointment currently raises NotImplementedEr
 - What did the human reviewer notice that Copilot did not: [CoPilot suggested adding a test for an invalid ID that was not null. This confused me, as this test case was already implemented, and thus CoPilot's suggestion was rejected.]
 - What did Copilot identify that the human reviewer initially missed: [CoPilot suggested adding a test for an invalid ID and invalid inputs that were of a datatype other than String. As the input could be given in Integer form, or None Type, there is a need to ensure the system can handle such errors.]
 - Unsupported or incorrect Copilot suggestion: [CoPilot suggested changing the project's Store-Driven Design, as it could cause maintainance issues in the future.]
-- Human judgement accepted, modified or rejected, and why: [response]
-- Which evidence justified merge approval: [response]
+- Human judgement accepted, modified or rejected, and why: [Human judjement was accepted as it covered all tests and had no faults.]
+- Which evidence justified merge approval: [The original tests supported the lookup cases they covered. Multiple poeple reviewed before the merge to make sure their was no conflicts or hidden faults.]
 
 - Human reviewer noticed before consulting Copilot: [Before consulting CoPilot on the FR-06 and FR-07 programs I noticed no issues, the program was functional, the test cases were taken from the requirements list.]
 - Copilot noticed: [CoPilot's only suggestions were to provide evidence of the program in the test suite, and of the tests themselves.]
@@ -323,7 +322,7 @@ Repeat per member. Include only categories that describe actual work; write not 
 - Review: [I checked my own diff and considered the teammate and Copilot feedback. I have not recorded ani independent review of another member's pull request here. ]
 - Issue refinement: [I created issue #5 with acceptance criteria and compleetion conditions after implementing the change.]
 - Design and responsibility discussion: [I worked through why the service asks the store for the patient and returns the original object rather than making a replacement.]
-- Debugging or integration: [I corrected assertions that were incorrectly inside pytest.raises and reran the tests successfully. Integration into main is still pending.]
+- Debugging or integration: [I moved the assertions outside 'pytest.raises' so they would run after the expected error. I also resolved the shared evidence-file conflict when bringing 'main' into my paitent bnranch, keeping both the patient and cancellation entries. THe combined feature branch passed 32 tests.]
 - Documentation or team support: [I recorded the patient issue, Pull request, test results, review feedback and Copilot decisions in this shared record.]
 
 - Member: [@MastrRoshiiii]
@@ -350,7 +349,7 @@ Repeat per member. Include only categories that describe actual work; write not 
 
 **Testing:** I added seven practitioner lookup tests covering successful lookup, whitespace, case sensitivity, invalid IDs, unknown IDs and unchanged records after failed lookups. I also expanded the invalid-ID tests to include non-string inputs following the Copilot review feedback (PR #19).
 
-**Review:** I reviewed the feedback on practitioner lookup and submitted a correction through PR #19. Teammate review of this correction is pending.
+**Review:** I responded to feedback on practitioner lookup. i submitted PR #19 as a later follow-up to add non-string ID tests. That follow-up was outside the recorded Stage 6 checkpoint.
 
 **Issue refinement:** I created Issue #3 with the practitioner lookup requirements, acceptance criteria and implementation tasks.
 
@@ -378,7 +377,7 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 3. What makes a commit a good engineering commit?
 
-[response]
+[A good engineering commit will record the one focused change with the comment accociated with that change. This makes it easier to review, test and trace potential issues.]
 
 4. What is a pull request?
 
@@ -410,25 +409,25 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 ## M Completion and handover
 
-- Starting SHA: [response]
-- Final Stage 6 code SHA: [response]
-- Test command: [response]
-- Working directory: [response]
-- Observed result: [response]
-- PR and another-member reviewer: [links]
-- Unresolved issue or none: [response]
+- Starting SHA: [79cad13]
+- Final Stage 6 code SHA: [3e992e1128657d708db10ad36e1cd1654d45936e]
+- Test command: [python -m pytest]
+- Working directory: [project/]
+- Observed result: [32 passed in 0.11s]
+- PR and another-member reviewer: [https://github.com/LoserWithAGame/st1-assignment-3/pull/6 and reviewed by MastrRoshiiii]
+- Unresolved issue or none: [None]
 - Stage 7 handover status: [ready for tutor checkpoint / unresolved work]
 - Final submitted SHA if later than tested SHA: [response and evidence-only difference]
 
-- [ ] Three Stage 6 service targets completed and checked.
-- [ ] Original supplied tests retained and passing.
-- [ ] At least two focused issues link requirements and acceptance criteria.
-- [ ] Feature work reviewed by another member using the actual diff.
-- [ ] Human-first review and required Copilot comparison recorded.
-- [ ] Feedback resolved and approval recorded before merge.
-- [ ] Everyone pulled main and integrated checks passed.
-- [ ] Required activities, quiz responses and contribution notes completed.
-- [ ] Only synthetic data included; confidential peer material kept out.
-- [ ] Tutor can trace a requirement through issue, code, tests, PR and checkpoint.
+- [Complete] Three Stage 6 service targets completed and checked.
+- [Complete] Original supplied tests retained and passing.
+- [Complete] At least two focused issues link requirements and acceptance criteria.
+- [Complete] Feature work reviewed by another member using the actual diff.
+- [Complete] Human-first review and required Copilot comparison recorded.
+- [Complete] Feedback resolved and approval recorded before merge.
+- [Complete] Everyone pulled main and integrated checks passed.
+- [Complete] Required activities, quiz responses and contribution notes completed.
+- [Complete] Only synthetic data included; confidential peer material kept out.
+- [Complete] Tutor can trace a requirement through issue, code, tests, PR and checkpoint.
 
 Do not write a file's own future commit SHA into that file. Record the tested code SHA first, then commit the evidence; explain the difference when submitting.
