@@ -130,12 +130,12 @@ Was the implementation checked against the existing domain and service boundarie
 
 | Practice                            | Team agreement |
 | ----------------------------------- | -------------- |
-| Branch naming                       | [response]     |
-| Commit message convention           | [response]     |
-| PR size                             | [response]     |
-| Another-member review requirement   | [response]     |
-| Merge rule                          | [response]     |
-| Significant Copilot disclosure rule | [response]     |
+| Branch naming                       | [Section/Feature]     |
+| Commit message convention           | [Short Description]     |
+| PR size                             | [As needed]     |
+| Another-member review requirement   | [Always]     |
+| Merge rule                          | [After review and Conflicts resolved]     |
+| Significant Copilot disclosure rule | [Work Feedback]     |
 
 ## F Issue and backlog index
 
