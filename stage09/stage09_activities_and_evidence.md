@@ -12,14 +12,14 @@ Stage 8 integrated SHA, command, working directory and actual result: <!-- compl
 
 | Information | Required session/domain or transient state? | Requirement or reason |
 |---|---|---|
-| Patient identity | | |
-| Appointment history | | |
-| Temporary menu choice | | |
-| Practitioner specialty | | |
-| Debug print output | | |
-| Appointment status | | |
+| Patient identity | Session/domain | Registration and later lookups require the use of storeed patient ID and name. A booking then links to to that patient. |
+| Appointment history | sessions/domain | Cancelled appointments remain finable and listable during the session. |
+| Temporary menu choice | Transient | The choice needs to tell the console what actions to run on this turn |
+| Practitioner specialty | Session/domain | The specialty part is apart of the pracittioners details. |
+| Debug print output | transient | Only helpful during debugging, no other service requires this as stored data. |
+| Appointment status | session/domain | needs to check if that time slot is occupied or not so it needs that appointment data. |
 
-What is intentionally lost on exit? <!-- response -->
+What is intentionally lost on exit? [Because its all stored in memory all data will be lost after the session ends. This includes patient, pracititoner, and appointments. Including the hisotry of cancellations will reset after finishing the session.]
 
 ### A2 Interface and domain data plan
 
