@@ -4,8 +4,8 @@ UG and PG | One evolving group project | Complete this blank record using the St
 
 All Assignment 3 stage materials are provided from the beginning. Complete this stage only after the previous applicable stage has been integrated, verified and recorded. Use this supplied record in stage08/ in your EXISTING repository. Preserve project/, all earlier tests, records and responses. Do not download another starter or copy staff solutions. The Stage 8 preparation utility is supplied or run by teaching staff when Stage 8 begins. Follow your tutor’s controlled workflow and the handout. If temporarily supplied, keep it outside the repository in a sibling Stage_8_Assets/ folder; exclude it from Git and the final submission.
 
-Group/tutorial: [complete]
-Members and UG/PG cohorts: [complete]
+Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
+Members and UG/PG cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
 Record owner / contribution links for each member: [complete]
 
 Use concise results and accessible artefact links rather than copying entire logs. Keep human-first entries before consulting GitHub Copilot. Link shared evidence once; do not repeat it across sections. No entries below are specimen answers or claimed results.
@@ -21,33 +21,101 @@ For each, choose symptom, evidence or hypothesis/opinion, and explain your reaso
 - Traceback points to smartcare/services.py line 42 in the example.
 The example line number is illustrative; inspect the actual line in your run. The removal hypothesis must be tested against the current project, which has no public delete operation.
 
-Response and reason: [complete]
+Response and reason: 
+1. Symptom: This describes the problem someone notices, but it does not explain why it happens. The appointment might still be stored but hidden from searches.
+2. Hypothesis: This suggests a possible cause, but we need to inspect the code to check it. The instructions say the current project has no public delete operation, so we should not assume the appointment was deleted.
+3. Evidence: The failing test shows that store.find_appointment('A1') returns None after cancellation. The earlier checks show that cancellation returned the original appointment and its status became CANCELLED.
+4. Opinion: This is a broad judgement without specific evidence explaining why.
+5. Evidence: A traceback identifies where an error was reported. Line 42 is only an example in the question. In our cancellation test, the traceback points to services.py line 142, which raises ‘Appointment not found’. This identifies where the error appeared, but does not establish its cause.
 
 ### A.2 Build a debugging record
 Choose the cancelled-history scenario or a same-practitioner/time booking. Before changing code, record expected behaviour, observed behaviour, minimal reproduction, a hypothesis and evidence to inspect. Use a requirement to justify the expectation. Keep the initial hypothesis even if later evidence disproves it.
 
-Response and reason: [complete]
+Response and reason:
+- Cancelled-history
+
+- Expected Behaviour: Under FR-07 a cancelled appointment must remain stored and available to search. Looking up an appointment, example: (A1) after cancellation should return the original appointment with its status set to CANCELLED.
+
+- Observed behaviour: Cancellation returns the original appointment and chnages its status to CANCELLED. But when attempting to look up (A1) through the data_store.py returns None.
+- Minimal Production: 
+1. Register a patient and a practitioner.
+2. Book appointment A1.
+3. Cancel appointment A1.
+4. Look up A1 using store.find_appointment('A1').
+5. Observe that the lookup returns None instead of the cancelled appointment.
 
 ### A.3 Test defect or product defect
 A test expects cancelled appointments to be deleted, but FR-07 says history must be retained. What should be changed? Explain why. Also decide whether a test expecting different practitioners at the same time to conflict reflects AC-04.2. Do not assume every failing test is correct.
 
-Response and reason: [complete]
+Response and reason:
+- The test expecting cancelled appointments to be deleted should be corrected. FR-07 requires cancelled history to remain stored. The test should check that the original appointment can still be found and has the status CANCELLED.
+- The test expecting different practitioners to conflict simply because their appointments share the same time should also be corrected. Under AC-04.2, different practitioners can have appointments at the same time. The conflict rule should prevent the same practitioner from being booked twice at that time.
+- A failing test does not automatically mean the application is wrong. The test’s expectation must agree with the requirement.
 
 ### A.4 Refactoring smell hunt
 Consider a hypothetical 70-line AppointmentService method containing duplicate status strings, direct collection manipulation, printing, validation and four nested conditionals. Identify the smells and propose small refactorings that preserve required behaviour. The direct collection work replaces the old storage-specific scenario; use the existing SmartCareDataStore boundary. Do not implement an extra architecture.
 Classify these proposed changes as refactoring, repair or feature: rename appt to appointment; extract a repeated conflict helper; add rescheduling; restore retained cancellation lookup; replace a magic status string with the existing enum. Explain the behaviour that must remain unchanged.
 
-Response and reason: [complete]
+Response and reason:
+- The method contains several code smells, for example:
+1. It handles too many responsibilities in one place, making it harder to understand and test.
+2. Repeated status strings increase the chance of spelling mistakes.
+3. Directly changing stored collections bypasses the SmartCareDataStore methods.
+4. Printing mixes screen output with appointment processing.
+5. Four levels of nested conditions make the decision process difficult to follow.
+
+
+Small improvements would include using the existing AppointmentStatus enum, extracting repeated checks into clearly named helper methods, using the existing data-store methods, and keeping printing in the console layer. Simple checks that reject invalid requests early could also reduce nesting.
+
+- Classification of the proposed changes:
+1. Rename “appt” to “appointment”: Refactoring. It improves readability without changing what the code does.
+2. Extract a repeated conflict helper: Refactoring. It removes duplication while keeping the same booking rules.
+3. Add rescheduling: Feature. It introduces a new capability.
+4. Restore retained cancellation lookup: Repair. It corrects behaviour that breaks the requirement to retain cancelled history.
+5. Replace a magic status string with the existing enum: Refactoring, provided the replacement preserves the existing behaviour.
+
 
 ### A.5 Traceback and hypothesis ranking
 Using one actual failure, identify its exception/assertion, expected and observed values, test line, application call path and supporting requirement. List three plausible causes and rank them by fit with the available evidence. For each cause, name a check that could distinguish it from the others. Explain why a traceback alone does not establish the cause.
 
-Response and reason: [complete]
+Response and reason:
+- Test: test_cancel_appointment_returns_retained_cancelled_object()
+
+- Exception: AssertionError: The test expected to return the stored appointment, but returns None.
+
+- Exepcted Value: The original appointment (A1), with its status set to CANCELLED.
+
+- Observed Value: store.find_appointment (A1) returend None.
+
+- Test Location: test_cancellation.py, line 41, in test_cancel_appointment_returns_retained_cancelled_object.
+
+- Application Call Path: The test books A1 through AppointmentService, cancels it through AppointmentService, and then calls SmartCareDataStore.find_appointment('A1'). The final lookup does not return the appointment, so the assertion fails.
+
+
+Supoorting Requirement:
+
+FR-07 requires cancelled appointment history to remain stored and available to find.
+
+Three possible causes ranked:
+1. The lookup excludes cancelled appointments.
+- This best fits the evidence because cancellation returns the correct object and changes its status successfully, but the later lookup fails.
+- Check: Inspect find_appointment for a condition that ignores cancelled appointments. Check whether A1 remains in the stored collection.
+2. Cancellation removes the appointment from storage.
+- This could explain the missing result, although we have not seen evidence of removal and the project has no public delete operation.
+- Check: Follow the cancellation code and compare the stored appointments before and after cancellation.
+3. The appointment is stored under a different ID.
+- This could cause a lookup for A1 to fail, but the screenshot gives no evidence that its ID changed.
+- Check: Compare the appointment’s ID and its storage key before and after cancellation.
+
+
+
+Why the traceback is not enough:
+- The traceback identifies the failed assertion and the unexpected result. Several could potentially be different problems that could produce that result, so I must inspect the code and stored data before confirming the cause.
 
 ### A.6 Exit question
 Why is changing code immediately after seeing a failure often a poor debugging strategy?
 
-Response and reason: [complete]
+Response and reason: Chnaging the code immediately might be fixing a symptom rather then a cause. Its also possible for the test itself to be wrong. Check the expected behaviour against the requirement, and gather evidence to test possible explanations. This would help with making small fixes without accidently breaking working behaviour.
 
 
 Classification responses (1–5, each with reason): [complete]
