@@ -263,15 +263,27 @@ The Stage 8 defects were reproduced and repaired in a separate local copy of the
 
 **Verification limitation:** These results were produced locally. The repaired GitHub branch must be tested again and its final commit SHA recorded before integration is considered complete.
 
+
 ## H. Refactoring decision and before/after verification
 
-Smell and exact location: [complete]
-Small proposed structural change / why justified: [complete before editing]
-External behaviour to preserve / relevant tests: [complete]
-Before result: see G, full passing suite.
-Actual change / diff / separate refactor SHA: [complete]
-Focused and full after-refactor commands / working directory / results / evidence: [complete]
-Result — accepted, revised or rejected / reason / behaviour-preservation conclusion: [complete]
+**Smell and exact location:** In `project/smartcare/data_store.py`, the `has_practitioner_conflict()` function used the string comparison `appointment.status.value == "scheduled"`. This duplicates the value already defined by `AppointmentStatus.SCHEDULED`.
+
+**Small structural change and justification:** Replaced the string comparison with `appointment.status is AppointmentStatus.SCHEDULED`. This improves readability and uses the existing enum without changing the booking requirements.
+
+**External behaviour to preserve:** A practitioner cannot have two scheduled appointments at the same time. Different practitioners can be booked at the same time. Cancelled appointments must not cause booking conflicts.
+
+**Before-refactor verification:** After repairing both Stage 8 defects and adding three regression tests, the local full test suite returned 37 passed. Evidence: [Before-refactor test results](verification/06_extended_full_suite_before_refactor.txt).
+
+**Actual refactoring:** Changed the status comparison in `has_practitioner_conflict()` to use the existing enum. The change was made separately from the original bug repairs on branch `fix/stage08-waruna-repairs`. The GitHub refactoring commit SHA should be recorded after confirming the commit.
+
+**After-refactor verification:** Local testing returned 14 passed for the focused tests and 37 passed for the full suite. The application demonstration also completed successfully.
+
+Evidence:
+- [Focused test results](verification/07_after_refactor_focused.txt)
+- [Full test results](verification/08_after_refactor_full_suite.txt)
+- [Application demonstration](verification/09_main_demo.txt)
+
+**Decision and conclusion:** Accepted in local verification because the refactoring preserved the expected application behaviour and all tests passed. Final acceptance requires teammate review and another test run on the integrated GitHub version.
 
 ## I. Git, human review and integration
 
