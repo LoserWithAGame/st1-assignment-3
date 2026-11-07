@@ -242,7 +242,10 @@ Record actual work in test design, implementation, review, traceability, diagnos
 
 | Member | Actual contribution | Evidence link |
 |---|---|---|
-| [complete] | [complete] | [complete] |
+| [LoserWithAGame] | [Completed FR-05 Tests, and Sections: Tutorial Exit Question, A:1:FR-05, B:FR-05, C, D, F, G, H, I, K, M] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/26, PR-26. https://github.com/LoserWithAGame/st1-assignment-3/pull/24, PR-24. https://github.com/LoserWithAGame/st1-assignment-3/pull/23, Pr-23. https://github.com/LoserWithAGame/st1-assignment-3/pull/18, PR-18] |
+| [MastrRoshiiii] | [Completed FR-06 and FR-07 Tests, and Sections: A:1:FR-06 and FR-07, A:2, A:3, A:4, B:FR-06 and FR-07, J, N] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/16, PR-16] |
+| [quiet-learner] | [Completed Review of LoserWithAGame's Pull Requests, and MastrRoshiiii's Pull Requests. Sections: A:3, A:4, B:FR-06 and FR-07, J, N, L] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/15, PR-15] |
+| [warunabandara11-wq] | [Completed FR-01, Sections: A:1:FR-01] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/21, PR-21] |
 
 ## N Formative Questions
 
@@ -278,10 +281,10 @@ Record actual work in test design, implementation, review, traceability, diagnos
 
 ## O Stage Completion
 
-Tested Stage 7 main SHA: [complete]
-Full-suite result: [complete]
-Unresolved defects and effect on baseline: [complete or none]
+Tested Stage 7 main SHA: [770ca814cf20519f2717c07e2760aec5b383efef]
+Full-suite result: [Passed]
+Unresolved defects and effect on baseline: [None]
 Clean working tree and integration evidence: [complete]
-Stage 8 handover status: [complete; no Stage 8 work assigned]
-All tutorial/formative responses and traceability/Copilot decisions complete: [confirm]
+Stage 8 handover status: [complete; No errors with Stage 07]
+All tutorial/formative responses and traceability/Copilot decisions complete: [confirmed]
 
