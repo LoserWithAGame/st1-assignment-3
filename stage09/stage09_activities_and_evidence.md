@@ -38,10 +38,10 @@ Relate patient ID/name, practitioner ID/name/specialty, and appointment ID/actua
 
 | Conceptual case | Violation | Correct boundary and reason |
 |---|---|---|
-| Appointment.cancel reads input | | |
-| Service prints/reads the menu | | |
-| Query sorts its source in place | | |
-| Store prints Appointment saved | | |
+| Appointment.cancel reads input | The appointment object is asking the unser for information, whitch is the consol's job to do | The console asks for the appointment ID, and the service finds that appointment. Then cancel() checks whether cancellation is allowed and updates the status. This also lets test call cancel() without needing any keyboard. |
+| Service prints/reads the menu | The serice is mixing its work with displaying the menu and reading choices. | The console reads the user's choice and displays the result. The service carries out the action and returns an object or raises an error. This makes the serice easier to use and test on its own. |
+| Query sorts its source in place | Sorting in place changes the order of the iriginal list given to the query. This could effect other code using that list. | The query should return a new sorted list using sorted(). The caller keeps its original list in the same order, and the appointment object stays the unchanged. |
+| Store prints Appointment saved | The store is displaying a message as well as keeping the record. | The store keeps the appointment so it can be retreived later. The console displays the confirmation after the service finishes successfully. This keeps the user messages in the same part of the program. |
 
 ### A4 Sorting comparison
 
