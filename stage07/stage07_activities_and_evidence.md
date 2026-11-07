@@ -66,7 +66,7 @@ GitHub Copilot generates five tests, all of which pass. Two only assert that obj
 ### Tutorial exit question
 
 Why can 100% code coverage coexist with poor software verification?
-[response]
+[Code Coverage is not a measure of a functional program, as the code coverage test model outlines specific lines of code, functions, or classes to test. Testing each individually means that collaboratively each could be unfunctional. The program needs to be tested in this method as well as a whole to see the best results.]
 
 ## B Requirement to Test Traceability Matrix
 
@@ -82,13 +82,9 @@ Assign TEST IDs before implementation or generation. Use canonical AC IDs with t
 | [FR-06 Cancel appointment] | [Only a SCHEDULED appointment may be cancelled; a second cancellation must be rejected.] | [TEST-FR06-04] | [Invalid-transition service-level unit test] | [test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history/tests/test_cancellation.py] | [The first cancellation succeeds, the second raises ValueError and the appointment remains CANCELLED.] | [Passed] | [Student Authored] |
 | [FR-06 Cancel appointment] | [A COMPLETED appointment cannot be cancelled, and a failed attempt must leave it unchanged.] | [TEST-FR06-05] | [Invalid-transition service-level unit test] | [test_cancellation.py::test_completed_appointment_cannot_be_cancelled/tests/test_cancellation.py] | [The service raises ValueError. The appointment remains COMPLETED, retrievable and stored as the same object.] | [Passed] | [Student Authored] |
 | [FR-06 Cancel appointment] | [A SCHEDULED appointment can be cancelled, and a repeated cancellation is rejected.] | [TEST-FR06-S01] | [Domain unit test] | [test_starter.py::test_domain_cancellation_and_guard/tests/test_starter.py] | [The first cancellation changes the status to CANCELLED. A second cancellation raises ValueError, and the status remains CANCELLED.] | [Passed] | [Supplied] |
-| [FR-05 Prevent practitioner conflict] | [Appointments with duplicate times and Practitioners are not booked.] | [TEST-FR05-01] | [Service Level Unit Test] | [test_services.py::test_practitioner_conflict_prevents_appointments/tests/test_services.py] | [Passed] | [Mixed] |
-| [FR-05 Prevent practitioner conflict] | [Appointments with the same Practitioner and Different Times are Booked.] | [TEST-FR05-02] | [Service Level Unit Test] | [test_services.py::test_different_practitioner_books_appointment/tests/test_services.py] | [Passed] | [complete] |
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
-
+| [FR-05 Prevent practitioner conflict] | [Appointments with duplicate times and Practitioners are not booked.] | [TEST-FR05-01] | [Service Level Unit Test] | [test_services.py::test_practitioner_conflict_prevents_appointments/tests/test_services.py] | [The service raises a ValueError if there is a duplicate appointment] | [Passed] | [Mixed] |
+| [FR-05 Prevent practitioner conflict] | [Appointments with the different Practitioner and same Times are Booked.] | [TEST-FR05-02] | [Service Level Unit Test] | [test_services.py::test_different_practitioner_books_appointment/tests/test_services.py] | [The service is asserted if there is a no conflict.] | [Passed] | [Student Authored] |
+| [FR-05 Prevent practitioner conflict] | [Appointments with the same Practitioner and Different Times are Booked.] | [TEST-FR05-03] | [Service Level Unit Test] | [test_services.py::test_different_time_books_appointment/tests/test_services.py] | [The service is asserted if there is a no conflict.] | [Passed] | [Student Authored] |
 
 ## C Test Design
 
@@ -96,7 +92,17 @@ Use descriptive test names such as test_cancel_changes_status() or test_blank_pa
 
 | Test ID | Requirement | Acceptance criterion | Positive / Negative / Boundary | Test intention | Observable result expected | Added evidence beyond supplied tests |
 |---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| [TEST-FR07-01] | [FR-07 Retain cancelled history] | [Positive] | [Cancelling an appointment must not delete or replace it.] | [The cancelled appointment remains retrievable from the store as the same object.] | [The cancelled appointment remains retrievable from the store as the same object.] | [Not Applicable] |
+| [TEST-FR07-02] | [FR-07 Retain cancelled history] | [A rejected repeated cancellation must not remove or replace the cancelled appointment.] | [Positive] | [After the rejected second cancellation, the same CANCELLED object remains retrievable and remains the only stored appointment.] | [After the rejected second cancellation, the same CANCELLED object remains retrievable and remains the only stored appointment.] | [Not Applicable] |
+| [TEST-FR06-01] | [FR-06 Cancel appointment] | [A known SCHEDULED appointment can be cancelled using its ID.] | [Positive] | [The service returns the original appointment and changes its status to CANCELLED.] | [The service returns the original appointment and changes its status to CANCELLED.] | [Not Applicable] |
+| [TEST-FR06-02] | [FR-06 Cancel appointment] | [A valid but unknown appointment ID must be rejected without changing existing appointments.] | [Positive] | [The service raises LookupError, the existing appointment remains SCHEDULED and the stored list remains unchanged.] | [The service raises LookupError, the existing appointment remains SCHEDULED and the stored list remains unchanged.] | [Not Applicable] |
+| [TEST-FR06-03] | [FR-06 Cancel appointment] | [Blank, whitespace-only and non-text appointment IDs must be rejected without changing state.] | [Boundary] | [Empty text, whitespace, None and 123 each raise ValueError. The existing appointment remains SCHEDULED and stored.] | [Empty text, whitespace, None and 123 each raise ValueError. The existing appointment remains SCHEDULED and stored.] | [Not Applicable] |
+| [TEST-FR06-04] | [FR-06 Cancel appointment] | [Only a SCHEDULED appointment may be cancelled; a second cancellation must be rejected.] | [Positive] | [The first cancellation succeeds, the second raises ValueError and the appointment remains CANCELLED.] | [The first cancellation succeeds, the second raises ValueError and the appointment remains CANCELLED.] | [Not Applicable] |
+| [TEST-FR06-05] | [FR-06 Cancel appointment] | [A COMPLETED appointment cannot be cancelled, and a failed attempt must leave it unchanged.] | [Positive] | [The service raises ValueError. The appointment remains COMPLETED, retrievable and stored as the same object.] | [The service raises ValueError. The appointment remains COMPLETED, retrievable and stored as the same object.] | [Not Applicable] |
+| [TEST-FR06-S01] | [FR-06 Cancel appointment] | [A SCHEDULED appointment can be cancelled, and a repeated cancellation is rejected.] | [Positive] | [The first cancellation changes the status to CANCELLED. A second cancellation raises ValueError, and the status remains CANCELLED.] | [The first cancellation changes the status to CANCELLED. A second cancellation raises ValueError, and the status remains CANCELLED.] | [Not Applicable] |
+| [TEST-FR05-01] | [FR-05 Prevent practitioner conflict] | [Appointments with duplicate times and Practitioners are not booked.] | [Positive] | [The service raises a ValueError if there is a duplicate appointment.] | [The service raises a ValueError if there is a duplicate appointment.] | [Not Applicable] |
+| [TEST-FR05-02] | [FR-05 Prevent practitioner conflict] | [Appointments with different Practitioner and same Times are Booked.] | [Positive] | [The service is asserted if there is a no conflict.] | [The service is asserted if there is a no conflict.] | [Not Applicable] |
+| [TEST-FR05-03] | [FR-05 Prevent practitioner conflict] | [Appointments with the same Practitioner and Different Times are Booked.] | [Positive] | [The service is asserted if there is a no conflict.] | [The service is asserted if there is a no conflict.] | [Not Applicable] |
 
 ## D Arrange Act Assert Record
 
@@ -104,7 +110,7 @@ Arrange test data; act on one meaningful behaviour; assert the required observab
 
 | Test ID | Arrange | Act | Assert | Why meaningful / why assertion proves criterion |
 |---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] |
+| [TEST-FR05-01] | [('A1', 'P1', 'D1', when)] | [Practitioner Conflict Prevents Appointments] | ["with pytest.raises(ValueError): appointment_service.book_appointment('A2', 'P1', 'D1', when)"] | [This asserts that when the Practitioner has a conflicting appointment it will raise a ValueError.] |
 
 ## E Domain Test Evidence
 
@@ -112,7 +118,7 @@ Cover Patient/Practitioner construction and validation; Appointment construction
 
 | Test ID | Behaviour | Test file/function | Result |
 |---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] |
+| [TEST-FR05-03] | [Test that appointments with a different time but same practitioner cause no conflicts] | [test_services.py::test_different_time_books_appointment()] | [Passed] |
 
 ## F Service Test Evidence
 
@@ -120,7 +126,7 @@ Use fresh shared SmartCareDataStore state, registered objects and completed Stag
 
 | Test ID | Behaviour | Requirement / criterion | Test file/function | Result |
 |---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] |
+| [TEST-FR05-02] | [Tests that appointments with different practitioner but same time causes no conflict.] | [Appointments with different Practitioner and same Times are Booked.] | [test_services.py::test_different_practitioner_books_appointment()] | [Passed] |
 
 ## G Negative and Boundary Cases
 
@@ -128,37 +134,70 @@ Connect cases to actual contracts and verify unchanged state after rejection.
 
 | Behaviour | Boundary/invalid input | Expected result | Test ID |
 |---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] |
+| [The first registration returns the stored patient object. A duplicate ID raises `ValueError`, and the original record remains unchanged.] | [(`P1`)] | [Attempt to register another patient using the same ID (`P1`).] | [FR-01] |
 
 ## H GitHub Copilot Test Design
 
 Select ONE real acceptance criterion. Complete human-first fields before using Copilot. Do not require an accepted generated test.
 
-Requirement: [complete]
-Acceptance criterion: [quote]
-Behaviour to test: [complete]
-Human-first test idea/categories: [complete]
-Prompt and purpose: [complete or link]
+Requirement: [FR-05]
+Acceptance criterion: ["Appointment is rejected when Practitioner ('D2') and Time (2026, 10, 1, 9) is the same as an existing appointment"]
+Behaviour to test: [Prevent practitioner conflict]
+Human-first test idea/categories: [Appointments with duplicate times and Practitioners are not booked. Appointments with different Practitioner and same Times are Booked. Appointments with the same Practitioner and Different Times are Booked.]
+Prompt and purpose: [https://github.com/copilot/share/0247419e-40e0-80a4-a142-960f006f613f]
 
 For each significant candidate, copy this entry as needed:
-- Copilot test idea/candidate: [complete]
-- What it claims to verify: [complete]
-- Requirement trace: [complete]
-- Assertion quality: [complete]
-- Human critique: [complete]
-- Decision: [Accept / Modify / Reject]
-- Reason: [complete]
-- Final test reference if accepted/modified: [link or not retained]
-- Actual verification result: [complete; do not claim an unrun test passed]
+- Copilot test idea/candidate: [Valid: no existing appointment.]
+- What it claims to verify: [A booking at the criterion’s practitioner and time can be made when no conflicting appointment exists.]
+- Requirement trace: [Book A1 for P1, practitioner D2, at WHEN.]
+- Assertion quality: [Booking returns an appointment with ID A1, and store.find_appointment("A1") returns that appointment.]
+- Human critique: [This verifies that an appointment can be booked in the first place, which is extremely important to testing conflicting practitioners.]
+- Decision: [Modify]
+- Reason: [This is already verified in other tests, as the tests would not function without it.]
+- Final test reference if accepted/modified: [test_services.py::test_practitioner_conflict_prevents_appointments/tests/test_services.py]
+- Actual verification result: [none: testing software broken.]
+
+For each significant candidate, copy this entry as needed:
+- Copilot test idea/candidate: [Invalid: exact conflict]
+- What it claims to verify: [A booking is rejected when practitioner D2 and time (2026, 10, 1, 9) match an existing appointment.]
+- Requirement trace: [First book A1 for D2 at WHEN; then attempt A2 for D2 at WHEN.]
+- Assertion quality: [The second call raises ValueError; A1 remains findable and A2 is absent from the store.]
+- Human critique: [Good assertion, tests that duplicate appointments are not booked.]
+- Decision: [Accept]
+- Reason: [Testing that the conflicting appointments does not book is the main requirement.]
+- Final test reference if accepted/modified: [test_services.py::test_practitioner_conflict_prevents_appointments/tests/test_services.py]
+- Actual verification result: [none: testing software broken.]
+
+For each significant candidate, copy this entry as needed:
+- Copilot test idea/candidate: [Boundary: same time, different practitioner]
+- What it claims to verify: [The repository’s Stage 12 demo criterion says the same time with a different practitioner is allowed; this distinguishes a practitioner conflict from a time-only conflict.]
+- Requirement trace: [Book A1 for D1 at WHEN, then book A2 for D2 at WHEN.]
+- Assertion quality: [Both bookings succeed and are findable.]
+- Human critique: [Good assertion, testing whether the appointment can be booked with a different practitioner at the same time]
+- Decision: [Accept]
+- Reason: [Great test to ensure functionality.]
+- Final test reference if accepted/modified: [test_services.py::test_different_practitioner_books_appointment()]
+- Actual verification result: [none: testing software broken.]
+
+For each significant candidate, copy this entry as needed:
+- Copilot test idea/candidate: [Boundary: same practitioner, different time]
+- What it claims to verify: [The stated conflict is for the same practitioner and same time; a different time should not be treated as that exact conflict.]
+- Requirement trace: [Book A1 for D2 at WHEN, then book A2 for D2 at datetime(2026, 10, 1, 10).]
+- Assertion quality: [Both bookings succeed and are findable.]
+- Human critique: [Good assertion, testing different times with the same practitioner is extremely important.]
+- Decision: [Accept]
+- Reason: [Great test to ensure functionality.]
+- Final test reference if accepted/modified: [test_services.py::test_different_time_books_appointment()]
+- Actual verification result: [none: testing software broken.]
 
 Before accepting: traces to a requirement/criterion; can fail for the right reason; assertion checks required behaviour; no invented business rule; no unnecessary private implementation dependence. Reject/modify weak assertions, invented requirements, excessive mocking, duplicates, wrong exceptions, obsolete architecture and unnecessary dependencies.
 
 ## I Weak Copilot Test Reflection
 
-Which Copilot-generated test looked convincing but was weak? [response]
-Why was it weak? [response]
-How did you strengthen it? [response]
-Accepted / modified / rejected test decisions and evidence: [link actual decisions in H]
+Which Copilot-generated test looked convincing but was weak? [Valid: no existing appointment.]
+Why was it weak? [This test verifies a test that is ingrained in every other test for this Functional Requirement.]
+How did you strengthen it? [I got rid of it entirely]
+Accepted / modified / rejected test decisions and evidence: [Modified, as I embedded this element in every other test for this Functional Requirement.]
 
 ## J Regression Run
 
@@ -184,10 +223,10 @@ Requirement → test → failure/observation → diagnosis → change → verifi
 
 ## K What the Suite Still Does Not Prove
 
-What does your test suite still not prove? [response]
-Coverage if used: [result or not used]
-Which uncovered areas matter, and why does coverage percentage alone not establish correctness? [response]
-Optional fixtures/parametrisation used and why, if any: [response or not used]
+What does your test suite still not prove? [Register Patient]
+Coverage if used: [Under other tests the Patient is proven to be registered, although there is no test for it specifically]
+Which uncovered areas matter, and why does coverage percentage alone not establish correctness? [This is one of the main requirments for the Stage07 Tests.]
+Optional fixtures/parametrisation used and why, if any: [not used]
 
 ## L Git and Review Evidence
 
