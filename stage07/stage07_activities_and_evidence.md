@@ -242,7 +242,10 @@ Record actual work in test design, implementation, review, traceability, diagnos
 
 | Member | Actual contribution | Evidence link |
 |---|---|---|
-| [complete] | [complete] | [complete] |
+| [LoserWithAGame] | [Completed FR-05 Tests, and Sections: Tutorial Exit Question, A:1:FR-05, B:FR-05, C, D, F, G, H, I, K, M] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/26, PR-26. https://github.com/LoserWithAGame/st1-assignment-3/pull/24, PR-24. https://github.com/LoserWithAGame/st1-assignment-3/pull/23, Pr-23. https://github.com/LoserWithAGame/st1-assignment-3/pull/18, PR-18] |
+| [MastrRoshiiii] | [Completed FR-06 and FR-07 Tests, and Sections: A:1:FR-06 and FR-07, A:2, A:3, A:4, B:FR-06 and FR-07, J, N] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/16, PR-16] |
+| [quiet-learner] | [Completed Review of LoserWithAGame's Pull Requests, and MastrRoshiiii's Pull Requests. Sections: A:3, A:4, B:FR-06 and FR-07, J, N, L] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/15, PR-15] |
+| [warunabandara11-wq] | [Completed FR-01, Sections: A:1:FR-01] | [https://github.com/LoserWithAGame/st1-assignment-3/pull/21, PR-21] |
 
 ## N Formative Questions
 
