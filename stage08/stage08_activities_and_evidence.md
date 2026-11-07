@@ -124,35 +124,35 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 
 ## B. Stage 7 baseline and safe preparation
 
-- Stage 7 code SHA and requirement baseline: [complete]
-- Baseline test command / working directory / observed result / evidence: [complete]
-- Clean preparation SHA if a record-only commit followed Stage 7: [complete]
-- Branch and preparer / how teammates obtained this branch: [complete]
-- Downloaded tool version, source SHA256 and --check outcome: [complete]
+- Stage 7 code SHA and requirement baseline: - 770ca814cf20519f2717c07e2760aec5b383efef. The requirements baseline was SmartCare A3 Requirements Baseline 2026, revision 2.
+- Baseline test command / working directory / observed result / evidence: - The Stage 7 record shows python -m pytest -v, run from the project folder, with 32 passed, 0 failed at the earlier commit 2fba9705ec1baabf68b34fd0b74a200cd5bdca8b.
+- Clean preparation SHA if a record-only commit followed Stage 7: Github shows that the fault commit directly followed 829e6e8. There was no seperate.
+- Branch and preparer / how teammates obtained this branch: Gupta Pranav authored the preparation commit on debug/stage08. Teammates including myself obtained this branch during our tutorial by pulling the branch from Github.
+- Downloaded tool version, source SHA256 and --check outcome: 
 - --apply and --verify output summaries / artefact references: [complete]
-- Bounded diff inspected and recovery location (not committed): [complete]
-- Prepared faulty-state commit SHA: [complete]
+- Bounded diff inspected and recovery location (not committed): The preparation commit only chnaged data_store.py. 
+- Prepared faulty-state commit SHA: d666a560fbc6de3f56636aaf5b0a35f13ffb70ba
 - Preparation or recovery issues and resolution, if any: [complete]
-- Initial prepared full-suite command / result / key failures: [complete]
+- Initial prepared full-suite command / result / key failures: I ran python -m pytest -v from the project folder on debug/stage08. It showed 5 failed, and 29 passed. Two of the failures invollved cancelled appointment history and three involved practitioner booking conflicts.  
 
 ## C. F8-01 diagnosis and repair
 
-- Symptom / observed behaviour: [complete]
-- Expected behaviour and requirement: [complete]
-- Minimal synthetic reproduction steps: [complete]
-- Meaningful failing test path/name and exact relevant failure: [complete]
-- Human hypothesis and intended checks: see E, F8-01.
+- Symptom / observed behaviour: Cancelling appointment A1 returned the original appointment and changed its status to CANCELLED. Looking it up afterward returned None.
+- Expected behaviour and requirement: FR-07 requires cancelled appointment history to be retained. Looking up A1 after cancellation should return the same appointment with status CANCELLED.
+- Minimal synthetic reproduction steps: Register a sample patient and practitioner, book appointment A1, cancel it, then call store.find_appointment('A1').
+- Meaningful failing test path/name and exact relevant failure: test_cancel_appointment_returns_retained_cancelled_object failed at [test_cancellation.py, line 41 (line 41) project/tests/test_cancellation.py:41)]. The check assert store.find_appointment('A1') is appointment raised an AssertionError because the lookup returned None.
+- Human hypothesis and intended checks: see E, F8-01. (I plan to compare list_appointments() with find_appointment('A1') after cancellation. If A1 still appears in the list but the lookup returns None, I would inspect the lookup code to see why it skips that record. If A1 is also missing from the list, I would check whether cancellation removes it.)
 - Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
 - Smallest justified fix / diff / why other behaviour is preserved: [complete]
 - Repair SHA / focused verification result: [complete]
 
 ## D. F8-02 diagnosis and repair
 
-- Symptom / observed behaviour: [complete]
-- Expected behaviour and requirement: [complete]
-- Minimal synthetic reproduction steps: [complete]
-- Meaningful failing test path/name and exact relevant failure: [complete]
-- Human hypothesis and intended checks: see E, F8-02.
+- Symptom / observed behaviour: The system allowed a second appointment for the same practitioner at the same time. It also incorrectly reported a conflict for a different practitioner at that time.
+- Expected behaviour and requirement: FR-05 requires the system to prevent double booking a practitioner. A second booking for the same practitioner at the same time should raise ValueError.
+- Minimal synthetic reproduction steps: Book appointment A1 for practitioner D1 at 9:00 am. Try to book a second appointment for D1 at the same time. It should be rejected. Then check the same time for practitioner D2, who has no booking. The system should report no conflict.
+- Meaningful failing test path/name and exact relevant failure: In [project/tests/test_services.py (line 155)], test_practitioner_conflict_prevents_appointments books A1 with practitioner D1 on line 154, then attempts to book A2 with the same practitioner at the same time on lines 155–156. The second booking should raise ValueError, but it went through, so pytest reported Failed: DID NOT RAISE <class 'ValueError'>. In the same file, test_different_practitioner_books_appointment checks on line 166 that D2 has no conflict when D1 is booked at that time. The check returned True instead of False, so pytest reported AssertionError: assert True is False. In [project/tests/test_starter.py (line 127)], test_conflict_rule_and_different_practitioner also expects ValueError on lines 127–128 when a second appointment is booked with D1 at the same time. Pytest reported Failed: DID NOT RAISE <class 'ValueError'> at line 127, and the test stopped before reaching the check that a booking with D2 succeeds.
+- Human hypothesis and intended checks: see E, F8-02. (I plan to book D1 at 9 am, then run the conflict check directly for D1 and D2 at 9am. If the direct check gives the wrong results, Ill inspect the check itself. If it gives the right results, Ill check which ID the booking service passes in.)
 - Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
 - Smallest justified fix / diff / why other behaviour is preserved: [complete]
 - Repair SHA / focused verification result: [complete]
@@ -162,32 +162,87 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 Complete both entries BEFORE Copilot. C/D supply observed/expected/reproduction/test; retain those initial facts and link them here.
 
 ### F8-01 human entry
-Likely cause and why plausible: [complete]
-Evidence intended to inspect / competing explanation / discriminating check: [complete]
-Member and saved sequence/time or commit showing this preceded consultation: [complete]
+Likely cause and why plausible: I believe that the lookup might be skipping cancelled appointments. The cancellation returned the original appointment with its status set to CANCELLED, but looking up A1 immediately afterward returned None.
+Evidence intended to inspect / competing explanation / discriminating check: I plan to compare list_appointments() with find_appointment('A1') after cancellation. If A1 still appears in the list but the lookup returns None, I would inspect the lookup code to see why it skips that record. If A1 is also missing from the list, I would check whether cancellation removes it.
+Member and saved sequence/time or commit showing this preceded consultation: @MastrRoshiiii saved on 7/11/2026 at 10:11pm before consulting Copilot. 
 
 ### F8-02 human entry
-Likely cause and why plausible: [complete]
-Evidence intended to inspect / competing explanation / discriminating check: [complete]
-Member and saved sequence/time or commit showing this preceded consultation: [complete]
+Likely cause and why plausible: I believe the conflict check was comparing practitioner IDs incorrectly. It allowed a second booking for D1 at the same time but reported a conflict for D2, who had no booking at that time.
+Evidence intended to inspect / competing explanation / discriminating check: I plan to book D1 at 9 am, then run the conflict check directly for D1 and D2 at 9am. If the direct check gives the wrong results, Ill inspect the check itself. If it gives the right results, Ill check which ID the booking service passes in.
+Member and saved sequence/time or commit showing this preceded consultation: @MastrRoshiiii saved on 7/11/2026 at 10:37pm.
 
 ## F. GitHub Copilot prompts, findings and human decisions
 
 Use the full handout prompt separately for BOTH defects, after E. Keep each actual prompt or accessible reference; include observed behaviour, expected behaviour, reproduction, failing test, human hypothesis, relevant code, three ranked causes and discriminating checks, with the no-rewrite/no-invented-requirements constraints.
 
 ### F8-01 Copilot review
-Actual prompt / output reference and member: [complete]
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
+Actual prompt / output reference and member:
+1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: 
 2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
 Final human conclusion and comparison with initial hypothesis: [complete]
 
 ### F8-02 Copilot review
-Actual prompt / output reference and member: [complete]
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-Final human conclusion and comparison with initial hypothesis: [complete]
+Actual prompt / output reference and member: Help me investigate F8-02, the practitioner booking conflict, on the debug/stage08 branch.
+
+To reproduce it, book appointment A1 for practitioner D1 at 9 am. Then try to book A2 for D1 at the same time. Also check whether D2, who has no booking at that time, is reported as having a conflict.
+
+Expected behaviour under FR-05 and AC-04.2: the second booking for D1 should raise ValueError, and the conflict check for D2 should return False.
+
+Actual behaviour: the second booking for D1 went through, and the conflict check for D2 returned True.
+
+Failing tests in project/tests/test_services.py:
+- test_practitioner_conflict_prevents_appointments, lines 155–156: Failed: DID NOT RAISE <class 'ValueError'>
+- test_different_practitioner_books_appointment, line 166: AssertionError: assert True is False
+
+My initial hypothesis and planned check from Part E: F8-02
+```
+My initial hypothesis and planned check from Part E:
+I believe the conflict check is comparing practitioner IDs incorrectly. It allowed a second booking for D1 at the same time but reported a conflict for D2, who had no booking at that time.
+
+I plan to book D1 at 9 am, then run the conflict check directly for D1 and D2 at 9 am. If the direct check gives the wrong results, I’ll inspect the check itself. If it gives the right results, I’ll check which ID the booking service passes in.
+```
+
+
+Relevant code:
+```
+```python
+def has_practitioner_conflict(
+    self,
+    practitioner_id: str,
+    date_time: datetime,
+    exclude_appointment_id: str | None = None,
+) -> bool:
+    for appointment in self.list_appointments():
+        if (appointment.appointment_id != exclude_appointment_id
+                and appointment.practitioner.practitioner_id != practitioner_id
+                and appointment.date_time == date_time
+                and appointment.status.value == "scheduled"):
+            return True
+    return False
+```
+
+Relevant code from book_appointment in project/smartcare/services.py, lines 124–132:
+
+```python
+if self.data_store.has_practitioner_conflict(
+    practitioner.practitioner_id,
+    date_time,
+):
+    raise ValueError(
+        'Practitioner already has a SCHEDULED appointment at this time',
+    )
+self.data_store.add_appointment(appointment)
+return appointment
+```
+
+```
+Give me three possible causes, ranked from most to least likely. For each one, explain what evidence supports it and give me one specific check that would help tell it apart from the other causes. Clearly separate what the code or tests show from what you are guessing. Use the stated requirements. Do not edit or rewrite the code, change the tests, or invent requirements.
+```
+1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked the reversed practitioner comparison first. The check was to read the practitioner comparison and compare it with the failing tests. The code uses `!=`, which means it matches a different practitioner. This explains why D1's second booking went through and why D2 was incorrectly flagged as busy. I marked this suggestion **correct** and **accepted** it because it explains both failures.
+2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked an incorrect time or status check second. The suggested check was to compare A1's stored time and status with the values used by the conflict check. Copilot reported that A1 was scheduled at the requested time. The D2 test returned `True`, which also shows that the time and status checks passed in that case. I marked this suggestion **wrong as the cause of these failures** and **rejected** it because the wrong result occurred even when those checks passed.
+3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked the booking service passing the wrong practitioner ID third. The check was to see which ID the service passes and compare that with a test that calls the data store directly. The service passes the resolved practitioner's ID, and the direct test passed `D2` to the data store and still got the wrong result. I marked this suggestion **wrong as the cause of these failures** and **rejected** it because the fault also occurs without going through the booking service.
+Final human conclusion and comparison with initial hypothesis: I initially believed the conflict check was comparing practitioner IDs incorrectly. The code showed that it was checking for a different practitioner when it should check for the same one. This confirmed my initial suspicion and explained why D1 could be booked twice at the same time while D2 was incorrectly flagged as busy.
 
 ## G. Failing to passing regression evidence
 
