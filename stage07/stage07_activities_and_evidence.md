@@ -234,7 +234,13 @@ Use links rather than copying GitHub history. Continue the Stage 6 workflow; no 
 
 | Issue/task | Branch | PR | Reviewer | Key feedback | Outcome |
 |---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| Complete Activities 3 and 4, regression evidence in J, and formative answers in N | doc/stage07-testing-evidence | PR #15 https://github.com/LoserWithAGame/st1-assignment-3/pull/15  | @LoserWithAGame was requested as review; no submitted review was completed. | No written review feedback, The auther added individual and changed-order test evidence and linkted it in part J | @LoserWithAGame merged into main 0c3c68e |
+| Add stage 7 evidence, inluding entries in Activities A and section B | docs/stage07-evidence | PR #16 https://github.com/LoserWithAGame/st1-assignment-3/pull/16  | No submitted review recorded | The auther asked teammates to conform the additions to A and B. No review response was recorded | @loserWithAGame merged into main as 8cfa26a. |
+| Complete the FR-01 patient registration test design in Activity 1 | stage07/fr01-test-design | PR #21  https://github.com/LoserWithAGame/st1-assignment-3/pull/21  | No submitted review record | The auther added positive and negative resistration scenarios and expected assertions | @LoserWithAGame merged into main as 867e4d2. |
+| Updated syntheic practioner details in two tests and add a final blank line to the evidence record | stage07/activites-respone | PR #22 https://github.com/LoserWithAGame/st1-assignment-3/pull/22  | @quiet-learner approval was recorded after merge | No written feedback provided | @LoserWithAGame merged into main as 57e1255. @quiet-learner subsequently approved. |
+| Update stage 7 sections B-I and K, edit service tests and add VS code settings | Stage07/activities-response | PR #26 https://github.com/LoserWithAGame/st1-assignment-3/pull/26  | @quiet-learner | Approved with "looks great! feedback is approved. Merging now".  | @quiet-learner approved before merging into main as 5e07414. |
+| Update contribution evidence and completion record in Sections M and O | stage07/activites-response | PR #27 https://github.com/LoserWithAGame/st1-assignment-3/pull/27  | @quiet-learner | Approved with "good work!". | @quiet-learner approved before @LoserWithAGame merged into main as 9de01bb. |
+
 
 ## M Contribution Evidence
 
