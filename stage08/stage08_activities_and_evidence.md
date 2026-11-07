@@ -244,18 +244,24 @@ Give me three possible causes, ranked from most to least likely. For each one, e
 3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked the booking service passing the wrong practitioner ID third. The check was to see which ID the service passes and compare that with a test that calls the data store directly. The service passes the resolved practitioner's ID, and the direct test passed `D2` to the data store and still got the wrong result. I marked this suggestion **wrong as the cause of these failures** and **rejected** it because the fault also occurs without going through the booking service.
 Final human conclusion and comparison with initial hypothesis: I initially believed the conflict check was comparing practitioner IDs incorrectly. The code showed that it was checking for a different practitioner when it should check for the same one. This confirmed my initial suspicion and explained why D1 could be booked twice at the same time while D2 was incorrectly flagged as busy.
 
+
 ## G. Failing to passing regression evidence
 
-| Checkpoint | Code SHA or precise diff | Command and working directory | Actual result and artefact reference |
-|---|---|---|---|
-| F8-01 before repair | [complete] | [complete] | [complete] |
-| F8-01 after repair | [complete] | [complete] | [complete] |
-| F8-02 before repair | [complete] | [complete] | [complete] |
-| F8-02 after repair | [complete] | [complete] | [complete] |
-| Full suite after both repairs, before refactor | [complete] | [complete] | [complete] |
+The Stage 8 defects were reproduced and repaired in a separate local copy of the project. Testing was performed from the `project/` directory using Python 3.13.5 and pytest 9.0.2. The results below are local verification evidence; the GitHub changes still require team review and integration testing.
 
-Explain how the assertions detect each relevant incorrect result and protect previous behaviour: [complete]
-Unrelated failures investigated / resolution: [complete or not applicable with reason]
+| Checkpoint | Code SHA or precise diff | Command and working directory | Actual result and artifact reference |
+|---|---|---|---|
+| F8-01 before repair | Prepared Stage 8 commit `7c56089`. Appointment lookup incorrectly excluded cancelled records. | `cd project && python -m pytest -q tests/test_cancellation.py` | Two relevant tests failed. See [F8-01 before](verification/01_F8-01_before.txt). |
+| F8-01 after repair | Removed the cancelled-status restriction from `find_appointment()`, retaining ID validation. Repair commit SHA to be confirmed. | `cd project && python -m pytest -q tests/test_cancellation.py` | Two previously failing tests passed in the focused local verification. See [F8-01 after](verification/03_F8-01_after.txt). |
+| F8-02 before repair | Prepared Stage 8 commit `7c56089`. Practitioner conflict logic incorrectly used `!=` instead of `==`. | Focused practitioner-conflict tests from `project/` | Three tests failed. See [F8-02 before](verification/02_F8-02_before.txt). |
+| F8-02 after repair | Changed the practitioner ID comparison to `==`, keeping the existing time and status checks. Repair commit SHA to be confirmed. | Focused practitioner-conflict tests from `project/` | All three previously failing tests passed in local verification. See [F8-02 after](verification/04_F8-02_after.txt). |
+| Full suite after both repairs, before refactor | Both functional repairs applied. Original tests were preserved, with three additional regression tests added separately. | `cd project && python -m pytest -q` | All 34 original tests passed. With three additional regression tests, 37 passed. See [original suite](verification/05_repaired_full_suite_before_refactor.txt) and [extended suite](verification/06_extended_full_suite_before_refactor.txt). |
+
+**How the assertions detect defects:** The F8-01 tests verify that cancelled appointments remain retrievable and that repeated cancellation raises the expected error. The F8-02 tests verify that the same practitioner cannot be booked twice at the same time, while different practitioners can be booked simultaneously.
+
+**Unrelated failures investigated:** The original prepared suite produced 5 failures and 29 passes. All five failures related to F8-01 and F8-02. No additional failures were reported in that local run. See [initial test results](verification/00_prepared_full_suite.txt).
+
+**Verification limitation:** These results were produced locally. The repaired GitHub branch must be tested again and its final commit SHA recorded before integration is considered complete.
 
 ## H. Refactoring decision and before/after verification
 
