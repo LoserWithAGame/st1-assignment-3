@@ -1,0 +1,31 @@
+$ cd project && python -m pytest -q tests/test_services.py::test_practitioner_conflict_prevents_appointments tests/test_services.py::test_different_practitioner_books_appointment tests/test_starter.py::test_conflict_rule_and_different_practitioner --tb=short
+Exit status: 1
+Python: 3.13.5
+$ python -m pytest --version
+pytest 9.0.2 (local environment; approved project baseline expects pytest 8.3.5)
+
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_______________ test_practitioner_conflict_prevents_appointments _______________
+../../../stage8_work/st1-assignment-3-debug-stage08/project/tests/test_services.py:155: in test_practitioner_conflict_prevents_appointments
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+________________ test_different_practitioner_books_appointment _________________
+../../../stage8_work/st1-assignment-3-debug-stage08/project/tests/test_services.py:166: in test_different_practitioner_books_appointment
+    assert data_store.has_practitioner_conflict('D2', when, 'P2') is False
+E   AssertionError: assert True is False
+E    +  where True = has_practitioner_conflict('D2', datetime.datetime(2026, 10, 1, 9, 0), 'P2')
+E    +    where has_practitioner_conflict = <smartcare.data_store.SmartCareDataStore object at 0x7f7ac8cb4cd0>.has_practitioner_conflict
+________________ test_conflict_rule_and_different_practitioner _________________
+../../../stage8_work/st1-assignment-3-debug-stage08/project/tests/test_starter.py:127: in test_conflict_rule_and_different_practitioner
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ============================
+FAILED tests/test_services.py::test_practitioner_conflict_prevents_appointments - Failed: DID NOT RAISE <class 'ValueError'>
+FAILED tests/test_services.py::test_different_practitioner_books_appointment - AssertionError: assert True is False
+ +  where True = has_practitioner_conflict('D2', datetime.datetime(2026, 10, 1, 9, 0), 'P2')
+ +    where has_practitioner_conflict = <smartcare.data_store.SmartCareDataStore object at 0x7f7ac8cb4cd0>.has_practitioner_conflict
+FAILED tests/test_starter.py::test_conflict_rule_and_different_practitioner - Failed: DID NOT RAISE <class 'ValueError'>
+3 failed in 0.09s
