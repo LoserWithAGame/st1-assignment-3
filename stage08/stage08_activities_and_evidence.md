@@ -128,9 +128,9 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 - Stage 7 code SHA and requirement baseline: - 770ca814cf20519f2717c07e2760aec5b383efef. The requirements baseline was SmartCare A3 Requirements Baseline 2026, revision 2.
 - Baseline test command / working directory / observed result / evidence: - The Stage 7 record shows python -m pytest -v, run from the project folder, with 32 passed, 0 failed at the earlier commit 2fba9705ec1baabf68b34fd0b74a200cd5bdca8b.
 - Clean preparation SHA if a record-only commit followed Stage 7: Github shows that the fault commit directly followed 829e6e8. There was no seperate.
-- Branch and preparer / how teammates obtained this branch: Gupta Pranav authored the preparation commit on debug/stage08. Teammates including myself obtained this branch during our tutorial by pulling the branch from Github.
-- Downloaded tool version, source SHA256 and --check outcome: [complete]
-- --apply and --verify output summaries / artefact references: [complete]
+- Branch and preparer / how teammates obtained this branch: @LoserWithAGame authored the preparation commit on debug/stage08. Teammates including myself obtained this branch during our tutorial by pulling the branch from Github.
+- Downloaded tool version, source SHA256 and --check outcome: Stage 8 tool 1.1. Preflight passed. Both proposed faults were checked in a temporary copy, and the project was unchanged. The baseline Git SHA was 829e6e84cedd16331a83aebc8144fd01f1869aff. The tool reported the baseline source SHA256 as b4a1993e878c59a9df5e9055320702b2d318c5b6055bb1693a3afc25cd8fd375.
+- --apply and --verify output summaries / artefact references: --apply and --verify — --apply prepared both faults and confirmed the two expected failures in the tool’s targeted checks. --verify confirmed exactly two expected failures and both approved fault symptoms. https://github.com/LoserWithAGame/st1-assignment-3/commit/d666a560fbc6de3f56636aaf5b0a35f13ffb70ba. Stage 8 tool 1.1. recorded its recovery backup and hash in .stage8_faults.
 - Bounded diff inspected and recovery location (not committed): The preparation commit only chnaged data_store.py. 
 - Prepared faulty-state commit SHA: d666a560fbc6de3f56636aaf5b0a35f13ffb70ba
 - Preparation or recovery issues and resolution, if any: No preparation or recovery issues were reported by @LoserWithAGame.
@@ -175,6 +175,12 @@ Member and saved sequence/time or commit showing this preceded consultation: @Ma
 ## F. GitHub Copilot prompts, findings and human decisions
 
 Use the full handout prompt separately for BOTH defects, after E. Keep each actual prompt or accessible reference; include observed behaviour, expected behaviour, reproduction, failing test, human hypothesis, relevant code, three ranked causes and discriminating checks, with the no-rewrite/no-invented-requirements constraints.
+
+Cancelled appointment lookup
+- I initially believed the lookup might be skipping cancelled appointments. The code confirmed that it left out records with the status CANCELLED. This explained why A1 could not be found and why a second cancellation raised LookupError instead of ValueError. After the filter was removed, both focused tests passed.
+
+Practitioner booking conflict
+- I initially believed the conflict check was comparing practitioner IDs incorrectly. The code confirmed that it was checking for a different practitioner when it should check for the same one. This explained why D1 could be booked twice at the same time and why D2 was incorrectly flagged as busy. After the comparison was fixed, all three focused tests passed.
 
 ### F8-01 Copilot review
 Actual prompt / output reference and member: (@MastrRoshiiii) Help me investigate F8-01, the cancelled appointment history fault, using the prepared faulty commit d666a56.
@@ -350,7 +356,7 @@ Evidence:
 **Human review feedback and Copilot comparison:** I approved Waruna’s changes in PR #29 so they could go through final editing and review before merging to main. My GitHub review recorded the approval. The technical comparison is recorded in Part F. Copilot suggested that the lookup was skipping cancelled appointments and that the practitioner comparison was reversed. Waruna’s changes addressed both causes, and the focused tests passed after the repairs. https://github.com/LoserWithAGame/st1-assignment-3/pull/29#pullrequestreview-5817144792
 
 **Review approval and merge evidence:** - @MastrRoshiiii approved PR #29 before merging it into debug/stage08 at commit 5e5637ea3e59f8bfe081b703da865121e7c2bca1.
-**Integrated code and team retesting:** Pending. Local verification produced 37 passing tests after the repairs and refactoring, with results recorded in `stage08/verification/`. After integration, the team must pull the updated code, run `python -m pytest -q` from `project/`, and record the final commit SHA and actual test results.
+**Integrated code and team retesting:** Stage 8 was merged into main through PR #32 at commit d5fe118eb560a1bdaf10696f3a988fdbb32f15bd. An independent retest of that exact commit ran python -B -m pytest -q -p no:cacheprovider from the project folder using Python 3.14.7 and pytest 8.3.5. The result was 38 passed in 0.06 seconds. The earlier 37 passed result was from debug/stage08, before the merge into main.
 
 **Evidence-only commits:** The verified debug/stage08 commit was 5e5637e, which passed all 37 tests. Commit 8450428 added the verification logs. Commits a07dfd5, b4b8a01 and c9a9619 updated the Stage 8 evidence document only. The final verified main SHA and any evidence-only commit made after that test run will be recorded at submission.
 
@@ -431,9 +437,9 @@ Response: Investigate failures using evidence before changing code, make minimal
 - [x] Local recovery metadata and the teaching preparation utility excluded from the proposed changes.
 - [ ] Same project and full suite ready for Stage 9 following Stage 8 integration, final verification and recording.
 
-**Verified integrated code SHA / result:** Pending. Local testing after the repairs and refactoring returned 37 passed using Python 3.13.5 and pytest 9.0.2. These results do not replace final integrated verification. (Still required, pending merge to main)
+**Verified integrated code SHA / result:** Verified main commit d5fe118eb560a1bdaf10696f3a988fdbb32f15bd. The full suite passed 38 tests in 0.06 seconds. See Part I for the command, working directory, and test environment.
 
-**Submitted SHA and evidence-only difference:** Pending final pull request review, merge and submission. The verification logs and documentation were prepared separately from the functional code repairs. (Still required, pending merge to main)
+**Submitted SHA and evidence-only difference:** The verified code SHA is d5fe118eb560a1bdaf10696f3a988fdbb32f15bd. The submitted SHA is pending the final documentation update.
 
 **Unresolved issues / owner / next action:**
 
