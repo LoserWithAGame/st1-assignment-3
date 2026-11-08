@@ -1,0 +1,26 @@
+--- a/project/smartcare/data_store.py
++++ b/project/smartcare/data_store.py
+@@ -89,11 +89,7 @@
+     def find_appointment(self, appointment_id: str) -> Appointment | None:
+         if not isinstance(appointment_id, str) or not appointment_id.strip():
+             raise ValueError("Appointment ID cannot be blank")
+-        for appointment in self.list_appointments():
+-            if (appointment.appointment_id == appointment_id.strip()
+-                    and appointment.status.value != "cancelled"):
+-                return appointment
+-        return None
++        return self._appointments.get(appointment_id.strip())
+ 
+     def list_appointments(self) -> list[Appointment]:
+         """Return a new list containing all stored appointment objects."""
+@@ -107,8 +103,8 @@
+     ) -> bool:
+         for appointment in self.list_appointments():
+             if (appointment.appointment_id != exclude_appointment_id
+-                    and appointment.practitioner.practitioner_id != practitioner_id
++                    and appointment.practitioner.practitioner_id == practitioner_id
+                     and appointment.date_time == date_time
+-                    and appointment.status.value == "scheduled"):
++                    and appointment.status is AppointmentStatus.SCHEDULED):
+                 return True
+         return False

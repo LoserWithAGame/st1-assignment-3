@@ -1,0 +1,29 @@
+$ cd project && python -m pytest -q tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history --tb=short
+Exit status: 1
+Python: 3.13.5
+$ python -m pytest --version
+pytest 9.0.2 (local environment; approved project baseline expects pytest 8.3.5)
+
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________ test_cancel_appointment_returns_retained_cancelled_object ___________
+../../../stage8_work/st1-assignment-3-debug-stage08/project/tests/test_cancellation.py:41: in test_cancel_appointment_returns_retained_cancelled_object
+    assert store.find_appointment('A1') is appointment
+E   AssertionError: assert None is <smartcare.domain.Appointment object at 0x7f2515c86f90>
+E    +  where None = find_appointment('A1')
+E    +    where find_appointment = <smartcare.data_store.SmartCareDataStore object at 0x7f2515c867b0>.find_appointment
+__________ test_repeated_cancellation_is_rejected_and_retains_history __________
+../../../stage8_work/st1-assignment-3-debug-stage08/project/tests/test_cancellation.py:98: in test_repeated_cancellation_is_rejected_and_retains_history
+    appointment_service.cancel_appointment('A1')
+smartcare/services.py:155: in cancel_appointment
+    appointment = self.find_appointment(appointment_id)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+smartcare/services.py:142: in find_appointment
+    raise LookupError('Appointment not found')
+E   LookupError: Appointment not found
+=========================== short test summary info ============================
+FAILED tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object - AssertionError: assert None is <smartcare.domain.Appointment object at 0x7f2515c86f90>
+ +  where None = find_appointment('A1')
+ +    where find_appointment = <smartcare.data_store.SmartCareDataStore object at 0x7f2515c867b0>.find_appointment
+FAILED tests/test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history - LookupError: Appointment not found
+2 failed in 0.08s

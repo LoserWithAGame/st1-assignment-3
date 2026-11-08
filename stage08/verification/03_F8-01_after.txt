@@ -1,0 +1,8 @@
+$ cd project && python -m pytest -q tests/test_cancellation.py::test_cancel_appointment_returns_retained_cancelled_object tests/test_cancellation.py::test_repeated_cancellation_is_rejected_and_retains_history
+Exit status: 0
+Python: 3.13.5
+$ python -m pytest --version
+pytest 9.0.2 (local environment; approved project baseline expects pytest 8.3.5)
+
+..                                                                       [100%]
+2 passed in 0.04s
