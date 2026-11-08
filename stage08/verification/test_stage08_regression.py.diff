@@ -1,0 +1,56 @@
+--- a/project/tests/test_stage08_regression.py
++++ b/project/tests/test_stage08_regression.py
+@@ -0,0 +1,53 @@
++"""Additional Stage 8 regression tests for retained history and conflicts.
++
++These extend (never replace) the supplied Stage 6 and Stage 7 tests.
++"""
++
++from datetime import datetime
++
++from smartcare.data_store import SmartCareDataStore
++from smartcare.domain import AppointmentStatus
++from smartcare.services import AppointmentService, PatientService, PractitionerService
++
++
++def booking_context():
++    store = SmartCareDataStore()
++    PatientService(store).register_patient('P1', 'Alex Example')
++    practitioners = PractitionerService(store)
++    practitioners.register_practitioner('D1', 'Taylor Example', 'General')
++    practitioners.register_practitioner('D2', 'Morgan Example', 'General')
++    return store, AppointmentService(store)
++
++
++def test_cancelled_history_is_found_but_does_not_block_a_new_booking():
++    store, service = booking_context()
++    when = datetime(2026, 10, 1, 9)
++    old = service.book_appointment('A1', 'P1', 'D1', when)
++    service.cancel_appointment('A1')
++
++    assert store.find_appointment('A1') is old
++    assert old.status is AppointmentStatus.CANCELLED
++    assert store.has_practitioner_conflict('D1', when) is False
++    new = service.book_appointment('A2', 'P1', 'D1', when)
++    assert new is store.find_appointment('A2')
++    assert old is store.find_appointment('A1')
++    assert len(store.list_appointments()) == 2
++
++
++def test_excluded_appointment_does_not_conflict_with_itself():
++    store, service = booking_context()
++    when = datetime(2026, 10, 1, 9)
++    appointment = service.book_appointment('A1', 'P1', 'D1', when)
++    assert store.has_practitioner_conflict('D1', when) is True
++    assert store.has_practitioner_conflict('D1', when, 'A1') is False
++    assert store.find_appointment('A1') is appointment
++
++
++def test_parallel_booking_for_distinct_practitioners_preserves_both_records():
++    store, service = booking_context()
++    when = datetime(2026, 10, 1, 9)
++    first = service.book_appointment('A1', 'P1', 'D1', when)
++    second = service.book_appointment('A2', 'P1', 'D2', when)
++    assert first is store.find_appointment('A1')
++    assert second is store.find_appointment('A2')
++    assert len(store.list_appointments()) == 2

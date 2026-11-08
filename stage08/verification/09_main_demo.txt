@@ -1,0 +1,4 @@
+cd project && python main.py
+Exit status: 0
+A1: P1 with DR1, 2026-10-01 09:00, scheduled
+Session-only data: records are lost on exit.

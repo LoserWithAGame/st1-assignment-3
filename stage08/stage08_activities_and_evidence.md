@@ -244,102 +244,151 @@ Give me three possible causes, ranked from most to least likely. For each one, e
 3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked the booking service passing the wrong practitioner ID third. The check was to see which ID the service passes and compare that with a test that calls the data store directly. The service passes the resolved practitioner's ID, and the direct test passed `D2` to the data store and still got the wrong result. I marked this suggestion **wrong as the cause of these failures** and **rejected** it because the fault also occurs without going through the booking service.
 Final human conclusion and comparison with initial hypothesis: I initially believed the conflict check was comparing practitioner IDs incorrectly. The code showed that it was checking for a different practitioner when it should check for the same one. This confirmed my initial suspicion and explained why D1 could be booked twice at the same time while D2 was incorrectly flagged as busy.
 
+
 ## G. Failing to passing regression evidence
 
-| Checkpoint | Code SHA or precise diff | Command and working directory | Actual result and artefact reference |
-|---|---|---|---|
-| F8-01 before repair | [complete] | [complete] | [complete] |
-| F8-01 after repair | [complete] | [complete] | [complete] |
-| F8-02 before repair | [complete] | [complete] | [complete] |
-| F8-02 after repair | [complete] | [complete] | [complete] |
-| Full suite after both repairs, before refactor | [complete] | [complete] | [complete] |
+The Stage 8 defects were reproduced and repaired in a separate local copy of the project. Testing was performed from the `project/` directory using Python 3.13.5 and pytest 9.0.2. The results below are local verification evidence; the GitHub changes still require team review and integration testing.
 
-Explain how the assertions detect each relevant incorrect result and protect previous behaviour: [complete]
-Unrelated failures investigated / resolution: [complete or not applicable with reason]
+| Checkpoint | Code SHA or precise diff | Command and working directory | Actual result and artifact reference |
+|---|---|---|---|
+| F8-01 before repair | Prepared Stage 8 commit `7c56089`. Appointment lookup incorrectly excluded cancelled records. | `cd project && python -m pytest -q tests/test_cancellation.py` | Two relevant tests failed. See [F8-01 before](verification/01_F8-01_before.txt). |
+| F8-01 after repair | Removed the cancelled-status restriction from `find_appointment()`, retaining ID validation. Repair commit SHA to be confirmed. | `cd project && python -m pytest -q tests/test_cancellation.py` | Two previously failing tests passed in the focused local verification. See [F8-01 after](verification/03_F8-01_after.txt). |
+| F8-02 before repair | Prepared Stage 8 commit `7c56089`. Practitioner conflict logic incorrectly used `!=` instead of `==`. | Focused practitioner-conflict tests from `project/` | Three tests failed. See [F8-02 before](verification/02_F8-02_before.txt). |
+| F8-02 after repair | Changed the practitioner ID comparison to `==`, keeping the existing time and status checks. Repair commit SHA to be confirmed. | Focused practitioner-conflict tests from `project/` | All three previously failing tests passed in local verification. See [F8-02 after](verification/04_F8-02_after.txt). |
+| Full suite after both repairs, before refactor | Both functional repairs applied. Original tests were preserved, with three additional regression tests added separately. | `cd project && python -m pytest -q` | All 34 original tests passed. With three additional regression tests, 37 passed. See [original suite](verification/05_repaired_full_suite_before_refactor.txt) and [extended suite](verification/06_extended_full_suite_before_refactor.txt). |
+
+**How the assertions detect defects:** The F8-01 tests verify that cancelled appointments remain retrievable and that repeated cancellation raises the expected error. The F8-02 tests verify that the same practitioner cannot be booked twice at the same time, while different practitioners can be booked simultaneously.
+
+**Unrelated failures investigated:** The original prepared suite produced 5 failures and 29 passes. All five failures related to F8-01 and F8-02. No additional failures were reported in that local run. See [initial test results](verification/00_prepared_full_suite.txt).
+
+**Verification limitation:** These results were produced locally. The repaired GitHub branch must be tested again and its final commit SHA recorded before integration is considered complete.
+
 
 ## H. Refactoring decision and before/after verification
 
-Smell and exact location: [complete]
-Small proposed structural change / why justified: [complete before editing]
-External behaviour to preserve / relevant tests: [complete]
-Before result: see G, full passing suite.
-Actual change / diff / separate refactor SHA: [complete]
-Focused and full after-refactor commands / working directory / results / evidence: [complete]
-Result — accepted, revised or rejected / reason / behaviour-preservation conclusion: [complete]
+**Smell and exact location:** In `project/smartcare/data_store.py`, the `has_practitioner_conflict()` function used the string comparison `appointment.status.value == "scheduled"`. This duplicates the value already defined by `AppointmentStatus.SCHEDULED`.
+
+**Small structural change and justification:** Replaced the string comparison with `appointment.status is AppointmentStatus.SCHEDULED`. This improves readability and uses the existing enum without changing the booking requirements.
+
+**External behaviour to preserve:** A practitioner cannot have two scheduled appointments at the same time. Different practitioners can be booked at the same time. Cancelled appointments must not cause booking conflicts.
+
+**Before-refactor verification:** After repairing both Stage 8 defects and adding three regression tests, the local full test suite returned 37 passed. Evidence: [Before-refactor test results](verification/06_extended_full_suite_before_refactor.txt).
+
+**Actual refactoring:** Changed the status comparison in `has_practitioner_conflict()` to use the existing enum. The change was made separately from the original bug repairs on branch `fix/stage08-waruna-repairs`. The GitHub refactoring commit SHA should be recorded after confirming the commit.
+
+**After-refactor verification:** Local testing returned 14 passed for the focused tests and 37 passed for the full suite. The application demonstration also completed successfully.
+
+Evidence:
+- [Focused test results](verification/07_after_refactor_focused.txt)
+- [Full test results](verification/08_after_refactor_full_suite.txt)
+- [Application demonstration](verification/09_main_demo.txt)
+
+**Decision and conclusion:** Accepted in local verification because the refactoring preserved the expected application behaviour and all tests passed. Final acceptance requires teammate review and another test run on the integrated GitHub version.
+
 
 ## I. Git, human review and integration
 
-Issues for both defects / refactor scope and owners: [complete]
-Branch / prepared, repair and refactor checkpoints: [link B/C/D/H]
-PR link and another member's reviewer identity: [complete]
-Key human feedback, difference from Copilot findings and response/outcome: [complete]
-Actual review approval / merge evidence: [complete]
-Integrated code SHA and team pull/retest command / working directory / result: [complete]
-Evidence-only later SHA / explanation if different: [complete or not applicable]
-Each member's substantive contribution and artefact: [complete]
+**Issues and owners:** F8-01 concerns retaining cancelled appointment history (FR-07), while F8-02 concerns preventing practitioner booking conflicts (FR-05). @MastrRoshiiii documented the diagnoses in Sections C–F. @warunabandara11-wq contributed the proposed repairs, regression tests and verification evidence. Issue links and final ownership confirmation are pending.
+
+**Branches and checkpoints:** The prepared Stage 8 branch is `debug/stage08`, with preparation evidence recorded in Section B and the documented Stage 8 commit `7c56089`. The repairs, regression tests and refactoring were added on `fix/stage08-waruna-repairs`. Exact repair and refactoring commit SHAs must be added from GitHub's commit history.
+
+**Pull request and reviewer:** Pending. The changes will be submitted through a pull request from `fix/stage08-waruna-repairs` into `debug/stage08`. Another team member will be requested to review the changes before merging.
+
+**Human review feedback and Copilot comparison:** The Copilot suggestions were examined in Section F against the observed failures and code. Independent pull request review is still pending. The actual reviewer feedback, any differences from Copilot's findings and resulting corrections will be recorded after review.
+
+**Review approval and merge evidence:** Pending. No approval or successful merge is claimed at this stage. The pull request URL, reviewer identity and merge commit will be recorded when available.
+
+**Integrated code and team retesting:** Pending. Local verification produced 37 passing tests after the repairs and refactoring, with results recorded in `stage08/verification/`. After integration, the team must pull the updated code, run `python -m pytest -q` from `project/`, and record the final commit SHA and actual test results.
+
+**Evidence-only commits:** Verification logs and documentation were added separately from the functional repairs. The final submission should identify the verified code SHA and any later evidence-only commit SHA.
+
+**Member contributions:**
+- @MastrRoshiiii: Stage 8 preparation, initial failure analysis, defect diagnosis, human hypotheses and Copilot review documentation in Sections A–F.
+- @warunabandara11-wq: Stage 8 functional corrections, additional regression tests, local verification evidence, refactoring and documentation in Sections G–H and the remaining assigned sections.
+
+Other members' contributions and final review activities will be recorded using verified GitHub evidence.
+
+**Current status:** Local repairs and verification are complete. Independent review, merge approval and integrated testing remain pending.
+
 
 ## J. Required reflections
 
-1. Which Copilot diagnosis appeared convincing but lacked evidence? [complete; report honestly if none and discuss the least-supported real suggestion]
-2. What evidence changed your group's view? [complete]
-3. How did regression tests protect the refactoring? [complete]
+
+1. **Which Copilot diagnosis appeared convincing but lacked evidence?** The suggestion that the booking problem was caused by incorrect time or status checks initially appeared plausible. However, the tests showed those conditions were already satisfied. The actual problem was the practitioner ID comparison, which used `!=` instead of `==`.
+
+2. **What evidence changed your group's view?** The initial test results showed five failures. Inspecting the code and running focused tests identified two problems: cancelled appointments were excluded from lookup, and practitioner conflicts were checked against different practitioners instead of the same practitioner. These findings provided stronger evidence than the initial suggestions.
+
+3. **How did regression tests protect the refactoring?** Regression tests checked that cancelled appointments remained retrievable, conflicting bookings were rejected, and different practitioners could still be booked at the same time. After replacing the string-based status comparison with the enum, all 14 focused tests and 37 full-suite tests passed in local verification. This provided evidence that the refactoring preserved the expected behaviour.
+
+
 
 ## K. Ten formative questions
 
 1. What should an engineer do before changing code in response to a failure?
 
-Response: [complete]
+Response: First reproduce the failure, examine the error message and traceback, review the requirements, and identify the possible cause before changing the code.
 
 2. Where should expected behaviour come from during debugging?
 
-Response: [complete]
+Response: Expected behaviour should come from the approved requirements, acceptance criteria and system specifications, rather than assumptions about how the code should work.
 
 3. What is a debugging hypothesis?
 
-Response: [complete]
+Response: A debugging hypothesis is a testable explanation of why a problem occurs. Engineers investigate it using code inspection and testing.
 
 4. What is a regression test and why is it retained?
 
-Response: [complete]
+Response: A regression test checks that previously working functionality still behaves correctly after changes. It is retained to prevent the same bug from returning.
 
 5. What is meant by root cause?
 
-Response: [complete]
+Response: The root cause is the underlying problem in the code or system that produces the failure. Fixing it addresses the actual problem rather than just its symptoms.
 
 6. What is refactoring?
 
-Response: [complete]
+Response: Refactoring means improving the internal structure or readability of code without changing its intended external behaviour.
 
 7. What is a swallowed exception?
 
-Response: [complete]
+Response: A swallowed exception occurs when an error is caught but ignored or not handled properly. This can hide failures and make debugging difficult.
 
 8. What is a code smell?
 
-Response: [complete]
+Response: A code smell is a sign of potentially poor code structure, such as duplicated logic or unnecessary complexity. It may indicate that the code needs improvement.
 
 9. How should GitHub Copilot-generated debugging diagnoses be treated?
 
-Response: [complete]
+Response: Copilot suggestions should be treated as possible explanations, not confirmed facts. Engineers should verify them against the requirements, actual code and test results before accepting them.
 
 10. What is the Stage 8 engineering rule?
 
-Response: [complete]
+Response: Investigate failures using evidence before changing code, make minimal justified repairs, verify them using regression tests, refactor only after achieving a passing baseline, and obtain human review before integration.
+
+
 
 ## L. Completion and handover
 
-- [ ] Existing project, earlier tests and stage records preserved.
-- [ ] Passing Stage 7 SHA and safe preparation details recorded.
-- [ ] Both defects reproduced with meaningful failing tests.
-- [ ] Both human hypotheses recorded before Copilot; actual suggestions evaluated with evidence.
-- [ ] Supported causes and minimal repairs explained; focused and full regression results recorded.
-- [ ] One genuine refactor verified under passing before/after tests.
-- [ ] Human PR review, feedback resolution and integrated retest recorded.
-- [ ] Tutorial, three reflections and ten formative responses complete.
-- [ ] Local recovery metadata excluded from submitted source.
-- [ ] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
+- [x] Existing project, earlier tests and stage records preserved. The Stage 8 changes were made on a separate branch without modifying earlier stage files.
+- [ ] Passing Stage 7 SHA and safe preparation details recorded completely. The Stage 7 baseline is documented in Section B, but some preparation evidence still needs confirmation.
+- [x] Both defects reproduced with meaningful failing tests. The original prepared suite recorded 5 failures and 29 passes.
+- [ ] Both human hypotheses recorded before Copilot and actual suggestions evaluated with evidence. Sections E and F contain the available analysis, but remaining Copilot evidence must be confirmed by the teammate.
+- [x] Supported causes and minimal repairs explained. Focused and full local regression results are recorded in Section G.
+- [x] One genuine refactor verified locally with passing before-and-after tests. The full suite returned 37 passed following the refactoring.
+- [ ] Human pull request review, feedback resolution and integrated retest recorded. These steps are pending.
+- [x] Tutorial activities, three reflections and ten formative responses completed in Sections A, J and K.
+- [x] Local recovery metadata and the teaching preparation utility excluded from the proposed changes.
+- [ ] Same project and full suite ready for Stage 9 following Stage 8 integration, final verification and recording.
 
-Verified integrated code SHA / result: see I.
-Submitted SHA and evidence-only difference if any: [complete]
-Unresolved issues or incomplete checks / owner / next action: [complete]
-Handover note: [complete]
+**Verified integrated code SHA / result:** Pending. Local testing after the repairs and refactoring returned 37 passed using Python 3.13.5 and pytest 9.0.2. These results do not replace final integrated verification.
+
+**Submitted SHA and evidence-only difference:** Pending final pull request review, merge and submission. The verification logs and documentation were prepared separately from the functional code repairs.
+
+**Unresolved issues / owner / next action:**
+
+- @MastrRoshiiii: Confirm the remaining preparation and Copilot evidence in Sections B–F.
+- @warunabandara11-wq: Submit the Stage 8 repairs, regression tests, refactoring and supporting evidence through a pull request.
+- Team reviewer: Review the code changes, tests and evidence, and provide feedback before approval.
+- Group integrator: Merge the approved changes, rerun the full test suite and record the final integrated commit SHA.
+
+**Handover note:** Stage 8 identified two defects involving cancelled appointment history and practitioner booking conflicts. Both defects were corrected and locally verified. Three additional regression tests were added, and a small status-check refactoring preserved the required behaviour. The full local test suite passed 37 tests. The project must receive human review, integration testing and final evidence confirmation before Stage 8 is considered fully complete or handed over to Stage 9.
+
