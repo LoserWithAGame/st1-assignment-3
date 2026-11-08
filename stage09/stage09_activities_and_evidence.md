@@ -12,14 +12,14 @@ Stage 8 integrated SHA, command, working directory and actual result: <!-- compl
 
 | Information | Required session/domain or transient state? | Requirement or reason |
 |---|---|---|
-| Patient identity | | |
-| Appointment history | | |
-| Temporary menu choice | | |
-| Practitioner specialty | | |
-| Debug print output | | |
-| Appointment status | | |
+| Patient identity | Session/domain | The app needs to keep patient's ID and name so it can find them after registering them.|
+| Appointment history | sessions/domain | If i cancel an appoiontment, I should still be able to find it and see it in the all-status list during the same session. |
+| Temporary menu choice | Transient | The number I type tells the menu what to do this time. THe app can move on from that choice once it finishes the action, no need to save history of that choice. |
+| Practitioner specialty | Session/domain | Specialty is part of the pracittioners record, so it should still be there when I look them up later. |
+| Debug print output | transient | Only helpful during debugging, no other service requires this as stored data. |
+| Appointment status | session/domain | The app needs the status to know whether an appointment can be cancelled and whether it should appear under a particular filter. |
 
-What is intentionally lost on exit? <!-- response -->
+What is intentionally lost on exit? [Because its all stored in memory all data will be lost after the session ends. This includes patient, pracititoner, and appointments. Including the hisotry of cancellations will reset after finishing the session.]
 
 ### A2 Interface and domain data plan
 
@@ -27,21 +27,21 @@ Plan before AI. This replaces schema/key design; no database tables are required
 
 | Function or component | Explicit inputs and types | Outputs | Responsibility and validation | Domain source / existing constraint |
 |---|---|---|---|---|
-| appointment_sort_key | | | | |
-| select_appointments | | | | |
-| Service listing | | | | |
-| Console | | | | |
+| appointment_sort_key | One appointment [object] | A pair containing the date/time and the apopintment ID, [tuple[date/time, str]] | Gives python the two values to sort by. If two appointments have the same time, the ID decides which comes first. | Both values already come from the appointment. |
+| select_appointments | A list of appointment objects, a practitioner ID as a string, and an appointmentstatus or None | A new list containing the mathcing appointment objects  | Keeps the appointments for the requested practitioner, applied the status filter if one was given, then sorts those results. It leaves the original list and appointments alone. | It reads the practitioner ID and status on each appointment. The service checks whether the practitioner exists. |
+| Service listing | A practitioner ID as a string and an Appointmentstatus or None | A list of matching appointments, or an error | Looks up the pracittioenr, checks the filter and passes the appointments from the store to query. A known pracitioner with no matches gets an emtpy list returned | The store already has the registered practiioner and appointment records. An unknown ID gives LookupError, while an invlaid ID or filter gives ValueError. |
+| Console | Keyboard inpout as text, such as a menu number, an ID, a date/time or a status. |Prompts, results and error messages on then screen | Reads what the user types, then converts it when needed and calls the right service. For listing, a blank filter becomes None and, scheduled becomes Appointmentstatus.scheduled. | The menu shares one store for the whole session. Booking uses the existing YYY-MM-DD HH:MM date/time format. |
 
-Relate patient ID/name, practitioner ID/name/specialty, and appointment ID/actual participants/date_time/status to the existing contracts: <!-- response -->
+Relate patient ID/name, practitioner ID/name/specialty, and appointment ID/actual participants/date_time/status to the existing contracts: [ A patient has an ID and name. A practitioner has an ID, name and specialty. An appointment has its own ID, date/time and status. It links to the actual registered patient and practiioner objects. FOr example, appointment A1 can link to the existing records for P1 and D1. Cancelling it changes the status of that same A1 record. changing one thing can cause a cascade of changes in other parts of the data.]
 
 ### A3 Responsibility violations
 
 | Conceptual case | Violation | Correct boundary and reason |
 |---|---|---|
-| Appointment.cancel reads input | | |
-| Service prints/reads the menu | | |
-| Query sorts its source in place | | |
-| Store prints Appointment saved | | |
+| Appointment.cancel reads input | The appointment object is asking the unser for information, whitch is the consol's job to do | The console asks for the appointment ID, and the service finds that appointment. Then cancel() checks whether cancellation is allowed and updates the status. This also lets test call cancel() without needing any keyboard. |
+| Service prints/reads the menu | The serice is mixing its work with displaying the menu and reading choices. | The console reads the user's choice and displays the result. The service carries out the action and returns an object or raises an error. This makes the serice easier to use and test on its own. |
+| Query sorts its source in place | Sorting in place changes the order of the iriginal list given to the query. This could effect other code using that list. | The query should return a new sorted list using sorted(). The caller keeps its original list in the same order, and the appointment object stays the unchanged. |
+| Store prints Appointment saved | The store is displaying a message as well as keeping the record. | The store keeps the appointment so it can be retreived later. The console displays the confirmation after the service finishes successfully. This keeps the user messages in the same part of the program. |
 
 ### A4 Sorting comparison
 
