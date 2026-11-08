@@ -6,7 +6,8 @@ All Assignment 3 stage materials are provided from the beginning. Complete this 
 
 Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
 Members and UG/PG cohorts: [MastrRoshiiii -, LoserWithAGame - Liam Smilie- warunabandara11-wq]
-Record owner / contribution links for each member: [complete]
+Record owner / contribution links for each member: @MastrRoshiiii — Stage 8 write-up for Parts B–F (https://github.com/LoserWithAGame/st1-assignment-3/commit/7c56089ca9eacfb3db15f857724fe9e967bf6a59) and review of PR #29 (https://github.com/LoserWithAGame/st1-assignment-3/pull/29#pullrequestreview-5817144792).
+@warunabandara11-wq — PR #29, which contains the repairs, regression tests, refactor, and test evidence. (https://github.com/LoserWithAGame/st1-assignment-3/pull/29)
 
 Use concise results and accessible artefact links rather than copying entire logs. Keep human-first entries before consulting GitHub Copilot. Link shared evidence once; do not repeat it across sections. No entries below are specimen answers or claimed results.
 
@@ -118,9 +119,9 @@ Why is changing code immediately after seeing a failure often a poor debugging s
 Response and reason: Chnaging the code immediately might be fixing a symptom rather then a cause. Its also possible for the test itself to be wrong. Check the expected behaviour against the requirement, and gather evidence to test possible explanations. This would help with making small fixes without accidently breaking working behaviour.
 
 
-Classification responses (1–5, each with reason): [complete]
-Tutorial debugging record — expected; observed; reproduction; hypothesis; evidence to inspect: [complete]
-Traceback — exception/assertion; expected/observed values; test line; call path; requirement; ranked causes and discriminating checks: [complete]
+Classification responses (1–5, each with reason): See A.1 for all five classifications and their reasons.
+Tutorial debugging record — expected; observed; reproduction; hypothesis; evidence to inspect: See A.2 for the expected behaviour, observed behaviour, and steps to reproduce the cancelled-history fault. See Part E, F8-01, for my initial hypothesis and planned checks.
+Traceback — exception/assertion; expected/observed values; test line; call path; requirement; ranked causes and discriminating checks: See A.5 for the AssertionError in test_cancellation.py, line 41. The test expected the original appointment, but the lookup returned None. A.5 also records the call path, the FR-07 requirement, and the three possible causes with a check for each.
 
 ## B. Stage 7 baseline and safe preparation
 
@@ -128,11 +129,11 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 - Baseline test command / working directory / observed result / evidence: - The Stage 7 record shows python -m pytest -v, run from the project folder, with 32 passed, 0 failed at the earlier commit 2fba9705ec1baabf68b34fd0b74a200cd5bdca8b.
 - Clean preparation SHA if a record-only commit followed Stage 7: Github shows that the fault commit directly followed 829e6e8. There was no seperate.
 - Branch and preparer / how teammates obtained this branch: Gupta Pranav authored the preparation commit on debug/stage08. Teammates including myself obtained this branch during our tutorial by pulling the branch from Github.
-- Downloaded tool version, source SHA256 and --check outcome: 
+- Downloaded tool version, source SHA256 and --check outcome: [complete]
 - --apply and --verify output summaries / artefact references: [complete]
 - Bounded diff inspected and recovery location (not committed): The preparation commit only chnaged data_store.py. 
 - Prepared faulty-state commit SHA: d666a560fbc6de3f56636aaf5b0a35f13ffb70ba
-- Preparation or recovery issues and resolution, if any: [complete]
+- Preparation or recovery issues and resolution, if any: No preparation or recovery issues were reported by @LoserWithAGame.
 - Initial prepared full-suite command / result / key failures: I ran python -m pytest -v from the project folder on debug/stage08. It showed 5 failed, and 29 passed. Two of the failures invollved cancelled appointment history and three involved practitioner booking conflicts.  
 
 ## C. F8-01 diagnosis and repair
@@ -142,9 +143,9 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 - Minimal synthetic reproduction steps: Register a sample patient and practitioner, book appointment A1, cancel it, then call store.find_appointment('A1').
 - Meaningful failing test path/name and exact relevant failure: test_cancel_appointment_returns_retained_cancelled_object failed at [test_cancellation.py, line 41 (line 41) project/tests/test_cancellation.py:41)]. The check assert store.find_appointment('A1') is appointment raised an AssertionError because the lookup returned None.
 - Human hypothesis and intended checks: see E, F8-01. (I plan to compare list_appointments() with find_appointment('A1') after cancellation. If A1 still appears in the list but the lookup returns None, I would inspect the lookup code to see why it skips that record. If A1 is also missing from the list, I would check whether cancellation removes it.)
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Supported root cause and inspected code/runtime evidence: find_appointment() skipped records with status CANCELLED. The original test showed that cancellation returned the same appointment with its status set to CANCELLED, but the lookup returned None. A second cancellation therefore raised LookupError before it could reach the check that raises ValueError.
+- Smallest justified fix / diff / why other behaviour is preserved: I reviewed Waruna’s repair. He removed and appointment.status.value != "cancelled" from find_appointment(). This lets the lookup return the original appointment by ID even after it has been cancelled. Invalid IDs still raise ValueError, unknown IDs still return None from the data store, and the existing cancellation check still rejects a second cancellation with ValueError.
+- Repair SHA / focused verification result: 2fdc483097fd8902b4dc1c4f74042cc5327e11be. Waruna’s focused verification recorded 2 passed. The first test confirmed that the original cancelled appointment could still be found. The second confirmed that cancelling it again raised ValueError and preserved its history.
 
 ## D. F8-02 diagnosis and repair
 
@@ -153,9 +154,9 @@ Traceback — exception/assertion; expected/observed values; test line; call pat
 - Minimal synthetic reproduction steps: Book appointment A1 for practitioner D1 at 9:00 am. Try to book a second appointment for D1 at the same time. It should be rejected. Then check the same time for practitioner D2, who has no booking. The system should report no conflict.
 - Meaningful failing test path/name and exact relevant failure: In [project/tests/test_services.py (line 155)], test_practitioner_conflict_prevents_appointments books A1 with practitioner D1 on line 154, then attempts to book A2 with the same practitioner at the same time on lines 155–156. The second booking should raise ValueError, but it went through, so pytest reported Failed: DID NOT RAISE <class 'ValueError'>. In the same file, test_different_practitioner_books_appointment checks on line 166 that D2 has no conflict when D1 is booked at that time. The check returned True instead of False, so pytest reported AssertionError: assert True is False. In [project/tests/test_starter.py (line 127)], test_conflict_rule_and_different_practitioner also expects ValueError on lines 127–128 when a second appointment is booked with D1 at the same time. Pytest reported Failed: DID NOT RAISE <class 'ValueError'> at line 127, and the test stopped before reaching the check that a booking with D2 succeeds.
 - Human hypothesis and intended checks: see E, F8-02. (I plan to book D1 at 9 am, then run the conflict check directly for D1 and D2 at 9am. If the direct check gives the wrong results, Ill inspect the check itself. If it gives the right results, Ill check which ID the booking service passes in.)
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Supported root cause and inspected code/runtime evidence: In has_practitioner_conflict(), the code used != to compare practitioner IDs. That made it look for a booking with a different practitioner. This explains why the test allowed D1 to be booked twice at the same time but incorrectly reported a conflict for D2.
+- Smallest justified fix / diff / why other behaviour is preserved: Waruna changed appointment.practitioner.practitioner_id != practitioner_id to appointment.practitioner.practitioner_id == practitioner_id. The check now matches the same practitioner. The checks for the appointment time, SCHEDULED status, and optional excluded appointment ID stayed the same.
+- Repair SHA / focused verification result: 2fdc483097fd8902b4dc1c4f74042cc5327e11be. Waruna’s focused verification recorded 3 passed. The tests confirmed that a second booking for the same practitioner at the same time is rejected and that a different practitioner can still take a booking at that time.
 
 ## E. Human-first hypotheses
 
@@ -176,14 +177,60 @@ Member and saved sequence/time or commit showing this preceded consultation: @Ma
 Use the full handout prompt separately for BOTH defects, after E. Keep each actual prompt or accessible reference; include observed behaviour, expected behaviour, reproduction, failing test, human hypothesis, relevant code, three ranked causes and discriminating checks, with the no-rewrite/no-invented-requirements constraints.
 
 ### F8-01 Copilot review
-Actual prompt / output reference and member:
-1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: 
-2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: [complete]
-Final human conclusion and comparison with initial hypothesis: [complete]
+Actual prompt / output reference and member: (@MastrRoshiiii) Help me investigate F8-01, the cancelled appointment history fault, using the prepared faulty commit d666a56.
+
+To reproduce it, register a sample patient and practitioner, book appointment A1, cancel it, then call store.find_appointment('A1').
+
+Expected behaviour under FR-07: the cancelled appointment should remain stored and the lookup should return the original appointment with its status set to CANCELLED. Under FR-06, a second cancellation should be rejected with ValueError.
+
+Observed behaviour: the first cancellation returns the original appointment and sets its status to CANCELLED, but the lookup returns None. A second cancellation raises LookupError("Appointment not found") instead of ValueError.
+
+Failing tests in project/tests/test_cancellation.py:
+- test_cancel_appointment_returns_retained_cancelled_object, line 41: AssertionError because store.find_appointment('A1') returned None instead of the original appointment.
+- test_repeated_cancellation_is_rejected_and_retains_history, line 98: expected ValueError, but got LookupError("Appointment not found").
+
+My initial hypothesis and planned check from Part E:
+I believe the lookup might be skipping cancelled appointments. I plan to compare list_appointments() with find_appointment('A1') after cancellation. If A1 still appears in the list but the lookup returns None, I’ll inspect why the lookup skips it. If A1 is missing from the list too, I’ll check whether cancellation removes it.
+
+Relevant code from data_store.py:
+
+```python
+def find_appointment(self, appointment_id: str) -> Appointment | None:
+    if not isinstance(appointment_id, str) or not appointment_id.strip():
+        raise ValueError("Appointment ID cannot be blank")
+    for appointment in self.list_appointments():
+        if (appointment.appointment_id == appointment_id.strip()
+                and appointment.status.value != "cancelled"):
+            return appointment
+    return None
+
+def list_appointments(self) -> list[Appointment]:
+    return list(self._appointments.values())
+```
+
+Relevant code from services.py, with docstrings omitted:
+
+```python
+def find_appointment(self, appointment_id: str) -> Appointment:
+    appointment = self.data_store.find_appointment(appointment_id)
+    if appointment is None:
+        raise LookupError('Appointment not found')
+    return appointment
+
+def cancel_appointment(self, appointment_id: str) -> Appointment:
+    appointment = self.find_appointment(appointment_id)
+    appointment.cancel()
+    return appointment
+```
+
+Give me three possible causes, ranked from most to least likely. For each one, explain what evidence supports or weakens it and give me one specific check that would distinguish it from the other causes. Clearly separate what the supplied code and test results show from what still needs checking. Suggest checks for me to run. Do not run commands, edit or rewrite code, change tests, or invent requirements.
+
+1. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked the lookup skipping cancelled appointments first. The suggested check was to compare `list_appointments()` with `find_appointment('A1')` after cancellation. The original test showed that cancellation returned the same appointment with status `CANCELLED`, but the lookup returned `None`. The lookup code had a condition that skipped cancelled appointments. After that condition was removed, both focused tests passed. I marked this suggestion **correct** and **accepted** it because it explains both failures.
+2. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason: Copilot ranked deletion or replacement of the appointment second. The suggested check was to see whether the original A1 object still appeared in `list_appointments()` after cancellation. The first cancellation returned the original object, and the service code showed no step that removed or replaced it. The two focused tests passed after changing only the lookup for this fault. I marked this suggestion **wrong as the cause** and **rejected** it because fixing the lookup was enough to restore the expected behaviour.
+3. Ranked suggestion / evidence check / observed evidence / correct, partly correct or wrong / accept, modify or reject with reason:  Copilot ranked the order of the cancellation steps third. The suggested check was to compare calling `appointment.cancel()` directly with cancelling through the service a second time. The traceback showed that the service raised `LookupError` during lookup, before it reached `appointment.cancel()`. After the lookup was fixed, the repeated cancellation test passed with the expected `ValueError`. I marked this suggestion **partly correct** and **modified** it. The order explains where the wrong error came from, but the fix belongs in the lookup.
 
 ### F8-02 Copilot review
-Actual prompt / output reference and member: Help me investigate F8-02, the practitioner booking conflict, on the debug/stage08 branch.
+Actual prompt / output reference and member: (@MastrRoshiiii) Help me investigate F8-02, the practitioner booking conflict, on the debug/stage08 branch.
 
 To reproduce it, book appointment A1 for practitioner D1 at 9 am. Then try to book A2 for D1 at the same time. Also check whether D2, who has no booking at that time, is reported as having a conflict.
 
@@ -288,19 +335,24 @@ Evidence:
 
 ## I. Git, human review and integration
 
-**Issues and owners:** F8-01 concerns retaining cancelled appointment history (FR-07), while F8-02 concerns preventing practitioner booking conflicts (FR-05). @MastrRoshiiii documented the diagnoses in Sections C–F. @warunabandara11-wq contributed the proposed repairs, regression tests and verification evidence. Issue links and final ownership confirmation are pending.
+**Issues and owners:** F8-01 concerns retaining cancelled appointment history (FR-07), while F8-02 concerns preventing practitioner booking conflicts (FR-05). @MastrRoshiiii documented the diagnoses in Sections C–F. @warunabandara11-wq contributed the proposed repairs, regression tests and verification evidence. F8-01, F8-02 and the status check refactor were handled in PR #29. Separate Stage 8 issue links are were not used in stage 8. @MastrRoshiiii documented the diagnoses and reviewed the PR. @warunabandara11-wq implemented both repairs and the refactor, added regression tests, and recorded verification evidence. Formal ownership of parts A-F, @MastrRoshiiii, parts G-L, @warunabandara11-wq
 
-**Branches and checkpoints:** The prepared Stage 8 branch is `debug/stage08`, with preparation evidence recorded in Section B and the documented Stage 8 commit `7c56089`. The repairs, regression tests and refactoring were added on `fix/stage08-waruna-repairs`. Exact repair and refactoring commit SHAs must be added from GitHub's commit history.
+**Branches and checkpoints:** The prepared Stage 8 branch is `debug/stage08`, with preparation evidence recorded in Section B and the documented Stage 8 commit `7c56089`. The repairs, regression tests and refactoring were added on `fix/stage08-waruna-repairs`.
+- Prepared faulty commit — d666a560fbc6de3f56636aaf5b0a35f13ffb70ba
+- Snapshot used for before-repair tests — 7c56089ca9eacfb3db15f857724fe9e967bf6a59
+- Both repairs — 2fdc483097fd8902b4dc1c4f74042cc5327e11be
+- Additional regression tests — f9f04e90a229a6b6ddd1e7d53fd86f44c8085452
+- Status-check refactor — b8c165c3ac6ddc1c5aa57883339223f8d5909531
+- PR #29 merge into debug/stage08 — 5e5637ea3e59f8bfe081b703da865121e7c2bca1
 
-**Pull request and reviewer:** Pending. The changes will be submitted through a pull request from `fix/stage08-waruna-repairs` into `debug/stage08`. Another team member will be requested to review the changes before merging.
+**Pull request and reviewer:** PR #29 — Stage 8: Debugging Repairs, Regression Tests and Evidence was opened by @warunabandara11-wq and reviewed by @MastrRoshiiii.
 
-**Human review feedback and Copilot comparison:** The Copilot suggestions were examined in Section F against the observed failures and code. Independent pull request review is still pending. The actual reviewer feedback, any differences from Copilot's findings and resulting corrections will be recorded after review.
+**Human review feedback and Copilot comparison:** I approved Waruna’s changes in PR #29 so they could go through final editing and review before merging to main. My GitHub review recorded the approval. The technical comparison is recorded in Part F. Copilot suggested that the lookup was skipping cancelled appointments and that the practitioner comparison was reversed. Waruna’s changes addressed both causes, and the focused tests passed after the repairs. https://github.com/LoserWithAGame/st1-assignment-3/pull/29#pullrequestreview-5817144792
 
-**Review approval and merge evidence:** Pending. No approval or successful merge is claimed at this stage. The pull request URL, reviewer identity and merge commit will be recorded when available.
-
+**Review approval and merge evidence:** - @MastrRoshiiii approved PR #29 before merging it into debug/stage08 at commit 5e5637ea3e59f8bfe081b703da865121e7c2bca1.
 **Integrated code and team retesting:** Pending. Local verification produced 37 passing tests after the repairs and refactoring, with results recorded in `stage08/verification/`. After integration, the team must pull the updated code, run `python -m pytest -q` from `project/`, and record the final commit SHA and actual test results.
 
-**Evidence-only commits:** Verification logs and documentation were added separately from the functional repairs. The final submission should identify the verified code SHA and any later evidence-only commit SHA.
+**Evidence-only commits:** The verified debug/stage08 commit was 5e5637e, which passed all 37 tests. Commit 8450428 added the verification logs. Commits a07dfd5, b4b8a01 and c9a9619 updated the Stage 8 evidence document only. The final verified main SHA and any evidence-only commit made after that test run will be recorded at submission.
 
 **Member contributions:**
 - @MastrRoshiiii: Stage 8 preparation, initial failure analysis, defect diagnosis, human hypotheses and Copilot review documentation in Sections A–F.
@@ -308,7 +360,7 @@ Evidence:
 
 Other members' contributions and final review activities will be recorded using verified GitHub evidence.
 
-**Current status:** Local repairs and verification are complete. Independent review, merge approval and integrated testing remain pending.
+**Current status:** PR #29 was reviewed, approved, and merged into debug/stage08. @MastrRoshiiii ran python -m pytest -q from the project folder at commit 5e5637ea3e59f8bfe081b703da865121e7c2bca1. The result was 37 passed in 0.06 seconds using Python 3.14.7 and pytest 8.3.5. The final merge into main and retest there are pending.
 
 
 ## J. Required reflections
@@ -369,26 +421,26 @@ Response: Investigate failures using evidence before changing code, make minimal
 ## L. Completion and handover
 
 - [x] Existing project, earlier tests and stage records preserved. The Stage 8 changes were made on a separate branch without modifying earlier stage files.
-- [ ] Passing Stage 7 SHA and safe preparation details recorded completely. The Stage 7 baseline is documented in Section B, but some preparation evidence still needs confirmation.
+- [x] Passing Stage 7 SHA and safe preparation details recorded completely. The Stage 7 baseline is documented in Section B.
 - [x] Both defects reproduced with meaningful failing tests. The original prepared suite recorded 5 failures and 29 passes.
-- [ ] Both human hypotheses recorded before Copilot and actual suggestions evaluated with evidence. Sections E and F contain the available analysis, but remaining Copilot evidence must be confirmed by the teammate.
+- [x] Both human hypotheses recorded before Copilot and actual suggestions evaluated with evidence. Sections E and F contain the available analysis.
 - [x] Supported causes and minimal repairs explained. Focused and full local regression results are recorded in Section G.
 - [x] One genuine refactor verified locally with passing before-and-after tests. The full suite returned 37 passed following the refactoring.
-- [ ] Human pull request review, feedback resolution and integrated retest recorded. These steps are pending.
+- [x] Human pull request review, feedback resolution and integrated retest recorded.
 - [x] Tutorial activities, three reflections and ten formative responses completed in Sections A, J and K.
 - [x] Local recovery metadata and the teaching preparation utility excluded from the proposed changes.
 - [ ] Same project and full suite ready for Stage 9 following Stage 8 integration, final verification and recording.
 
-**Verified integrated code SHA / result:** Pending. Local testing after the repairs and refactoring returned 37 passed using Python 3.13.5 and pytest 9.0.2. These results do not replace final integrated verification.
+**Verified integrated code SHA / result:** Pending. Local testing after the repairs and refactoring returned 37 passed using Python 3.13.5 and pytest 9.0.2. These results do not replace final integrated verification. (Still required, pending merge to main)
 
-**Submitted SHA and evidence-only difference:** Pending final pull request review, merge and submission. The verification logs and documentation were prepared separately from the functional code repairs.
+**Submitted SHA and evidence-only difference:** Pending final pull request review, merge and submission. The verification logs and documentation were prepared separately from the functional code repairs. (Still required, pending merge to main)
 
 **Unresolved issues / owner / next action:**
 
-- @MastrRoshiiii: Confirm the remaining preparation and Copilot evidence in Sections B–F.
-- @warunabandara11-wq: Submit the Stage 8 repairs, regression tests, refactoring and supporting evidence through a pull request.
-- Team reviewer: Review the code changes, tests and evidence, and provide feedback before approval.
-- Group integrator: Merge the approved changes, rerun the full test suite and record the final integrated commit SHA.
+- @MastrRoshiiii: Confirm the remaining preparation and Copilot evidence in Sections B–F. (COMPLETE)
+- @warunabandara11-wq: Submit the Stage 8 repairs, regression tests, refactoring and supporting evidence through a pull request. (COMPLETE)
+- Team reviewer: Review the code changes, tests and evidence, and provide feedback before approval. (COMPLETE - @MastrRoshiiii)
+- Group integrator: Merge the approved changes, rerun the full test suite and record the final integrated commit SHA. (@MastrRoshiiii merged PR #29 into debug/stage08 at 5e5637ea3e59f8bfe081b703da865121e7c2bca1 and ran python -m pytest -q from project. The result was 37 passed in 0.06 seconds).
 
 **Handover note:** Stage 8 identified two defects involving cancelled appointment history and practitioner booking conflicts. Both defects were corrected and locally verified. Three additional regression tests were added, and a small status-check refactoring preserved the required behaviour. The full local test suite passed 37 tests. The project must receive human review, integration testing and final evidence confirmation before Stage 8 is considered fully complete or handed over to Stage 9.
 
