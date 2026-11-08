@@ -38,20 +38,24 @@ Relate patient ID/name, practitioner ID/name/specialty, and appointment ID/actua
 
 | Conceptual case | Violation | Correct boundary and reason |
 |---|---|---|
-| Appointment.cancel reads input | The appointment object is asking the unser for information, whitch is the consol's job to do | The console asks for the appointment ID, and the service finds that appointment. Then cancel() checks whether cancellation is allowed and updates the status. This also lets test call cancel() without needing any keyboard. |
+| Appointment.cancel reads input | The appointment object is asking the user for information, whitch is the console's job to do | The console asks for the appointment ID, and the service finds that appointment. Then cancel() checks whether cancellation is allowed and updates the status. This also lets test call cancel() without needing any keyboard. |
 | Service prints/reads the menu | The serice is mixing its work with displaying the menu and reading choices. | The console reads the user's choice and displays the result. The service carries out the action and returns an object or raises an error. This makes the serice easier to use and test on its own. |
-| Query sorts its source in place | Sorting in place changes the order of the iriginal list given to the query. This could effect other code using that list. | The query should return a new sorted list using sorted(). The caller keeps its original list in the same order, and the appointment object stays the unchanged. |
+| Query sorts its source in place | Sorting in place changes the order of the original list given to the query. This could effect other code using that list. | The query should return a new sorted list using sorted(). The caller keeps its original list in the same order, and the appointment object stays the unchanged. |
 | Store prints Appointment saved | The store is displaying a message as well as keeping the record. | The store keeps the appointment so it can be retreived later. The console displays the confirmation after the service finishes successfully. This keeps the user messages in the same part of the program. |
 
 ### A4 Sorting comparison
 
-For `appointments.sort(key=appointment_sort_key)` and `result = sorted(appointments, key=appointment_sort_key)`, predict source order, return value and result identity. Give a meaningful mutation check: <!-- response -->
+For `appointments.sort(key=appointment_sort_key)` and `result = sorted(appointments, key=appointment_sort_key)`, predict source order, return value and result identity. Give a meaningful mutation check: [ Using appoiontments.sort(key=appointment_sort_key) sorts the original lilst and returns None. It is still the same list, but the order may have changed.
+Using result = sorted(appointments, key=appointments_sort_key) gives me a new sorted list. THe original list stays in its original order. The two lists contain the same appointment objects.
+To check that nothing was changed accidentally, I would save the original order and appointment details before running the query. Afterword, I would check that those stays the same, that the result is sorted correctly, and that result is not appointments. ]
 
-Score-example prediction and explanation of passing the named key: <!-- response -->
+Score-example prediction and explanation of passing the named key: [ The result would be [('chen', 5), ('Ali', 8), ('Bea', 8)]. Chen comes first becasue their score is lowest. Ali and Bea have the same score, so their names decide the order. THe original list stayus as Bea, Ali, Chen.
+Key=score_key lets sorted() use the function on each item. Writing score-key() would call it straight away wihtout giving it an item. ]
 
 ### A5 Exit question
 
-Explain cancellation versus deletion, and checks for same-session lookup, all-status listing and SCHEDULED-only exclusion: <!-- response -->
+Explain cancellation versus deletion, and checks for same-session lookup, all-status listing and SCHEDULED-only exclusion: [ Cancelling an appointment changes to CANCELLED while keeping it in the soire. Deleting it would remove the record and its history.
+To check this, I would book A1, cancel it, then find it again in the same session. It should return the same appointment object with its status changed to Cancelled. The all-status list should still include A1, while the SCHEDULED list should leave it out. ]
 
 ## B. Human design and contracts
 
