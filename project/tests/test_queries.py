@@ -312,3 +312,37 @@ def test_service_listing_rejects_invalid_status(invalid_status):
     assert store.find_appointment("A1") is original
     assert store.list_appointments() == [original]
     assert original.status is AppointmentStatus.SCHEDULED
+
+def test_service_listing_retains_cancelled_history_and_accepts_spaces():
+    store = SmartCareDataStore()
+    patients = PatientService(store)
+    practitioners = PractitionerService(store)
+    appointments = AppointmentService(store)
+
+    patients.register_patient("P1", "Burnt Peanut")
+    practitioners.register_practitioner("D1", "Crispy Peanut", "General")
+
+    original = appointments.book_appointment(
+        "A1", "P1", "D1", datetime(2026, 10, 1, 9)
+    )
+
+    cancelled = appointments.cancel_appointment("A1")
+
+    # cancellation keeps the same aappointment object.
+    assert cancelled is original
+    assert store.find_appointment("A1") is original
+    assert original.status is AppointmentStatus.CANCELLED
+
+    # spaces around the pracitioner ID are accepted.
+    all_statuses = appointments.list_practitioner_appointments("  D1  ")
+    cancelled_only = appointments.list_practitioner_appointments("D1", AppointmentStatus.CANCELLED)
+    scheduled_only = appointments.list_practitioner_appointments("D1", AppointmentStatus.SCHEDULED)
+
+    # history remains visible, while the scheduled filter excludes it.
+    assert all_statuses == [original]
+    assert all_statuses[0] is original
+    assert cancelled_only == [original]
+    assert cancelled_only[0] is original
+    assert scheduled_only == []
+    assert store.list_appointments() == [original]
+    assert original.status is AppointmentStatus.CANCELLED
