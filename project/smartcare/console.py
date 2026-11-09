@@ -119,7 +119,7 @@ def run_menu() -> None:
                 print(f"Patient found: {patient.patient_id}: {patient.name}")
             elif choice == 3:
                 practitioner = practitioners.register_practitioner(
-                    practitioner_id=input("Practitioner ID: [INPUT] ".strip()),
+                    practitioner_id=input("Practitioner ID: [INPUT] ").strip(),
                     name=input("Practitioner name: [INPUT] "),
                     specialty=input("Specialty: [INPUT] "),
                 )
