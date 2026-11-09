@@ -139,6 +139,7 @@ def test_select_appointments_sorts_without_changing_source():
 
     #act.
     result = select_appointments(source, "D1")
+    repeated_result = select_appointments(source, "D1")
 
     # assert: earlier time first, then appointment ID for equal times.
     assert result == [earlier_a, earlier_b, later]
@@ -146,6 +147,10 @@ def test_select_appointments_sorts_without_changing_source():
     assert result[0] is earlier_a
     assert result[1] is earlier_b
     assert result[2] is later
+
+    #each call gives us a seperate result list.
+    assert repeated_result is not result
+    assert repeated_result is not source
 
     # the original list order and appointment fields must stay unchanged.
     assert source == original_order
