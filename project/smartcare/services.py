@@ -167,4 +167,5 @@ class AppointmentService:
         ValueError; a known practitioner with no matches returns an
         empty list.
         """
+        appointments = SmartCareDataStore.list_appointments()
         raise NotImplementedError('Stage 9: practitioner appointments')
