@@ -100,3 +100,62 @@ def test_select_appointments_returns_empty_when_status_has_no_matches():
     assert result == []
     assert store.find_appointment("A1") is appointment
     assert appointment.status is AppointmentStatus.SCHEDULED
+
+def test_select_appointments_sorts_without_changing_source():
+    # arrange: create participants and deliberately unordered appointments.
+    store = SmartCareDataStore()
+    patient = PatientService(store).register_patient("P1", "Burnt Peanut")
+    practitioner = PractitionerService(store).register_practitioner(
+        "D1", "Crispy Peanut", "General"
+    )
+
+    later = Appointment(
+        "A3", patient, practitioner, datetime(2026, 10, 1, 10),
+        AppointmentStatus.SCHEDULED,
+    )
+    earlier_b = Appointment(
+        "A2", patient, practitioner, datetime(2026, 10, 1, 9),
+        AppointmentStatus.CANCELLED,
+    )
+    earlier_a = Appointment(
+        "A1", patient, practitioner, datetime(2026, 10, 1, 9),
+        AppointmentStatus.COMPLETED,
+    )
+
+    source = [later, earlier_b, earlier_a]
+
+    # save the original order and field values before calling the query.
+    original_order = source.copy()
+    original_fields = [
+        (
+            appointment.appointment_id,
+            appointment.patient,
+            appointment.practitioner,
+            appointment.date_time,
+            appointment.status,
+        )
+        for appointment in source
+    ]
+
+    #act.
+    result = select_appointments(source, "D1")
+
+    # assert: earlier time first, then appointment ID for equal times.
+    assert result == [earlier_a, earlier_b, later]
+    assert result is not source
+    assert result[0] is earlier_a
+    assert result[1] is earlier_b
+    assert result[2] is later
+
+    # the original list order and appointment fields must stay unchanged.
+    assert source == original_order
+    assert [
+        (
+            appointment.appointment_id,
+            appointment.patient,
+            appointment.practitioner,
+            appointment.date_time,
+            appointment.status,
+        )
+        for appointment in source
+    ] == original_fields
