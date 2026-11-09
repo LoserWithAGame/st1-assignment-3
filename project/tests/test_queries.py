@@ -290,3 +290,25 @@ def test_service_listing_rejects_unknown_and_invalid_ids(
     assert store.find_appointment("A1") is original
     assert store.list_appointments() == [original]
     assert original.status is AppointmentStatus.SCHEDULED
+
+@pytest.mark.parametrize("invalid_status", ["scheduled", "pending", 123])
+def test_service_listing_rejects_invalid_status(invalid_status):
+    store = SmartCareDataStore()
+    patients = PatientService(store)
+    practitioners = PractitionerService(store)
+    appointments = AppointmentService(store)
+
+    patients.register_patient("P1", "Burnt Peanut")
+    practitioners.register_practitioner("D1", "Crispy Peanut", "General")
+
+    original = appointments.book_appointment(
+        "A1", "P1", "D1", datetime(2026, 10, 1, 9)
+    )
+
+    # Act and assert: the rejected request raises the expected error.
+    with pytest.raises(ValueError):
+        appointments.list_practitioner_appointments("D1", invalid_status)
+
+    assert store.find_appointment("A1") is original
+    assert store.list_appointments() == [original]
+    assert original.status is AppointmentStatus.SCHEDULED
