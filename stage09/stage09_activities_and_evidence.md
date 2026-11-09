@@ -94,9 +94,9 @@ What the tests do and do not establish: <!-- response -->
 
 | Scenario / acceptance ID | Reproducible inputs / artefact | Expected result | Observed result and state check | Evidence link |
 |---|---|---|---|---|
-| UI-01 full menu workflow | | | | |
-| UI-02 invalid-input recovery | | | | |
-| Automated service workflow | | | | |
+| UI-01 full menu workflow | Using the same ID and Inputs will reproduce results | Registering Patients, Practitioners, and Appointments. Cancelling Appointments, and Listing Scheduled appointments only | All Functional Requirements Satisfied | Refer to Appendix |
+| UI-02 invalid-input recovery | Using Inputs of the same invalid, unknown, and empty type will reproduce results | Use unknown menu options and invalid inputs | Handles Errors correctly, and Rejects Data that is incorrect | All Functional Requirements Satisfied | Refer to Appendix |
+| Automated service workflow | This is the Automated Method for the program, using the same inputs will reproduce the result | Follows the User's inputs and functions as intended | The Automated Service Workflow Functions as intended and follows all User inputs and Requirements. | Refer to Appendix |
 
 Include registration/find, booking, conflict rejection, different-practitioner booking, cancellation, retrieval, listing/filtering, freed slot and exit; duplicate/unknown/blank IDs, malformed/impossible date, invalid status, unknown choice and repeated cancellation. Identify before/after state and subsequent successful action.
 
