@@ -75,4 +75,28 @@ def test_select_appointments_filters_by_status(status):
         } [status]
 
         # assert: the exact expected appointments are returned.
-        assert result == expected
+    assert result == expected
+
+def test_select_appointments_returns_empty_when_status_has_no_matches():
+    # arrange: D1 has one scheduled appointment.
+    store = SmartCareDataStore()
+    patients = PatientService(store)
+    practitioner = PractitionerService(store)
+    appointments = AppointmentService(store)
+
+    patients.register_patient("P1", "Burnt Peanut")
+    practitioner.register_practitioner("D1", "Crispy Peanut", "General")
+
+    appointment = appointments.book_appointment(
+        "A1", "P1", "D1", datetime(2026, 10, 1, 9)
+    )
+
+    # Act: ask for cancelled appointments.
+    result = select_appointments(
+        store.list_appointments(), "D1", AppointmentStatus.CANCELLED
+    )
+
+    # assert: there are no matches, and the stored appointment is unchanged.
+    assert result == []
+    assert store.find_appointment("A1") is appointment
+    assert appointment.status is AppointmentStatus.SCHEDULED
