@@ -256,3 +256,37 @@ def test_service_listing_returns_fresh_empty_list_for_known_practitioner():
     # Listing leaves the registered practitioner and store unchanged.
     assert store.find_practitioner("D1") is practitioner
     assert store.list_appointments() == []
+
+@pytest.mark.parametrize(
+    "practitioner_id, expected_error",
+    [
+        ("UNKNOWN", LookupError),
+        ("", ValueError),
+        ("  ", ValueError),
+        (None, ValueError),
+        (123, ValueError),
+    ],
+)
+def test_service_listing_rejects_unknown_and_invalid_ids(
+    practitioner_id, expected_error
+):
+    store = SmartCareDataStore()
+    patients = PatientService(store)
+    practitioners = PractitionerService(store)
+    appointments = AppointmentService(store)
+
+    patients.register_patient("P1", "Burnt Peanut")
+    practitioners.register_practitioner("D1", "Crispy Peanut", "General")
+
+    original = appointments.book_appointment(
+        "A1", "P1", "D1", datetime(2026, 10, 1, 9)
+    )
+
+    # Act and assert: the rejected request raises the expected error.
+    with pytest.raises(expected_error):
+        appointments.list_practitioner_appointments(practitioner_id)
+
+    # the existing appointment remains stored and unchanged.
+    assert store.find_appointment("A1") is original
+    assert store.list_appointments() == [original]
+    assert original.status is AppointmentStatus.SCHEDULED
