@@ -164,3 +164,37 @@ def test_select_appointments_sorts_without_changing_source():
         )
         for appointment in source
     ] == original_fields
+
+def test_select_appointments_returns_fresh_empty_list():
+    source = []
+
+    result = select_appointments(source, "D1")
+
+    assert result == []
+    assert result is not source
+    assert source == []
+
+def test_select_appointments_returns_fresh_list_when_already_sorted():
+    store = SmartCareDataStore()
+    patient = PatientService(store).register_patient("P1", "Burnt Peanut")
+    practitioner = PractitionerService(store).register_practitioner(
+        "D1", "Crispy Peanut", "General"
+    )
+
+    first = Appointment(
+        "A1", patient, practitioner, datetime(2026, 10, 1, 9),
+        AppointmentStatus.SCHEDULED,
+    )
+    second = Appointment(
+        "A2", patient, practitioner, datetime(2026, 10, 1, 10),
+        AppointmentStatus.SCHEDULED,
+    )
+    source = [first, second]
+
+    result = select_appointments(source, "D1")
+
+    assert result == [first, second]
+    assert result is not source
+    assert result[0] is first
+    assert result[1] is second
+    assert source == [first, second]
