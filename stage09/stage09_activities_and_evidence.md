@@ -2,9 +2,9 @@
 
 Common UG and PG record. All Assignment 3 stage materials are provided from the beginning. Complete this stage only after the previous applicable stage has been integrated, verified and recorded. Use this supplied record in stage09/ in your EXISTING repository. Preserve project/, all earlier tests, records and responses. Do not download another starter or copy staff solutions. Use the Stage 9 handout and Overview/revision 2 baseline. Keep responses concise and link accessible artefacts; do not paste entire logs or private peer ratings.
 
-Group: <!-- complete -->
-Members and responsibilities: <!-- complete -->
-Stage 8 integrated SHA, command, working directory and actual result: <!-- complete -->
+Group: Wednesday 4:30pm - 6:30pm Group 1
+Members and responsibilities: @MastrRoshiiii, @LoserWithAGame, @quiet-learner, @warunabandara11-wq
+Stage 8 integrated SHA, command, working directory and actual result: d5fe118eb560a1bdaf10696f3a988fdbb32f15bd
 
 ## A. Tutorial activities
 
@@ -134,8 +134,8 @@ Responsibility check: explain how domain invariants, shared-store collections, s
 ## H. Review, completion and common handover
 
 Issues and bounded branches: <!-- links -->
-PR/diff and another-member human reviewer: <!-- actual links/name -->
-Review responses and Copilot comparison: <!-- links -->
+PR/diff and another-member human reviewer: All changes reviewed by @quiet-learner and @LoserWithAGame
+Review responses and Copilot comparison: https://github.com/copilot/c/a0c02da6-836a-406f-8a31-a7bb10f5028a
 Integrated common Stage 9 SHA: <!-- complete -->
 Full regression command, working directory, actual count/result and evidence: <!-- complete -->
 README run instructions and scope/limitations: <!-- link -->
