@@ -1,6 +1,7 @@
 from datetime import datetime
 import pytest
 
+from smartcare import queries
 from smartcare.data_store import SmartCareDataStore
 from smartcare.domain import Appointment, AppointmentStatus
 from smartcare.queries import select_appointments
@@ -198,3 +199,37 @@ def test_select_appointments_returns_fresh_list_when_already_sorted():
     assert result[0] is first
     assert result[1] is second
     assert source == [first, second]
+
+def test_named_sort_key_values_and_use(monkeypatch):
+    store = SmartCareDataStore()
+    patient = PatientService(store).register_patient("P1", "Burnt Peanut")
+    practitioner = PractitionerService(store).register_practitioner(
+        "D1", "Crispy Peanut", "General"
+    )
+    later = Appointment(
+        "A2", patient, practitioner, datetime(2026, 10, 1, 10),
+        AppointmentStatus.SCHEDULED,
+    )
+    earlier = Appointment(
+        "A1", patient, practitioner, datetime(2026, 10, 1, 9),
+        AppointmentStatus.SCHEDULED,
+    )
+
+    # check the named key directly.
+    original_key = queries.appointment_sort_key
+    assert original_key(later) == (datetime(2026, 10, 1, 10), "A2")
+
+    calls = []
+
+    # record which appointments are passed to the to the named key.
+    def record_key_call(appointment):
+        calls.append(appointment)
+        return original_key(appointment)
+
+    monkeypatch.setattr(queries, "appointment_sort_key", record_key_call)
+
+    result = queries.select_appointments([later, earlier], "D1")
+
+    assert result == [earlier, later]
+    assert len(calls) == 2
+    assert {appointment.appointment_id for appointment in calls} == {"A1", "A2"}
