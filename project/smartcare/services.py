@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from smartcare.data_store import SmartCareDataStore
+from smartcare.queries import select_appointments
 from smartcare.domain import (
     Appointment,
     AppointmentStatus,
@@ -167,5 +168,19 @@ class AppointmentService:
         ValueError; a known practitioner with no matches returns an
         empty list.
         """
-        appointments = SmartCareDataStore.list_appointments()
-        raise NotImplementedError('Stage 9: practitioner appointments')
+        # find the registered practitioner using the existing ID validation.
+        practitioner = self.data_store.find_practitioner(practitioner_id)
+        if practitioner is None:
+            raise LookupError(f"Practitioner not found: {practitioner_id}")
+
+        # direct service callers must supply an enum or None.
+        if status is not None and not isinstance(status, AppointmentStatus):
+            raise ValueError("status must be an AppointmentStatus or None")
+
+        appointments = self.data_store.list_appointments()
+
+        return select_appointments(
+            appointments=appointments,
+            practitioner_id=practitioner_id,
+            status=status
+        )
