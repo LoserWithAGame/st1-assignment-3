@@ -233,3 +233,26 @@ def test_named_sort_key_values_and_use(monkeypatch):
     assert result == [earlier, later]
     assert len(calls) == 2
     assert {appointment.appointment_id for appointment in calls} == {"A1", "A2"}
+
+def test_service_listing_returns_fresh_empty_list_for_known_practitioner():
+    # arrange: D1 exists but has no appointments.
+    store = SmartCareDataStore()
+    practitioners = PractitionerService(store)
+    appointments = AppointmentService(store)
+
+    practitioner = practitioners.register_practitioner(
+        "D1", "Crispy Peanut", "General"
+    )
+
+    # ACT: request the list twice.
+    first = appointments.list_practitioner_appointments("D1")
+    second = appointments.list_practitioner_appointments("D1")
+
+    # assert: both are emtpy, seperate lists.
+    assert first == []
+    assert second == []
+    assert first is not second
+
+    # Listing leaves the registered practitioner and store unchanged.
+    assert store.find_practitioner("D1") is practitioner
+    assert store.list_appointments() == []
