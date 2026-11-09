@@ -59,13 +59,25 @@ To check this, I would book A1, cancel it, then find it again in the same sessio
 
 ## B. Human design and contracts
 
-Complete before GitHub Copilot. Record any interface/integrity decision and its reasoning: <!-- response -->
+Complete before GitHub Copilot. Record any interface/integrity decision and its reasoning: Despite handling as many errors as we could think of in the Console, we still implemented a Try Except aspect to ensure that even the errors we did not account for could be handled properly.
 
 | Requirement | Input / session data | Operation and responsible component | Expected result or error | Test / evidence |
 |---|---|---|---|---|
-| | | | | |
+| QRY-01 | Practitioner ID and Appointment Status | This section is responsible for finding all appointments with inputs matching the Practitioner ID and Appointment Status. | When given a Practitioner ID and Appointment Status the system will provide all appointments for that Practitioner with that Status. | Success |
+| QRY-02 | Practitioner ID and Appointment Status | No matching status produces an empty result | No matching status produces an empty result | Success |
+| QRY-03 | Practitioner ID and Appointment Status | | | |
+| QRY-04 | Practitioner ID and Appointment Status | Raises Errors in the result of empty values, except for knwon appointments | Known practitioner with no appointments or no matching status: New empty list; no error 
+Valid unknown practitioner ID: LookupError
+Blank or invalid ID: ValueError under the existing ID contract
+Known practitioner with a non-enum status such as 'scheduled': ValueError; do not treat it as no matches
+Omitted status: Include every status and preserve history | Success |
+| FP-01 | Inputs | Repeat unchanged inputs; inspect code for hidden state, input/output and side effect | Repeat unchanged inputs; inspect code for hidden state, input/output and side effect | Success |
+| FP-02 | | Distinct returned list for empty, already-sorted and unsorted inputs; contained objects remain unchange | Distinct returned list for empty, already-sorted and unsorted inputs; contained objects remain unchange | Unknown |
+| FP-03 | | Test the named key directly and check sorting actually uses it | Sorting Actually uses it | Unknown |
+| UI-01 | Any Required | Registering Patients, Practitioners, and Appointments. Cancelling Appointments, and Listing Scheduled appointments only | Functions as intended | Refer to Appendix |
+| UI-02 | Any Required | Use unknown menu options and invalid inputs | Handles Errors correctly, and Rejects Data that is incorrect | Refer to Appendix |
 
-Cover QRY-01–04, FP-01–03, UI-01–02 and relevant FR-01–09. Explain empty versus unknown versus invalid, enum conversion, actual object identity, error handling and unchanged state on rejection: <!-- response -->
+Cover QRY-01–04, FP-01–03, UI-01–02 and relevant FR-01–09. Explain empty versus unknown versus invalid, enum conversion, actual object identity, error handling and unchanged state on rejection: Empty is without an input, Unknown is the type of input is incorrect, and Invalid is the correct type of input but not within the range required. Enum Conversion is the process of converting multiple Strings in a list into an ordered list of strings, this means you could get the same result from referencing the String or the Integer. Actual Object Identity is the unique memory signature of an object or variable. Error Handling is ensuring that all the errors can be caught, shown, and still allow the program to run past it.
 
 ## C. Implementation and query verification
 
@@ -90,13 +102,13 @@ Include registration/find, booking, conflict rejection, different-practitioner b
 
 ## E. GitHub Copilot review and human decisions
 
-Human design completed before AI: <!-- reference -->
-Actual prompt/context supplied: <!-- paste or accessible reference -->
-Actual response: <!-- accessible reference -->
+Human design completed before AI: console.py::run_menu/smartcare/project/console.py
+Actual prompt/context supplied: https://github.com/copilot/c/a0c02da6-836a-406f-8a31-a7bb10f5028a
+Actual response: https://github.com/copilot/c/a0c02da6-836a-406f-8a31-a7bb10f5028a
 
 | AI finding | Code/test evidence | Severity | Accept/Modify/Reject and reason | Change or no change | Actual verification |
 |---|---|---|---|---|---|
-| | | | | | |
+| The program sends IDs through without removing padding, whilst the checks are done with padding removed, the ID is parsed without it. | Code to check: services.py, lines 171–186; data_store.py, lines 54–60; queries.py, lines 26–35. | SEVERE | Accepted | CHANGED immediately to fix the issue. | Code fixed in console.py, run_menu() |
 
 Responsibility check: explain how domain invariants, shared-store collections, service coordination, pure queries and console effects remain separate: <!-- response -->
 
@@ -140,3 +152,140 @@ UG common candidate / PG future branch plan: <!-- complete -->
 - [ ] Common SHA protected for UG Stage 12; PG Stage 10/11 work deferred until approved.
 
 No persistence, rescheduling or assurance implementation is part of Stage 9. UG: 6→7→8→9→12. PG: 6→7→8→9→10→11→12. Mixed groups keep one repository and protect the common candidate.
+
+
+## Appendix:
+PS E:\st1 assignment3 files\St1-Asignment3\project> python main.py  --interactive
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 1
+Patient ID: [INPUT] P1
+Patient name: [INPUT] Alex Example
+Patient registered: P1: Alex Example
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 3
+Practitioner ID: [INPUT] D1
+Practitioner name: [INPUT] Taylor Example
+Specialty: [INPUT] General
+Practitioner registered: D1: Taylor Example, General
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A1
+Patient ID: [INPUT] P1
+Practitioner ID: [INPUT] D1
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2026-10-01 09:00
+A1: P1 with D1, 2026-10-01 09:00, scheduled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 8
+Practitioner ID: D1
+Status (blank=all; scheduled/cancelled/completed): 
+A1: P1 with D1, 2026-10-01 09:00, scheduled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 8
+Practitioner ID: D1
+Status (blank=all; scheduled/cancelled/completed): scheduled
+A1: P1 with D1, 2026-10-01 09:00, scheduled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 6
+Appointment ID: [INPUT] A1
+A1: P1 with D1, 2026-10-01 09:00, cancelled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 8
+Practitioner ID: D1
+Status (blank=all; scheduled/cancelled/completed): 
+A1: P1 with D1, 2026-10-01 09:00, cancelled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 0
+Exiting. All session-only data is lost.
+PS E:\st1 assignment3 files\St1-Asignment3\project> 
+
+
+
+

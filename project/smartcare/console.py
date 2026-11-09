@@ -115,11 +115,11 @@ def run_menu() -> None:
                 )
                 print(f"Patient registered: {patient.patient_id}: {patient.name}")
             elif choice == 2:
-                patient = patients.find_patient(patient_id=input("Patient ID: [INPUT] "))
+                patient = patients.find_patient(patient_id=input("Patient ID: [INPUT] ").strip())
                 print(f"Patient found: {patient.patient_id}: {patient.name}")
             elif choice == 3:
                 practitioner = practitioners.register_practitioner(
-                    practitioner_id=input("Practitioner ID: [INPUT] "),
+                    practitioner_id=input("Practitioner ID: [INPUT] ".strip()),
                     name=input("Practitioner name: [INPUT] "),
                     specialty=input("Specialty: [INPUT] "),
                 )
@@ -129,7 +129,7 @@ def run_menu() -> None:
                 )
             elif choice == 4:
                 practitioner = practitioners.find_practitioner(
-                    practitioner_id=input("Practitioner ID: [INPUT] ")
+                    practitioner_id=input("Practitioner ID: [INPUT] ").strip()
                 )
                 print(
                     f"Practitioner found: {practitioner.practitioner_id}: "
@@ -137,9 +137,9 @@ def run_menu() -> None:
                 )
             elif choice == 5:
                 appointment = appointments.book_appointment(
-                    appointment_id=input("Appointment ID: [INPUT] "),
-                    patient_id=input("Patient ID: [INPUT] "),
-                    practitioner_id=input("Practitioner ID: [INPUT] "),
+                    appointment_id=input("Appointment ID: [INPUT] ").strip(),
+                    patient_id=input("Patient ID: [INPUT] ").strip(),
+                    practitioner_id=input("Practitioner ID: [INPUT] ").strip(),
                     date_time=parse_date_time(
                         input("Date/time [YYYY-MM-DD HH:MM]: [INPUT] ")
                     ),
@@ -147,12 +147,12 @@ def run_menu() -> None:
                 print(format_appointment(appointment))
             elif choice == 6:
                 appointment = appointments.cancel_appointment(
-                    appointment_id=input("Appointment ID: [INPUT] ")
+                    appointment_id=input("Appointment ID: [INPUT] ").strip()
                 )
                 print(format_appointment(appointment))
             elif choice == 7:
                 appointment = appointments.find_appointment(
-                    appointment_id=input("Appointment ID: [INPUT] ")
+                    appointment_id=input("Appointment ID: [INPUT] ").strip()
                 )
                 print(format_appointment(appointment))
             elif choice == 8:
@@ -160,7 +160,7 @@ def run_menu() -> None:
                 status_text = input("Status (blank=all; scheduled/cancelled/completed): ").strip()
                 status = AppointmentStatus(status_text) if status_text else None
                 matches = appointments.list_practitioner_appointments(
-                    practitioner_id=practitioner_id, status=status,
+                    practitioner_id=practitioner_id.strip(), status=status,
                     )
                 if not matches:
                     print("No matching appointments found.")
