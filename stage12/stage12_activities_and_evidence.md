@@ -2,40 +2,40 @@
 
 BLANK student response template. Supplied from the beginning in stage12/ in your EXISTING repository; complete it only when you reach Stage 12 after the previous applicable stage is integrated, verified and recorded; preserve project/, tests, earlier records and Git history. UG/common and PG/extended scope must be explicit. Use concise results and versioned links, not copied logs or source. No staff answers or fabricated approvals.
 
-Group/tutorial: [response]
-Members and UG/PG applicability: [response]
+Group/tutorial: [Wednesday 4:30pm - 6:30pm Group 1]
+Members and UG/PG applicability: [@MastrRoshiiii, @LoserWithAGame, @warunabandara11-wq, @quiet-learner]
 
 
 ## A Release scope and starting SHA
 
-Release label/version and requirements baseline: [response]
-Common starting SHA / branch / applicable members: [response]
-PG starting SHA / branch / applicable members or not applicable: [response]
-Working-state review and approved integration: [response]
-Protected common candidate and PG differences: [response]
-Feature freeze / owner / verifier: [response]
+- Release label/version and requirements baseline: SmartCare Stage 12 Common RC1. Requirements baseline: SmartCare A3 Requirements Baseline 2026, revision 2. The common scope covers registration and lookup, booking and conflict checks, cancellation and retained history, appointment listing, and the console.
+- Common starting SHA / branch / applicable members: 'f615f78795d031f8b525a7a388e9c340ac296a61', doc/stage12, @MastrRoshiiii
+- PG starting SHA / branch / applicable members or not applicable: [N/A]
+- Working-state review and approved integration: Stage 9 console and appointment listing work was merged into main through PR #35. An independent test run on the exact starting commit returned 38 passed in 0.06 seconds using Python 3.14.7 and pytest 8.3.5.
+- Protected common candidate and PG differences: The common starting point is pinned to 'f615f78795d031f8b525a7a388e9c340ac296a61'. (No PG members).
+- Feature freeze / owner / verifier: Feature Freeze date - 9/11/2026, (Owner TBD), Verifier - @LoserWithAGame
 
 
 ## B Requirements and release readiness matrix
 
-Tutorial activity 1: All tests pass, README setup is incomplete, one dependency is unreviewed and a known limitation is undocumented. Decide Release / Release with conditions / Do not release and justify: [response]
+Tutorial activity 1: All tests pass, README setup is incomplete, one dependency is unreviewed and a known limitation is undocumented. Decide Release / Release with conditions / Do not release and justify: I would hold off on releasing. Passing tests show that the tested features work, but another person still needs clear setup instructions. I would finish the README, check the dependency, and document the known limitations. Then I would ask a teammate to set up the project from a fresh copy and run the operation tests before releasing it.
 
 Tutorial activity 2 and actual readiness matrix. Add exact requirement/acceptance IDs, evidence and reviewer; distinguish common/PG applicability.
 
 | Release claim / requirement / scope | Evidence | Location/link and SHA | Reviewer | Sufficient? | Gap/action |
 |---|---|---|---|---|---|
-| Cancellation history works | [response] | [response] | [response] | [response] | [response] |
-| Architecture responsibilities are appropriate | [response] | [response] | [response] | [response] | [response] |
-| Rescheduling is safe — PG only | [response] | [response] | [response] | [response] | [response] |
-| AI use is responsible — common recheck / PG assurance | [response] | [response] | [response] | [response] | [response] |
-| System is maintainable | [response] | [response] | [response] | [response] | [response] |
-| FR-01–03 register/find and validation | [response] | [response] | [response] | [response] | [response] |
-| FR-04–05 booking/conflict rules | [response] | [response] | [response] | [response] | [response] |
-| FR-06–08 cancellation/history/find | [response] | [response] | [response] | [response] | [response] |
-| FR-09 and QRY/FP listing/filter/order/purity | [response] | [response] | [response] | [response] | [response] |
-| UI full console sequence and error recovery | [response] | [response] | [response] | [response] | [response] |
-| Session-only scope / FR-10 retired | [response] | [response] | [response] | [response] | [response] |
-| PG RES and assurance integration | [response] | [response] | [response] | [response] | [response] |
+| Cancellation history works - FR-07 - common scope | The test cancels appointment A1, then checks that looking it up returns the same appointment with status `CANCELLED`. It passed in the 38-test suite. | 'test_cancellation.py', line 18, at 'f615f78795d031f8b525a7a388e9c340ac296a61' | Team reviewer pending | Yes for the behaviour tested. Release review is pending. | Independent check pending. Reviewer should rerun the cancellation history test on the final release. |
+| Architecture responsibilities are appropriate — common scope | `domain.py` decides when an appointment can be cancelled. `data_store.py` keeps the records. `services.py` finds the appointment and asks it to cancel. `queries.py` filters and sorts a new list without changing the original records. `console.py` asks for input and displays the results. | These five files are in `project/smartcare` at `f615f78795d031f8b525a7a388e9c340ac296a61`. | Team reviewer pending | Yes for the separation shown in the code. Independent review is pending. | Team member should follow one cancellation and one appointment listing through the code, then record their name and findings. |
+| Rescheduling is safe — PG only | N/A | N/A| N/A | N/A | N/A |
+| AI use is responsible — common scope | In Stage 8, Copilot suggested that the practitioner comparison was reversed. I checked the `!=` comparison against both failing behaviours before accepting the suggestion. After the repair, all three focused tests passed. | [Stage 8, Part F](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/stage08/stage08_activities_and_evidence.md#L295), SHA `f615f78` | @MastrRoshiiii checked the Stage 8 diagnosis. Stage 12 reviewer pending. | Yes for this example. Final release recheck pending. | Verifier to review this evidence in Part E and record their decision - approved/declined. |
+| System is maintainable — common scope | The Stage 8 refactor uses `AppointmentStatus.SCHEDULED` in the conflict check so the code uses the same status value as the rest of the project. All 37 tests passed before and after the refactor. | [Conflict check](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/smartcare/data_store.py#L112), SHA `f615f78`. Test evidence is in Stage 8, Part H. | Stage 12 reviewer pending | Partly. The code change is supported by tests, but the project README still lists completed work as TODOs in Part F. | Update the README in Part F, reviewer to follow it from a clean copy and record the result. |
+| FR-01–03 register/find and validation — common scope | Tests check that registered patients and practitioners can be found, duplicate registrations leave the original records in place, and invalid or unknown lookup IDs raise the expected errors. These tests passed in the 38-test suite. | [Registration tests](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/tests/test_starter.py#L61) and [lookup tests](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/tests/test_services.py#L19), SHA `f615f78`. | Stage 12 reviewer pending | Yes for the automated checks listed. Console verification is pending. | In Part D, a team member can demonstrate registering and finding a patient and two practitioners, then show that the console can recover from a failed lookup. Results should be recorded as pass/fail. |
+| FR-04–05 booking and conflict rules — common scope | The tests show that a valid booking succeeds, a booking with an unknown patient is rejected, and the same practitioner cannot be booked twice at the same time. A different practitioner can take a booking at that time (AC-04.2). These tests passed in the 38-test suite. | [Booking and conflict tests](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/tests/test_starter.py#L101), SHA `f615f78`. | Stage 12 reviewer pending | Yes for the automated checks listed. Console verification is pending. | In Part D, show a valid booking, a rejected double-booking, and a successful same-time booking with a different practitioner. Record the final test run in Part C. |
+| FR-06–08 cancellation, history, and lookup — common scope | Tests confirm that looking up a known ID returns the original appointment, cancelling it changes its status to `CANCELLED`, and the same record can still be found afterward. A second cancellation is rejected without removing the record. These tests passed in the 38-test suite. | [Appointment lookup test](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/tests/test_starter.py#L55) and [cancellation tests](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/tests/test_cancellation.py#L18), SHA `f615f78`. | Stage 12 reviewer pending | Yes for the automated checks listed. Console verification is pending. | In Part D, cancel A1, find it again and show its `CANCELLED` status, then try cancelling it a second time and record what happens. Record the final test run in Part C. |
+| FR-09 and QRY-01–04 / FP-01–03 — listing, filtering, ordering, and purity — common scope | A focused check showed that the query returned a new list containing the original appointment objects, sorted by date/time and then ID. Status filtering worked, and the original records stayed unchanged. A known practitioner with no bookings returned an empty list, while an unknown ID raised `LookupError`. | [Query code](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/smartcare/queries.py#L15) and [listing service](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/smartcare/services.py#L160), SHA `f615f78`. | Stage 12 reviewer pending | Partly. The checks passed for `D1`, but ` D1 ` returned an empty list. | Record the spaces-in-ID issue in Part H. After fixing it, test both inputs and record the result in Part C. Show listing and filtering through the console in Part D. |
+| UI-01 and UI-02 — full console sequence and error recovery — common scope | An independent console check covered registering and finding records, booking, rejecting a double-booking, cancelling and finding the same appointment, listing appointments, and exiting. The menu kept working after invalid choices, dates, statuses, and unknown IDs. | [Console menu](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/smartcare/console.py#L72), SHA `f615f78`. Ran `python -B main.py --interactive` from `project`. | Stage 12 team reviewer pending | Yes. The main workflow and error recovery worked. | Record the console walkthrough in Part D. Track the listing issue in Part H, then repeat that step after the fix. |
+| Session-only scope / FR-10 retired — common scope | I registered sample patient `P1`, exited the console, and opened a fresh session. Looking up `P1` returned `Patient not found`. The console also warned on exit that session data would be lost. | [Console menu](https://github.com/LoserWithAGame/st1-assignment-3/blob/f615f78795d031f8b525a7a388e9c340ac296a61/project/smartcare/console.py#L72), SHA `f615f78`. Ran `python -B main.py --interactive` from `project`. | Stage 12 team reviewer pending | Yes for the session-only behaviour checked. | Record the exit and restart demonstration in Part D. List the loss of records on exit as an accepted scope limit in Part G. |
+| PG RES and assurance integration | N/A | N/A | N/A | N/A | N/A |
 
 
 ## C Full regression results
@@ -69,7 +69,7 @@ Remaining failure / limitation: [response]
 | Architecture and one actual AI decision / known limitation | [response] | [response] | [response] | [response] |
 | PG reschedule identity/participants/time and no-op | [response] | [response] | [response] | [response] |
 | PG conflict/invalid status/failure non-mutation | [response] | [response] | [response] | [response] |
-| PG old slot / current lookup/list ordering / assurance risks | [response] | [response] | [response] | [response] |
+| PG old slot / current lookup/list ordering / assurance risks | [response] | [rnse]espo | [response] | [response] |
 Stable demo owner / fresh process / command: [response]
 PG demonstrations through service/tests or not applicable: [response]
 
