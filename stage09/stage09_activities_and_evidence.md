@@ -124,16 +124,16 @@ Responsibility check: explain how domain invariants, shared-store collections, s
 
 ## G. Ten formative answers
 
-1. What makes select_appointments pure, and what side effect breaks purity? <!-- response -->
-2. Which explicit inputs are needed, and why avoid a global store? <!-- response -->
-3. How can a new list reuse Appointment objects safely? <!-- response -->
-4. Why use a named key, and what breaks equal-time ties? <!-- response -->
-5. How do default and explicit status filters differ? <!-- response -->
-6. How do empty, unknown practitioner and invalid filter cases differ? <!-- response -->
-7. Which console errors recover, and how is unchanged state checked? <!-- response -->
-8. What is data integrity for registered participants, conflicts and history? <!-- response -->
-9. What is Copilot's review role, and who verifies findings? <!-- response -->
-10. How do pure functions and OOP responsibilities work together? <!-- response -->
+1. What makes select_appointments pure, and what side effect breaks purity? [ It works with the inputs it is given them unchanged. For example, if it sorted the original list or changed an appointment's status, it would affectdata outside the result it returns. ]
+2. Which explicit inputs are needed, and why avoid a global store? [ It needs a list of appointments, the practitioner ID and an optional status. Passing these in makes testing easier because I can give the function the exact data I want to check. ]
+3. How can a new list reuse Appointment objects safely? [ The new loist can refer to the same appointments. Changing the order of the new list leaves the original list in its own order. The query still needs to leave the appointments themselves uncahnged because both lists use those objects. ]
+4. Why use a named key, and what breaks equal-time ties? [ The named key gives us one clear sorting rule that we can test. Appointments are sorted by date and time first. If those match, the appointment ID decides which comes first. ]
+5. How do default and explicit status filters differ? [ If I leave the status out, I get all appointments for that practitioner. If I choose cancelled, I only get their cancelled appointments. ]
+6. How do empty, unknown practitioner and invalid filter cases differ? [ An empty list means the practitioner exists but has no appointments matching the request. An unknown practitioner raises LookupError. An invalid filter raisesValueError. The service expects an AppointmentStatus value or None. ]
+7. Which console errors recover, and how is unchanged state checked? [ The menu should show a message and let the user continue after things like a wrong ID, duplicate ID, bad date or invalid choice. I would check that the original records are still there with the same details, then try a valid action. For a rejecting booking, I would also check that it was never stored. ]
+8. What is data integrity for registered participants, conflicts and history? [ A booking should use the patient and practitioner objects already regisdtered in the store. It should reject a secon d scheduled booking for the same practitioner at the same time. After cancellation, the appointment should stay in the store so its history can still be found. ]
+9. What is Copilot's review role, and who verifies findings? [ Copilot can help spot possible issues and suggest tests. We still need to check sugggestions against the requirements and actual code. The person reviewing the change is responsible for checking the evidence before accepting it. ]
+10. How do pure functions and OOP responsibilities work together? [ Each part has a job. The object hold their details and rules, the store keeps the records, and services coordinate actions. The pure functions can then filter and sort the appointments they recieve. The console asks the user questions and displays the results. ]
 
 ## H. Review, completion and common handover
 
