@@ -42,12 +42,12 @@ Tutorial activity 2 and actual readiness matrix. Add exact requirement/acceptanc
 
 | Suite/scope | Environment/version | Working directory and command | Tested SHA | Actual result | Evidence link |
 |---|---|---|---|---|---|
-| Complete common | [response] | [response] | [response] | [response] | [response] |
-| Complete PG if applicable | [response] | [response] | [response] | [response] | [response] |
-| Affected focused checks after correction | [response] | [response] | [response] | [response] | [response] |
-| Full integrated recheck | [response] | [response] | [response] | [response] | [response] |
-Prior assertions preserved / reviewed test diff: [response]
-Remaining failure / limitation: [response]
+| Complete common | Python 3.14.7, pytest 8.3.5 | From `project`: `python -B -m pytest -q -p no:cacheprovider` | `055b404c35f2d5e6157ccbfbd043ae1e87638aba` | 38 passed in 0.06 seconds | PS C:\Users\Daniel Spence\OneDrive\Documents\ST1Assessment3\project> git rev-parse HEAD 055b404c35f2d5e6157ccbfbd043ae1e87638aba PS C:\Users\Daniel Spence\OneDrive\Documents\ST1Assessment3\project> python -m pytest -q [100%] 38 passed in 0.05s | |
+| Complete PG if applicable | N/A | N/A | N/A | N/A | N/A |
+| Affected focused checks after correction — listing with spaces around the practitioner ID | Python 3.14.7 | From `project`, ran `python -B main.py --interactive` with scripted inputs. Booked `A1` for `D1`, then listed using `D1` and ` D1 `. Also checked the listing service directly with both IDs. | `055b404c35f2d5e6157ccbfbd043ae1e87638aba` | Console passed: both inputs returned `A1`. | Console correction: (https://github.com/LoserWithAGame/st1-assignment-3/blob/055b404c35f2d5e6157ccbfbd043ae1e87638aba/project/smartcare/console.py#L163). Evidence is supplied as a PNG under 'ST1Assessment3\Stage12\Image Evidence' showing two tests, one with blank space beside the Practitioner ID. |
+| Full integrated recheck — common scope on `main` | Python 3.14.7, pytest 8.3.5 | From `project`: `python -m pytest -q` | `055b404c35f2d5e6157ccbfbd043ae1e87638aba` | 38 passed in 0.05 seconds | See the saved terminal output for the Complete common run above. |
+| Prior assertions preserved / reviewed test diff: | The test files were compared between the Stage 12 starting commit f615f78 and the tested main commit 055b404. No test files or assertions changed. The only change inside project was in the console code, and all 38 existing tests still passed. |
+| Remaining failure / limitation: | All 38 automated tests passed. The console now lists the correct appointments when a practitioner ID has spaces around it, but calling the listing service directly with D1 still returns an empty list even when D1 has bookings. (Limitation has been adrressed, updated and passed). |
 
 
 ## D Console and end to end demonstration
