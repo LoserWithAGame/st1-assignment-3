@@ -78,40 +78,40 @@ PG demonstrations through service/tests or not applicable: [N/A]
 
 | Review area | Code/evidence location | Finding or no finding | Correction/no change and recheck |
 |---|---|---|---|
-| OOP responsibilities and pure-query boundaries | [response] | [response] | [response] |
-| PascalCase and snake_case naming | [response] | [response] | [response] |
-| Useful type hints and meaningful docstrings | [response] | [response] | [response] |
-| Four-space indentation and imports/layout | [response] | [response] | [response] |
-| Focused methods / duplication / dead or commented code | [response] | [response] | [response] |
-| Globals / leakage / unnecessary inheritance or frameworks | [response] | [response] | [response] |
-| No SQLite/persistence/repository ABCs/speculative features | [response] | [response] | [response] |
-| Synthetic data / secrets / dependencies / provenance | [response] | [response] | [response] |
-| Significant common Copilot contributions and human verification | [response] | [response] | [response] |
-| PG plan/diff/test approvals and Stage 11 VERIFY/TRUST | [response] | [response] | [response] |
+| OOP responsibilities and pure-query boundaries | `domain.py` line 129, `services.py` lines 146 and 160, and `queries.py` line 15. Checked on `main` at `055b404`. | The appointment decides whether it can be cancelled. The service finds the appointment and asks it to cancel. The query filters and sorts a new list without changing the original records. One issue remains: the listing service passes an ID with spaces to the query, so it can miss existing bookings. | The console now removes the extra spaces. |
+| PascalCase and snake_case naming | `services.py` and `data_store.py` | Class names such as `AppointmentService` and `SmartCareDataStore` use PascalCase. Methods and variables such as `list_practitioner_appointments` and `practitioner_id` use snake_case. | The names checked follow the expected style, so no changes were needed. |
+| Useful type hints and meaningful docstrings | `queries.py` line 15 and `services.py` line 160 | The type hints show that the listing functions take a practitioner ID and an optional status, and return a list of appointments. The docstrings explain how the list is sorted and what happens when a practitioner is unknown or has no matching appointments. | The type hints and docstrings match the code in the functions reviewed. No changes needed. |
+| Four-space indentation and imports/layout | `queries.py` line 4 and `console.py` line 162 | The code reviewed uses four spaces for each level of indentation. Built-in | Four-space indentation and imports/layout | All 11 Python files in the app and tests. Import examples checked in `queries.py` and `console.py`. | All 11 files use four spaces for each block level. The imports checked are grouped clearly. One closing parenthesis in the 'console.py' listing is slightly out of line (line 164). | No indentation changes needed. The closing parenthesis can be lined up with the start of the call as a small fox. |
+| Focused methods / duplication / dead or commented code | `console.py`, lines 16, 33 and 95–104 | `parse_date_time()` checks the date and time, and `format_appointment()` prepares the text shown on screen. The menu checks whether the choice is from 0 to 8 twice. The second check can never reject anything because the first check has already rejected every other choice. | Correction to remove the second check. Then try `9` to confirm the menu still shows an error, and `0` to confirm it still exits normally from the original check. |
+| Globals / leakage / unnecessary inheritance or frameworks | `console.py` line 72, `data_store.py` lines 18 and 98, and `domain.py` line 26 | Each console session creates its own store. The records are kept inside that store, and listing appointments gives the caller a new list. The app uses built in Python tools, including `Enum` for appointment statuses. No unnecessary frameworks or class layers were found. | No changes needed for this check. Record the console restart in Part D to show that a new session starts with empty records. |
+| No SQLite/persistence/repository ABCs/speculative features | `data_store.py` line 18 and `console.py` lines 72 and 107 | SmartCare stores records in memory for one session. The common app uses `SmartCareDataStore` directly, with no database, file saving, or extra storage layer. No unrequested features such as billing or notifications were found. | No changes needed. Use the restart check in Part D as evidence and record session-only storage a sstated in Stage09. |
+| Synthetic data / secrets / dependencies / provenance | Project README, `requirements-dev.txt`, Stage 12 screenshot and Stage 8 Part F | We used made-up records in the tests and demo. The files checked showed no obvious passwords or keys. SmartCare runs with standard Python, and pytest 8.3.5 is used for testing. The README shows where the project started, Git shows what the team changed, and Stage 8 Part F explains how we checked Copilot’s advice. | No corrections or chnages needed. |
+| Significant common Copilot contributions and human verification | Stage 8 Part F and the focused test results in Part G | Copilot suggested that the lookup was skipping cancelled appointments and that the booking check was comparing the wrong practitioners. We checked both ideas against the code and the failing tests. After the fixes, the two cancellation tests and three booking conflict tests passed. | We accepted both suggestions because the code and test results supported them. |
+| PG plan/diff/test approvals and Stage 11 VERIFY/TRUST | N/A | N/A | N/A |
 
 | AI claim | Affected requirement/code | Human check | Accept/Modify/Reject and reason | Actual outcome/action or no change |
 |---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] |
-Access route or approved equivalent / limitations: [response]
-Available AI evidence and missing evidence honestly disclosed: [response]
+| Copilot said the booking check looked at the wrong practitioner. | FR-05 — prevent double booking | We read the code and checked the failing tests. | Accepted. The code checked for a different practitioner instead of the same one. | We fixed the check. All 3 focused tests passed. |
+Access route or approved equivalent / limitations: We used GitHub Copilot Chat in VS Code. It gave us ideas about what might be wrong. We checked those ideas ourselves using the code and tests.
+Available AI evidence and missing evidence honestly disclosed: Stage 8 Part F has the prompts we sent and notes on how we checked Copilot’s suggestions. Part G has the test results. We haven’t added links to the original Copilot replies yet as I was not sure how to link the reponses.
 
 
 ## F README and reproducibility check
 
 | README item | Location | Verifier | Result/gap |
 |---|---|---|---|
-| Purpose and included common/PG scope | [response] | [response] | [response] |
-| Out-of-scope capabilities and known limitations | [response] | [response] | [response] |
-| Confirmed teaching Python version and dependency installation | [response] | [response] | [response] |
-| Working directory / demo / interactive / test commands | [response] | [response] | [response] |
-| Repository structure and architecture responsibilities | [response] | [response] | [response] |
-| Responsible AI summary / synthetic-data rule | [response] | [response] | [response] |
-| Release label/version and SHA links | [response] | [response] | [response] |
-Root README index and project/README verified: [response]
-Fresh clone or extracted ZIP / candidate identity: [response]
-Verifier and clean environment / actual version: [response]
-Setup/run/test commands and observed results: [response]
-Missing local file or setup gap / remedy and recheck: [response]
+| Purpose and included common/PG scope | Root README, lines 3 and 34, and project README, line 14 | @LoserWithAGame — check pending | The READMEs explain what SmartCare is and that it keeps records for one session. Add a short list of what this release includes: registration and lookup, booking, cancellation with history, appointment listing, and the console menu. Our group is UG, so only the common scope applies. |
+| Out-of-scope capabilities and known limitations | Project README, line 14, and root README, line 30 | @LoserWithAGame — check pending | The README already explains that records are cleared when you close SmartCare. SmartCare doesn’t include logins, billing, reminders or rescheduling. |
+| Confirmed teaching Python version and dependency installation | Project README setup instructions and `requirements-dev.txt` | @LoserWithAGame — check pending | The course setup lists Python 3.13 and pytest 8.3.5. Our Part C run passed on Python 3.14.7. |
+| Working directory / demo / interactive / test commands | Root README, line 47, and project README, line 5 | @LoserWithAGame — check pending | Both READMEs explain that commands run from the `project` folder. They list `python main.py` for the demo and `python -m pytest` for the tests. We should include `python main.py --interactive` so users know how to open the menu. |
+| Repository structure and architecture responsibilities | Root README, lines 38–45, and project README, line 16 | @LoserWithAGame — check pending | The root README helps users find the app setup and each stage’s evidence. The project README explains where the rules, records and services live. Add that `queries.py` filters and sorts appointments, while `console.py` handles what the user types and sees. |
+| Responsible AI summary / synthetic-data rule | Root README, line 56, and project README, line 14 | @LoserWithAGame — check pending | Both READMEs say to use made-up records. The root README also says to check Copilot’s suggestions. We compared its advice with the code and test results before accepting it. See Part E for the example above. |
+| Release label/version and SHA links | Root README, line 14, and Stage 12 Parts A and K | @LoserWithAGame — check pending | Part A names the release `SmartCare Stage 12 Common RC1`. Once the final version is tested, add that label and a link to the tested commit in the README. |
+Root README index and project/README verified: All eight links in the root README point to files that exist. The project README explains how to install pytest, run the demo, and run the tests. It still needs the interactive menu command, python main.py --interactive. The fresh-copy check by a teammate is pending.
+Fresh clone or extracted ZIP / candidate identity: The project folder was exported from main at commit 055b404c35f2d5e6157ccbfbd043ae1e87638aba and tested in a separate folder. A teammate still needs to check the final submission from a fresh clone or the full source ZIP.
+Verifier and clean environment / actual version: @LoserWithAGame is the nominated verifier, and their check is pending. The extracted copy was tested using Python 3.14.7 and pytest 8.3.5 in an existing environment.
+Setup/run/test commands and observed results: From the extracted project folder at 055b404, python main.py showed the sample appointment, and python main.py --interactive opened the menu and exited normally when I chose 0. python -m pytest -q returned 38 passed in 0.07 seconds. This check used an existing Python 3.14.7 environment with pytest 8.3.5.
+Missing local file or setup gap / remedy and recheck: The extracted copy had all the files needed to run the app and tests. The project README still needs python main.py --interactive so users know how to open the menu.
 
 
 ## G Known limitations debt and release notes
