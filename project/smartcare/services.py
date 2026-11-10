@@ -181,6 +181,6 @@ class AppointmentService:
 
         return select_appointments(
             appointments=appointments,
-            practitioner_id=practitioner_id,
+            practitioner_id=practitioner.practitioner_id,
             status=status
         )

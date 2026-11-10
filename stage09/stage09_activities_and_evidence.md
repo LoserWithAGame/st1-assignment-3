@@ -83,12 +83,28 @@ Cover QRY-01–04, FP-01–03, UI-01–02 and relevant FR-01–09. Explain empty
 
 | Requirement / test ID | Code location | Case and meaningful assertion | Actual result | Evidence link |
 |---|---|---|---|---|
-| | | | | |
+| QRY-01 | `select_appointments`; test `test_select_appointments_only_returns_requested_practitioner` | Requesting D1 returns exactly its original appointment and excludes D2. | Passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py|
+| QRY-02 | Test `test_select_appointments_filters_by_status` | Default returns all statuses. Each enum filter returns the expected appointment. | Four cases passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| QRY-02 | Test `test_select_appointments_returns_empty_when_status_has_no_matches` | No matching status returns an empty list. The scheduled appointment stays unchanged. | Passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| QRY-03 and FP-01 | Test `test_select_appointments_sorts_without_changing_source` | Sorts by date/time then ID. Repeated calls return the same objects in separate lists. Source order and fields stay unchanged. | Passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py  |
+| FP-02 | Tests `test_select_appointments_returns_fresh_empty_list` and `test_select_appointments_returns_fresh_list_when_already_sorted` | Empty and already-sorted inputs produce fresh lists containing the original matching objects. | Both passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| FP-03 | `appointment_sort_key`; test `test_named_sort_key_values_and_use` | Checks the key tuple directly and records that selection uses the named key. | Passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| QRY-04 | Test `test_service_listing_returns_fresh_empty_list_for_known_practitioner` | Known practitioner with no appointments receives separate empty lists. Records stay unchanged. | Passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| QRY-04 | Test `test_service_listing_rejects_unknown_and_invalid_ids` | Unknown ID raises LookupError. Invalid IDs raise ValueError. Existing appointment stays unchanged. | Five cases passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| QRY-04 | Test `test_service_listing_rejects_invalid_status` | Raw strings and an integer raise ValueError. Stored appointment stays unchanged. | Three cases passed. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py |
+| QRY-04 and FR-07 | Test `test_service_listing_retains_cancelled_history_and_accepts_spaces` | Cancelled appointment keeps its identity. Spaced ID finds its history. Scheduled filter excludes it. | Failed initially, then passed after the service used the registered practitioner's ID. | https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py; https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/smartcare/services.py |
+
+I ran python -m pytest -q from project/ using Python 3.14.7 and pytest 8.3.5. The result was 58 passed in 0.07s. The tested code was committed as e680e44b7d3adb61b92a4531f94e9473883bfb29.
+
+[query-tests]: https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/tests/test_queries.py
+[listing-service]: https://github.com/LoserWithAGame/st1-assignment-3/blob/e680e44b7d3adb61b92a4531f94e9473883bfb29/project/smartcare/services.py
 
 Include practitioner isolation, every enum status/default all, equal-time ID tie-break, named-key reuse, repeated calls, empty/already-sorted fresh lists, unchanged source order/fields, known-empty/unknown/invalid service cases and retained history.
 
-Purity explanation from code inspection, including absence of hidden state and I/O: <!-- response -->
-What the tests do and do not establish: <!-- response -->
+Purity explanation from code inspection, including absence of hidden state and I/O: [ I checked that the query uses the appointment list, pracitioner ID and optional status passed into it. It builds a seperate list and sorts it using the named key. It reads appointment fields without changing them. It has no keyboard input, printing or hidden store access. The service gets records from the shared store before calling the query. ]
+What the tests do and do not establish: [ The tests check selection, filtering ordering, object identity, fresh lists and unchanged inputs for the supplied cases. They found a problem with spaces around a practitioner ID, which was fixed and retested. Seperate console and workflow evidence in part D ios still needed to show the features working together through the menu.]
+
+
 
 ## D. Integrated console and workflow evidence
 
@@ -114,22 +130,22 @@ Responsibility check: explain how domain invariants, shared-store collections, s
 
 ## F. Required reflections
 
-1. Which integration concern was architectural rather than a filtering/sorting detail? <!-- response -->
-2. Which Copilot suggestion did you reject as over-engineering, and why? <!-- response -->
-3. How did you prove cancelled appointments remain retrievable and listable in the same session? <!-- response -->
+1. Which integration concern was architectural rather than a filtering/sorting detail? [ One concern was making sure the menu and services use the same store for the whole session. If each menu choice created a new store, the patient I just registered would be missing when I tried to book an appointment. The console reads the input, the service checks the request, and the query filters and sorts the appointments.]
+2. Which Copilot suggestion did you reject as over-engineering, and why? [ I have not recorded a GitHub suggestion that i rejected as over-engineering. The changes I worked through were needed for the Stage 9 requirements, such as returning a new list and accepting spaces around practitioner IDs. I would need to check the group's Copilot review for an actual rejected suggestion before giving an example.]
+3. How did you prove cancelled appointments remain retrievable and listable in the same session? [ I wrote a testthat books A1, cancels it, and checks that the same appointment is still stored with CANCELLED status. It also checks that A1 appears in the all-status and cancelled lists, but stays out of the scheduled list. At first, the test failed because entering spaces around D1 returned an empty list. I fixed the service to use the ID from the registered practitioner object. The test then passed, and the full suite finished with 58 passed. ]
 
 ## G. Ten formative answers
 
-1. What makes select_appointments pure, and what side effect breaks purity? <!-- response -->
-2. Which explicit inputs are needed, and why avoid a global store? <!-- response -->
-3. How can a new list reuse Appointment objects safely? <!-- response -->
-4. Why use a named key, and what breaks equal-time ties? <!-- response -->
-5. How do default and explicit status filters differ? <!-- response -->
-6. How do empty, unknown practitioner and invalid filter cases differ? <!-- response -->
-7. Which console errors recover, and how is unchanged state checked? <!-- response -->
-8. What is data integrity for registered participants, conflicts and history? <!-- response -->
-9. What is Copilot's review role, and who verifies findings? <!-- response -->
-10. How do pure functions and OOP responsibilities work together? <!-- response -->
+1. What makes select_appointments pure, and what side effect breaks purity? [ It works with the inputs it is given them unchanged. For example, if it sorted the original list or changed an appointment's status, it would affectdata outside the result it returns. ]
+2. Which explicit inputs are needed, and why avoid a global store? [ It needs a list of appointments, the practitioner ID and an optional status. Passing these in makes testing easier because I can give the function the exact data I want to check. ]
+3. How can a new list reuse Appointment objects safely? [ The new loist can refer to the same appointments. Changing the order of the new list leaves the original list in its own order. The query still needs to leave the appointments themselves uncahnged because both lists use those objects. ]
+4. Why use a named key, and what breaks equal-time ties? [ The named key gives us one clear sorting rule that we can test. Appointments are sorted by date and time first. If those match, the appointment ID decides which comes first. ]
+5. How do default and explicit status filters differ? [ If I leave the status out, I get all appointments for that practitioner. If I choose cancelled, I only get their cancelled appointments. ]
+6. How do empty, unknown practitioner and invalid filter cases differ? [ An empty list means the practitioner exists but has no appointments matching the request. An unknown practitioner raises LookupError. An invalid filter raisesValueError. The service expects an AppointmentStatus value or None. ]
+7. Which console errors recover, and how is unchanged state checked? [ The menu should show a message and let the user continue after things like a wrong ID, duplicate ID, bad date or invalid choice. I would check that the original records are still there with the same details, then try a valid action. For a rejecting booking, I would also check that it was never stored. ]
+8. What is data integrity for registered participants, conflicts and history? [ A booking should use the patient and practitioner objects already regisdtered in the store. It should reject a secon d scheduled booking for the same practitioner at the same time. After cancellation, the appointment should stay in the store so its history can still be found. ]
+9. What is Copilot's review role, and who verifies findings? [ Copilot can help spot possible issues and suggest tests. We still need to check sugggestions against the requirements and actual code. The person reviewing the change is responsible for checking the evidence before accepting it. ]
+10. How do pure functions and OOP responsibilities work together? [ Each part has a job. The object hold their details and rules, the store keeps the records, and services coordinate actions. The pure functions can then filter and sort the appointments they recieve. The console asks the user questions and displays the results. ]
 
 ## H. Review, completion and common handover
 
