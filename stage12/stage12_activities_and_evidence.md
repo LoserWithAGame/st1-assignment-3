@@ -55,24 +55,23 @@ Tutorial activity 2 and actual readiness matrix. Add exact requirement/acceptanc
 | Demo step | Synthetic setup/input | Expected requirement | Observed result | Evidence/link |
 |---|---|---|---|---|
 | Problem and stakeholders | [Identifying Problem and Stakeholders] | [Problem is an incomplete SmartCare appointment booking system, stakeholders are SmartCare, Practitioners, Staff, Patients, Management] | [System is functional] | [Refer to Assignment Sheet and main.py for results] |
-| Register and find Patient and two Practitioners | [Two Practitioner ID's and a Patient ID] | [Patient and Practitioners Found or non-existent] | [Without Registering Patients or Practitioner: Not Found. With Registered Patients and Practitioners: Found] | [response] |
-| Valid booking | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment] | [Books an appointment using Inputs] | [response] | [response] |
-| Same practitioner exact-time conflict rejected | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment. Duplicated with the same Practitioner ID and Time and Date] | [Prevents the booking of an appointment and Raises an Error] | [response] | [response] |
-| Different practitioner same time allowed | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment. Duplicated with the same Time and Date] | [Allows the booking of an appointment] | [response] | [response] |
-| Cancel SCHEDULED and retain/find CANCELLED object | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment, Appointment Status.] | [Sets appointment Status to Cancelled, and is still stored within the system] | [response] | [response] |
-| Invalid/repeated cancellation rejected | [response] | [response] | [response] | [response] |
-| Default all-status listing | [response] | [response] | [response] | [response] |
-| Explicit filtering / empty vs unknown / deterministic order | [Any input] | [Filters Empty and Unknown input types without crashing the program] | [response] | [response] |
-| Invalid date/status/menu/lookup recovery and continued operation | [Inputs of Time and Date, Appointment Status] | [Raises an Error at all Invalid inputs, but allows the program to continue.] | [response] | [response] |
-| Session-only limitation and normal exit | [The recorded data only exists until the program is ended.] | [When the program ends, all appointments, practitioners, and patients are deleted from the system.] | [response] | [response] |
-| One meaningful requirement-linked pytest test explained | [FR-05: Prevent Practitioner Conflict] | [When a Duplicate appointment for the same Practitioner and Time and Date is attempted to be booked. When this situation occurs the appointment is not booked, raising a conflict error to the user.] | [response] | [response] |
-| Architecture and one actual AI decision / known limitation | [The AI suggested adding a padding remover for parsing the Patient, Practitioner, and Appointment ID's] | [This was accepted, as it was an oversight, we used padding removers for the Input verification but forgot to implement them in the parsing.] | [This was changed to the AI's suggestion] | [response] |
+| Register and find Patient and two Practitioners | [Two Practitioner ID's and a Patient ID] | [Patient and Practitioners Found or non-existent] | [Without Registering Patients or Practitioner: Not Found. With Registered Patients and Practitioners: Found] | [Refer to Appendix D:2] |
+| Valid booking | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment] | [Books an appointment using Inputs] | [Books Appointment using inputs, and verifies booking.] | [Refer to Appendix D:3] |
+| Same practitioner exact-time conflict rejected | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment. Duplicated with the same Practitioner ID and Time and Date] | [Prevents the booking of an appointment and Raises an Error] | [Rejects appointment, making an error message appear informing of the conflict] | [Refer to Appendix D:4] |
+| Different practitioner same time allowed | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment. Duplicated with the same Time and Date] | [Allows the booking of an appointment] | [Allows Appointment, and books it] | [Refer to Appendix D:5] |
+| Cancel SCHEDULED and retain/find CANCELLED object | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment, Appointment Status.] | [Sets appointment Status to Cancelled, and is still stored within the system] | [Cancels Appointment, and Accesses appointments that are cancelled] | [Refer to Appendix D:6] |
+| Invalid/repeated cancellation rejected | [Appointment Information] | [Cancellations rejected with an error explaining that it was already cancelled] | [Responds: "Error: Only SCHEDULED appointments may be cancelled] | [Refer to Appendix D:7] |
+| Default all-status listing | [Practitioner ID] | [When finding a Practitioner's appointments, without an input it lists all appointments of any status] | [Lists all Appointments of any status] | [Refer to Appendix D:8] |
+| Explicit filtering / empty vs unknown / deterministic order | [Any input] | [Filters Empty and Unknown input types without crashing the program, ensuring Boolean logic to properly filter results, and ensuring all Dictionaries and Lists are ordered. Done by testing searchability, invalid inputs, and empty inputs.] | [Passes all Tests] | [Refer to Appendix D:9] |
+| Invalid date/status/menu/lookup recovery and continued operation | [Inputs of Time and Date, Appointment Status] | [Raises an Error at all Invalid inputs, but allows the program to continue.] | [Passes All Tests] | [Refer to Appendix D:10] |
+| Session-only limitation and normal exit | [The recorded data only exists until the program is ended.] | [When the program ends, all appointments, practitioners, and patients are deleted from the system.] | [Passed Tests] | [Refer to Appendix D:12] |
+| One meaningful requirement-linked pytest test explained | [FR-05: Prevent Practitioner Conflict] | [When a Duplicate appointment for the same Practitioner and Time and Date is attempted to be booked. When this situation occurs the appointment is not booked, raising a conflict error to the user.] | [Raises a Conflicting Error and Rejects the Appointment] | [Refer to Appendix D:4, D:5] |
+| Architecture and one actual AI decision / known limitation | [The AI suggested adding a padding remover for parsing the Patient, Practitioner, and Appointment ID's] | [This was accepted, as it was an oversight, we used padding removers for the Input verification but forgot to implement them in the parsing.] | [This was changed to the AI's suggestion] | [Refer to Appendix D:11] |
 | PG reschedule identity/participants/time and no-op | [N/A] | [N/A] | [N/A] | [N/A] |
 | PG conflict/invalid status/failure non-mutation | [N/A] | [N/A] | [N/A] | [N/A] |
 | PG old slot / current lookup/list ordering / assurance risks | [N/A] | [N/A] | [N/A] | [N/A] |
-Stable demo owner / fresh process / command: [response]
+Stable demo owner / fresh process / command: LoserWithAGame ran the walkthrough on commit 678f7782aeed1be6fbe4a1569fe3a6e696984c54. They started a fresh session from the project folder using python main.py --interactive and entered sample records during the demo. Evidence: [Refer to Appendix D].
 PG demonstrations through service/tests or not applicable: [N/A]
-
 
 ## E Final code quality and AI review
 
@@ -255,3 +254,559 @@ Optional bounded-change practice only: validation rule, focused test, safe error
 Practice question/change and reasoning: [response or not undertaken]
 Separate reflection / peer / common team viva evidence links and routing: [response]
 No further coding stage. Later corrections use the published assessment process.
+
+
+
+# Appendix
+
+## D:2
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 1
+Patient ID: [INPUT] P1 
+Patient name: [INPUT] John Doe
+Patient registered: P1: John Doe
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 2
+Patient ID: [INPUT] P1
+Patient found: P1: John Doe
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 3
+Practitioner ID: [INPUT] D1
+Practitioner name: [INPUT] Matt Smith
+Specialty: [INPUT] General    
+Practitioner registered: D1: Matt Smith, General
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 3
+Practitioner ID: [INPUT] D2
+Practitioner name: [INPUT] David Tennant
+Specialty: [INPUT] Optometry
+Practitioner registered: D2: David Tennant, Optometry
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 4
+Practitioner ID: [INPUT] D1
+Practitioner found: D1: Matt Smith, General
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 4
+Practitioner ID: [INPUT] D2
+Practitioner found: D2: David Tennant, Optometry
+
+## D:3
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A1
+Patient ID: [INPUT] P1
+Practitioner ID: [INPUT] D1
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2026-12-31 12:30
+A1: P1 with D1, 2026-12-31 12:30, scheduled
+
+## D:4
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 1
+Patient ID: [INPUT] P2
+Patient name: [INPUT] Rose Tyler
+Patient registered: P2: Rose Tyler
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A2
+Patient ID: [INPUT] P2
+Practitioner ID: [INPUT] D1
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2026-12-31 12:30
+Error: Practitioner already has a SCHEDULED appointment at this time
+
+## D:5
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A1
+Patient ID: [INPUT] P1
+Practitioner ID: [INPUT] D1
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2026-12-31 12:30
+A1: P1 with D1, 2026-12-31 12:30, scheduled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A2
+Patient ID: [INPUT] P2
+Practitioner ID: [INPUT] D2
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2026-12-31 12:30
+A2: P2 with D2, 2026-12-31 12:30, scheduled
+
+## D:6
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 6
+Appointment ID: [INPUT] A2
+A2: P2 with D2, 2026-12-31 12:30, cancelled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 7
+Appointment ID: [INPUT] A2
+A2: P2 with D2, 2026-12-31 12:30, cancelled
+
+## D:7
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 6
+Appointment ID: [INPUT] A2
+Error: Only SCHEDULED appointments may be cancelled
+
+## D:8
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A3
+Patient ID: [INPUT] P2
+Practitioner ID: [INPUT] D1
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2027-02-12 08:15
+A3: P2 with D1, 2027-02-12 08:15, scheduled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 6
+Appointment ID: [INPUT] A3
+A3: P2 with D1, 2027-02-12 08:15, cancelled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 8
+Practitioner ID: D1
+Status (blank=all; scheduled/cancelled/completed): 
+A1: P1 with D1, 2026-12-31 12:30, scheduled
+A3: P2 with D1, 2027-02-12 08:15, cancelled
+
+## D:9
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 1
+Patient ID: [INPUT] 
+Patient name: [INPUT] 
+Error: Patient ID cannot be blank
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 1
+Patient ID: [INPUT] P3
+Patient name: [INPUT] 
+Error: Patient name cannot be blank
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] 
+Patient ID: [INPUT] 
+Practitioner ID: [INPUT] 
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 
+Error: Use date/time format YYYY-MM-DD HH:MM
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 7
+Appointment ID: [INPUT] A2
+A2: P2 with D2, 2026-12-31 12:30, scheduled
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 8
+Practitioner ID: D1
+Status (blank=all; scheduled/cancelled/completed): scheduled
+A1: P1 with D1, 2026-12-31 12:30, scheduled
+
+## D:10
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] fjdl
+Unknown choice. Choose a number from 0 to 8.
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 9
+Unknown choice. Choose a number from 0 to 8.
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] e
+Unknown choice. Choose a number from 0 to 8.
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT] A2
+Patient ID: [INPUT] P2
+Practitioner ID: [INPUT] P1
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] e
+Error: Use date/time format YYYY-MM-DD HH:MM
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 7
+Appointment ID: [INPUT] A5
+Error: Appointment not found
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 7
+Appointment ID: [INPUT] fkfk 
+Error: Appointment not found
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 8
+Practitioner ID: D1
+Status (blank=all; scheduled/cancelled/completed): Bonjour
+Error: 'Bonjour' is not a valid AppointmentStatus
+
+## D:11
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 1
+Patient ID: [INPUT]   P4  
+Patient name: [INPUT] Amy Pond
+Patient registered: P4: Amy Pond
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 3
+Practitioner ID: [INPUT]   D3  
+Practitioner name: [INPUT] Peter Capaldi
+Specialty: [INPUT] Angry Eyebrows
+Practitioner registered: D3: Peter Capaldi, Angry Eyebrows
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 5
+Appointment ID: [INPUT]   A4  
+Patient ID: [INPUT]   P4  
+Practitioner ID: [INPUT]   D3  
+Date/time [YYYY-MM-DD HH:MM]: [INPUT] 2026-12-31 12:35
+A4: P4 with D3, 2026-12-31 12:35, scheduled
+
+## D:12
+MAIN MENU
+------------------------------------------------------------
+[1] Register patient
+[2] Find patient
+[3] Register practitioner
+[4] Find practitioner
+[5] Book appointment
+[6] Cancel appointment
+[7] Find appointment
+[8] List practitioner appointments
+[0] Exit
+------------------------------------------------------------
+Select an option: [INPUT] 0
+Exiting. All session-only data is lost.
