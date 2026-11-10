@@ -54,24 +54,24 @@ Tutorial activity 2 and actual readiness matrix. Add exact requirement/acceptanc
 
 | Demo step | Synthetic setup/input | Expected requirement | Observed result | Evidence/link |
 |---|---|---|---|---|
-| Problem and stakeholders | [response] | [response] | [response] | [response] |
-| Register and find Patient and two Practitioners | [response] | [response] | [response] | [response] |
-| Valid booking | [response] | [response] | [response] | [response] |
-| Same practitioner exact-time conflict rejected | [response] | [response] | [response] | [response] |
-| Different practitioner same time allowed | [response] | [response] | [response] | [response] |
-| Cancel SCHEDULED and retain/find CANCELLED object | [response] | [response] | [response] | [response] |
+| Problem and stakeholders | [Identifying Problem and Stakeholders] | [Problem is an incomplete SmartCare appointment booking system, stakeholders are SmartCare, Practitioners, Staff, Patients, Management] | [System is functional] | [Refer to Assignment Sheet and main.py for results] |
+| Register and find Patient and two Practitioners | [Two Practitioner ID's and a Patient ID] | [Patient and Practitioners Found or non-existent] | [Without Registering Patients or Practitioner: Not Found. With Registered Patients and Practitioners: Found] | [response] |
+| Valid booking | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment] | [Books an appointment using Inputs] | [response] | [response] |
+| Same practitioner exact-time conflict rejected | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment. Duplicated with the same Practitioner ID and Time and Date] | [Prevents the booking of an appointment and Raises an Error] | [response] | [response] |
+| Different practitioner same time allowed | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment. Duplicated with the same Time and Date] | [Allows the booking of an appointment] | [response] | [response] |
+| Cancel SCHEDULED and retain/find CANCELLED object | [Appointment ID, Practitioner ID, Patient ID, Time and Date of Appointment, Appointment Status.] | [Sets appointment Status to Cancelled, and is still stored within the system] | [response] | [response] |
 | Invalid/repeated cancellation rejected | [response] | [response] | [response] | [response] |
 | Default all-status listing | [response] | [response] | [response] | [response] |
-| Explicit filtering / empty vs unknown / deterministic order | [response] | [response] | [response] | [response] |
-| Invalid date/status/menu/lookup recovery and continued operation | [response] | [response] | [response] | [response] |
-| Session-only limitation and normal exit | [response] | [response] | [response] | [response] |
-| One meaningful requirement-linked pytest test explained | [response] | [response] | [response] | [response] |
-| Architecture and one actual AI decision / known limitation | [response] | [response] | [response] | [response] |
-| PG reschedule identity/participants/time and no-op | [response] | [response] | [response] | [response] |
-| PG conflict/invalid status/failure non-mutation | [response] | [response] | [response] | [response] |
-| PG old slot / current lookup/list ordering / assurance risks | [response] | [rnse]espo | [response] | [response] |
+| Explicit filtering / empty vs unknown / deterministic order | [Any input] | [Filters Empty and Unknown input types without crashing the program] | [response] | [response] |
+| Invalid date/status/menu/lookup recovery and continued operation | [Inputs of Time and Date, Appointment Status] | [Raises an Error at all Invalid inputs, but allows the program to continue.] | [response] | [response] |
+| Session-only limitation and normal exit | [The recorded data only exists until the program is ended.] | [When the program ends, all appointments, practitioners, and patients are deleted from the system.] | [response] | [response] |
+| One meaningful requirement-linked pytest test explained | [FR-05: Prevent Practitioner Conflict] | [When a Duplicate appointment for the same Practitioner and Time and Date is attempted to be booked. When this situation occurs the appointment is not booked, raising a conflict error to the user.] | [response] | [response] |
+| Architecture and one actual AI decision / known limitation | [The AI suggested adding a padding remover for parsing the Patient, Practitioner, and Appointment ID's] | [This was accepted, as it was an oversight, we used padding removers for the Input verification but forgot to implement them in the parsing.] | [This was changed to the AI's suggestion] | [response] |
+| PG reschedule identity/participants/time and no-op | [N/A] | [N/A] | [N/A] | [N/A] |
+| PG conflict/invalid status/failure non-mutation | [N/A] | [N/A] | [N/A] | [N/A] |
+| PG old slot / current lookup/list ordering / assurance risks | [N/A] | [N/A] | [N/A] | [N/A] |
 Stable demo owner / fresh process / command: [response]
-PG demonstrations through service/tests or not applicable: [response]
+PG demonstrations through service/tests or not applicable: [N/A]
 
 
 ## E Final code quality and AI review
