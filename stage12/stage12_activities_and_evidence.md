@@ -154,12 +154,12 @@ Named substantive contributions: [response]
 
 ## J Human release decision
 
-Decision — READY FOR COURSE RELEASE / READY WITH DOCUMENTED LIMITATIONS / NOT YET READY: [response]
-Approver / date / rationale and evidence: [response]
-What risks remain / conditions / owners: [response]
-Can the team explain the system: [response]
-Can a change be recovered: [response]
-Common decision / PG decision where different: [response]
+Decision — READY FOR COURSE RELEASE / READY WITH DOCUMENTED LIMITATIONS / NOT YET READY: [READY FOR COURSE RELEASE]
+Approver / date / rationale and evidence: [Approver: LoserWithAGame / Date: 11/11/2026 / Rationale and Evidence: Found in all Stage activity sheets, especially with the tests documented in Stage 12. The program passes all functional requirements and tests]
+What risks remain / conditions / owners: [The biggest remaining risk is that of storage, as the program deletes all stored practitioners, patients, and appointments, which could delete records in a blackout, or any case with the program stopping.]
+Can the team explain the system: [The majority of the group will be able to explain the system.]
+Can a change be recovered: [Yes, as this is a Github Repository, all changes can be recovered.]
+Common decision / PG decision where different: [READY FOR RELEASE.]
 
 
 ## K Final tested release SHA
