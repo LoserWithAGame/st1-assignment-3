@@ -199,25 +199,25 @@ Remaining administration or release dependency: [response]
 
 ## M Formative questions
 
-1. What is a release candidate? [response]
+1. What is a release candidate? [A Release Candidate is a potential final product of a program to implement and deploy/release.]
 
-2. What is feature freeze and why is it used? [response]
+2. What is feature freeze and why is it used? [A feature freeze is implemented nearing the end of the project, and it ensures that the scope is not overexpanded. The best definition is that no new features are added after the feature freeze, the rest of the project is for testing, debugging, and repairing the program.]
 
-3. What is regression testing in a release context? [response]
+3. What is regression testing in a release context? [Regression Testing in a Release Context is done after bug fixes, as any bug fix could result in another section of the program being broken. Henceforth, in a Release Context, Regression Testing is the process of retesting the functionality of every aspect of the program before Release to ensure that everything is functioning correctly.]
 
-4. What is a known limitation? [response]
+4. What is a known limitation? [A known limitation is a constraint that is in the Release and fully known by the developers. For example, in this project we know that there is no Patient Appointment Lookup, and we acknowledge this constraint but still push the final product.]
 
-5. What is technical debt? [response]
+5. What is technical debt? [Technical Debt is many things, in the scope of this project it refers to the functionality of the program. Technical Debt is formed when cutting corners, as if you fail to properly test a function due to lack of time (Or Forgetting it), then in the future that Technical Debt could catch up with you, and cause the program to break.]
 
-6. What are release notes? [response]
+6. What are release notes? [Release notes are most commonly found in Markdown files, which document the project, how to use it, and fix it.]
 
-7. What is software maintenance? [response]
+7. What is software maintenance? [Software maintainance is the next stage after Stage 12, which requires ongoing fixes, management, and support for continued use.]
 
-8. What is the purpose of the individual demonstration/viva? [response]
+8. What is the purpose of the individual demonstration/viva? [The Individual Oral Presentations are essential to prove that each member of the group understood the work submitted, and that each contributed their shared work. Without this, the group assignment is assumed to have been completed equally by all group members, which may not be the case.]
 
-9. What should the final responsible-AI check establish before release? [response]
+9. What should the final responsible-AI check establish before release? [The final AI check should be to identify any major bugs or flaws in the program, as if there are any major issues with the program they should be fixed before the release.]
 
-10. What is the main course conclusion about AI and the role of the software engineer? [response]
+10. What is the main course conclusion about AI and the role of the software engineer? [AI is a brilliant tool to use for programming, as it can help with the programming, testing, debugging, and finalising of a program. The Software Engineer has the responsibility to understand, fact-check, and implement the program with the suggestions from the AI. At no point should the AI be doing 100% of the work without a Software Engineer to verify it.]
 
 
 ## N Reflection viva and handover
