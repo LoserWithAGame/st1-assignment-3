@@ -116,40 +116,40 @@ Missing local file or setup gap / remedy and recheck: The extracted copy had all
 
 ## G Known limitations debt and release notes
 
-Delivered features: [response]
-Important fixes: [response]
-Architecture/quality improvements: [response]
-Known limitations: [response]
-AI-assisted development note: [response]
+- Delivered features: Register and find patients and practitioners, book and cancel appointments, and view appointment history through the menu.
+- Important fixes: Cancelled appointments can still be found, and a practitioner can’t be booked twice at the same time.
+- Architecture/quality improvements: We kept the menu, records and booking rules separate so the code is easier to follow and test.
+- Known limitations: SmartCare is for practice with made-up records. All records are cleared when the app closes.
+- AI-assisted development note: We used Copilot to help spot problems and checked its suggestions against the code and tests.
 
 | Debt item | Impact | Priority | Future action | Accepted? / release rationale |
 |---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] |
-Session-only synthetic data and minute-precision local time: [response]
-Production auth/roles, portal, notifications, billing/insurance, clinical AI exclusions: [response]
-Scale/concurrency, timezone policy, operations/monitoring, accessibility/usability limitations: [response]
-Difference between accepted scope limit and unresolved required behaviour: [response]
-PG assurance residual risks / owner / status or not applicable: [response]
+| The menu checks the number range twice | Unnecessary repeat of code | low | Remove the extra check and test the menu afterwards | Yes. The menu still handles the out of range choice |
+Session-only synthetic data and minute-precision local time: We use made-up records. They’re cleared when the app closes, and appointments use local time without seconds.
+Production auth/roles, portal, notifications, billing/insurance, clinical AI exclusions: Logins, staff permissions, a patient portal, reminders, billing, insurance and AI medical advice are outside this release.
+Scale/concurrency, timezone policy, operations/monitoring, accessibility/usability limitations: The app is built for one person using the menu at a time. A real clinic would need support for more users, time zones, monitoring and accessibility checks.
+Difference between accepted scope limit and unresolved required behaviour: Clearing records on exit is expected. Showing the wrong appointments is a bug that needs fixing and testing again.
+PG assurance residual risks / owner / status or not applicable: N/A
 
 
 ## H Release findings and corrective action
 
 | Requirement/claim | Reproduction/observation | Impact/severity | Owner/action | Corrective diff | Focused/full recheck | Residual limit |
 |---|---|---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] | [response] | [response] |
-Justified no-change conclusion if no defect found: [response]
-Release blockers still open / status: [response]
+| FR-09: List a practitioners appointments | D1 shows bookings in the menu. On main, calling the listing service directly with D1 still returns an empty list. | Medium. A valid ID can show no bookings when the service is called directly. | @quiet-learner: Fix the direct service for when appointments are called directly. | The console change removes spaces from the ID. | The console check and all 38 tests passed on 055b404. After the service fix is merged, check both IDs directly and rerun the full suite. | The direct service issue is still present. |
+Justified no-change conclusion if no defect found: N/A - Defect still present in the direct listing.
+Release blockers still open / status: The service fix still needs to be merged into main and tested.
 
 
 ## I Git review and integration evidence
 
-Issue / PR / diff links and reviewed SHA: [response]
-Independent reviewer / feedback / response: [response]
-Integration commit / full recheck: [response]
-Tracked and untracked file inspection / cleanliness: [response]
-Secrets/staff material/caches/tool-metadata exclusion check: [response]
-Candidate recovery plan / known-good SHA: [response]
-Named substantive contributions: [response]
+- Issue / PR / diff links and reviewed SHA — The listing fix and new tests were reviewed at 03ebe1e387ec3214250225fcb59dfee006c40160. The Stage 12 evidence was added through separate PRs. [Listing fix and tests](https://github.com/LoserWithAGame/st1-assignment-3/pull/42/changes) · [Part C](https://github.com/LoserWithAGame/st1-assignment-3/pull/41) · [Parts E and F](https://github.com/LoserWithAGame/st1-assignment-3/pull/43) · [Part D](https://github.com/LoserWithAGame/st1-assignment-3/pull/45)
+- Independent reviewer / feedback / response: @LoserWithAGame approved the listing fix and the Part C, E and F updates. The feedback was positive and requested no changes. [Fix approval](https://github.com/LoserWithAGame/st1-assignment-3/pull/42#pullrequestreview-5839735196), [Part C approval](https://github.com/LoserWithAGame/st1-assignment-3/pull/41#pullrequestreview-5839743133), [Parts E and F approval](https://github.com/LoserWithAGame/st1-assignment-3/pull/43#pullrequestreview-5850504609)
+- Integration commit / full recheck: Tested main at 1d268dbe3e01d90f67935c187498554590cfb8eb. From project, python -B -m pytest -q -p no:cacheprovider returned 58 passed in 0.09 seconds using Python 3.14.7 and pytest 8.3.5. The focused test for IDs with spaces also passed. [Integrated commit](https://github.com/LoserWithAGame/st1-assignment-3/commit/1d268dbe3e01d90f67935c187498554590cfb8eb)
+- Tracked and untracked file inspection / cleanliness: Tracked and untracked file inspection / cleanliness — The files in the extracted copy were checked. Before I make the final ZIP, I’ll run git status --short to check for any unfinished changes or extra files.
+- Secrets/staff material/caches/tool-metadata exclusion check: The file check found no .env files, key files, caches, virtual environments or Stage 8 setup files in the extracted copy.
+- Candidate recovery plan / known-good SHA: 1d268dbe3e01d90f67935c187498554590cfb8eb is a known-good SHA. If a later change breaks the app, start a recovery branch from this commit and rerun the full-suit tests.
+- Named substantive contributions: @MastrRoshiiii recorded the Part C tests and screenshot and completed Parts A, B, C, E, F, G, H, I, L and part;y N. @quiet-learner fixed the listing issue and added query tests. @LoserWithAGame completed Part D, J, M, and N and reviewed the changes and merged them. @warunabandara11-wq contributed the Stage 8 repairs and regression tests carried into this release.
 
 
 ## J Human release decision
@@ -164,30 +164,30 @@ Common decision / PG decision where different: [response]
 
 ## K Final tested release SHA
 
-Exact common tested SHA: [response]
-Exact PG tested SHA or not applicable: [response]
-Final submitted SHA / repository URL: [response]
+Exact common tested SHA — 1d268dbe3e01d90f67935c187498554590cfb8eb. The full suite passed all 58 tests on this commit. See Part C for the test details on previous suite before fixes.
+Exact PG tested SHA or not applicable: N/A
+Final submitted SHA / repository URL: The submitted SHA is pending until the final changes are merged.
 Evidence-only later commit and difference explanation: [response]
-Executable changes after testing and re-verification: [response]
+Executable changes after testing and re-verification — After the earlier 38-test run, the practitioner listing fix and new tests were merged. The focused test passed, and the full rerun passed all 58 tests. If the code changes again before submission, we will rerun the tests and record the new SHA.
 Source ZIP name / SHA correspondence / extracted comparison: [response]
 
 
 ## L Submission package verification
 
-- [ ] Feature freeze and scoped requirements traced.
-- [ ] Applicable full regressions, integrated demo and invalid paths verified.
-- [ ] Architecture/code quality and final AI/dependency checks complete.
+- [x] Feature freeze and scoped requirements traced.
+- [x] Applicable full regressions, integrated demo and invalid paths verified.
+- [x] Architecture/code quality and final AI/dependency checks complete.
 - [ ] Root README and project/README reproduced by another verifier.
-- [ ] Release notes, technical debt and limitations visible.
-- [ ] Independent human review, integration and release decision recorded.
+- [x] Release notes, technical debt and limitations visible.
+- [x] Independent human review, integration and release decision recorded.
 - [ ] Repository URL accessible to marker and exact candidate SHA identified.
 - [ ] One source ZIP from submitted commit with root README.md and .gitignore.
-- [ ] project/ source and all accumulated applicable tests included.
-- [ ] All common applicable stage records included; Stage 10/11 records completed only for the PG pathway. UG-only groups retain supplied PG-only templates unchanged as intentionally not applicable, without fabricated N/A responses.
-- [ ] No .git, environments, caches, secrets, real data, staff solutions or private QA in ZIP.
-- [ ] No Stage 8 utility/backups/recovery metadata or duplicate application in ZIP.
+- [x] project/ source and all accumulated applicable tests included.
+- [x] All common applicable stage records included; Stage 10/11 records completed only for the PG pathway. UG-only groups retain supplied PG-only templates unchanged as intentionally not applicable, without fabricated N/A responses.
+- [x] No .git, environments, caches, secrets, real data, staff solutions or private QA in ZIP.
+- [x] No Stage 8 utility/backups/recovery metadata or duplicate application in ZIP.
 - [ ] Mixed-group common protection and candidate upload routing checked.
-- [ ] Group reflection, confidential individual peer forms and common team viva routed separately.
+- [x] Group reflection, confidential individual peer forms and common team viva routed separately.
 
 Confirmed assessment item/upload route: [response]
 Deadline/timezone: [response]
@@ -222,14 +222,14 @@ Remaining administration or release dependency: [response]
 
 ## N Reflection viva and handover
 
-Strongest evidence SmartCare is ready: [response]
-Weakest area: [response]
-How AI use changed from Stage 1 to Stage 12: [response]
-Start doing — engineering and AI use: [response]
-Stop doing — engineering and AI use: [response]
-Continue doing — engineering and AI use: [response]
-What worked / caused rework / future delivery improvement: [response]
-One paragraph — If AI can write code why do we still need software engineers: [response]
+- Strongest evidence SmartCare is ready: All 58 tests passed on the version we checked. That included the test for finding appointments when the practitioner ID has extra spaces.
+- Weakest area: The setup instructions still need a user to try them from a fresh copy. I’d like to know they can get the app running without asking us for help.
+- How AI use changed from Stage 1 to Stage 12: Some members used AI to help with understanding questions and used in the AI ON parts. By stage 12 it was only used when a part prompted its use and to clarify questions and tasks.
+- Start doing — engineering and AI use: Write down what I expect to happen before asking AI for help. Save the test result and commit SHA as soon as I run the test.
+- Stop doing — engineering and AI use: Leaving the evidence until the end and having to go back to find which version we tested.
+- Continue doing — engineering and AI use: Make small fixes, test the problem we fixed, and ask a teammate to review the change.
+- What worked / caused rework / future delivery improvement: Working on separate branches helped us share changes. We lost time going back to find old test results and commit SHAs. Next time, I’d record them as we go.
+- One paragraph — If AI can write code why do we still need software engineers: AI can give us code to try. We still need people to understand what the software should do, check that it works, and decide when it’s ready. In SmartCare, Copilot suggested what might be wrong with the booking check. We had to read the code and run the tests to find out if it was right.
 
 | Preparation item | Own explanation and evidence link |
 |---|---|
