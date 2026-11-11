@@ -231,24 +231,25 @@ Remaining administration or release dependency: [response]
 - What worked / caused rework / future delivery improvement: Working on separate branches helped us share changes. We lost time going back to find old test results and commit SHAs. Next time, I’d record them as we go.
 - One paragraph — If AI can write code why do we still need software engineers: AI can give us code to try. We still need people to understand what the software should do, check that it works, and decide when it’s ready. In SmartCare, Copilot suggested what might be wrong with the booking check. We had to read the code and run the tests to find out if it was right.
 
+
 | Preparation item | Own explanation and evidence link |
 |---|---|
-| Problem and stakeholders | [response] |
-| Two requirements and acceptance criteria | [response] |
-| Domain model and architecture | [response] |
-| Design trade-off | [response] |
-| Meaningful test and its limits / 100 percent coverage | [response] |
+| Problem and stakeholders | [The problem faced is that the SmartCare Clinic has been having difficulties with physical paper files, and would like a digital appointment booking application. Within this assignment the problem is that the SmartCare program is incomplete. The stakeholders involved are SmartCare, Practitioners, Staff, Patients, Management] |
+| Two requirements and acceptance criteria | [Two of the requirements are that the User Interface is easy to use and appealing, the second is that the system handles errors without crashing. The Acceptance Criteria that we have been following is Functionality, Documentation, and Usability, which are the fundamentals of a deployed program] |
+| Domain model and architecture | [The main things tracked within this program are the Patient's ID and Name, the Practitioner's ID, Name, and Specialty, and the Appointment's Practitioner ID, Patient ID, Time and Date, and ID. This means that the Appointment gathers the data of the Practitioner and Patient from the other objects. As for the Architecture, this program uses an Object Oriented Architecture, as it uses objects to identify, store, and find the Patient, Practitioner, and Appointment.] |
+| Design trade-off | [The only design trade-off that we had to make was to trade a GUI for a TUI as that was what the Client requested. Other than that we achieved all of the functional, and design requirements.] |
+| Meaningful test and its limits / 100 percent coverage | [The test for FR-06, Cancel Appointment. This test ensured that it was possible to cancel an appointment, in review of the tests provided, this has 100% Test Coverage.] |
 | Diagnosed defect and verification | [response] |
-| Shared store and session-state/query responsibilities | [response] |
-| What would break if session-state lookup/query responsibilities changed? | [response] |
-| Why cancellation is domain behaviour / conflict coordination is service behaviour | [response] |
-| FR-07 retained history test | [response] |
-| Actual AI change rejected/modified or honestly accepted with verification | [response] |
-| Unresolved limitation / future production work | [response] |
-| Personal implementation contribution | [response] |
-| Personal test/review/design/integration contribution | [response] |
-| PG agentic change and rescheduling verification | [response] |
-| PG responsible-AI risk/remediation or supported no finding | [response] |
+| Shared store and session-state/query responsibilities | [The data is being stored in a List of Objects for each type: Patient; Practitioner; Appointment. This is responsible for searching and finding the Object in question or register new objects. This is all temporary storage, which means the program only keeps information while it is running, this will need to be addressed in the future.] |
+| What would break if session-state lookup/query responsibilities changed? | [The program is separated into modules to allows for easier understanding, debugging, and fixing. Which is why there are multiple objects, functions, and storage lists, as using a single list to store all Practitioners, Patients, and Appointments, would confuse the finding program and make the entire program function slower.] |
+| Why cancellation is domain behaviour / conflict coordination is service behaviour | [Cancellation changes the domain itself, switching one property from SCHEDULED to CANCELLED, whereas Conflict coordination checks multiple Domains to verify if there is a conflict, which is why it is a service behaviour.] |
+| FR-07 retained history test | [This test identifies that cancelled appointments are still stored within the system, and not deleted from memory. This test passed.] |
+| Actual AI change rejected/modified or honestly accepted with verification | [The AI identified a major flaw in the final implementation of the console, as when the ID's were being parsed for all Objects, the blank spaces were not being removed. The blank spaces were removed temporarily to check for valid inputs, but we forgot to remove them when being parsed. this change was ACCEPTED, VERIFIED, and FIXED.] |
+| Unresolved limitation / future production work | [The biggest limitation is the storage, as having the appointments, patients, and practitioners deleted when the program stops does not follow the requirements of the Client. This would need to be addressed immediately, otherwise data will be lost, and the business will have the same errors as before of not being able to find appointment records.] |
+| Personal implementation contribution | [@MastrRoshiiii - Contributed Tests for FR-06 and FR-07, Debugging in Stage 8, and review of numerous Pull Requests. @LoserWithAGame - Contributed Tests for FR-05, Programming for the Console, and review of nearly every Pull Request made. @warunabandara11-wq - Contributed Debugging, Testing, and Repairing in Stage 8, and Practitioner Lookup Stage 6. @quiet-learner - Contributed Programming for the Console, Functional Requirement Programming in Stage 6, and Patient Lookup Services.] |
+| Personal test/review/design/integration contribution | [@MastrRoshiiii - Contributed Tests for FR-06 and FR-07, Debugging in Stage 8, and review of numerous Pull Requests. @LoserWithAGame - Contributed Tests for FR-05, Programming for the Console, and review of nearly every Pull Request made. @warunabandara11-wq - Contributed Debugging, Testing, and Repairing in Stage 8, and Practitioner Lookup Stage 6. @quiet-learner - Contributed Programming for the Console, Functional Requirement Programming in Stage 6, and Patient Lookup Services.] |
+| PG agentic change and rescheduling verification | [N/A] |
+| PG responsible-AI risk/remediation or supported no finding | [N/A] |
 
 Optional bounded-change practice only: validation rule, focused test, safe error-message change, explicit-input query or agreed status rule with test. Explain expected impact before editing, make a small change, run the test, and identify evidence to inspect if unsure. No live AI unless explicitly permitted. Preserve the submitted candidate.
 
