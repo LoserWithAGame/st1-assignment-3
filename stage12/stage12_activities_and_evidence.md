@@ -167,9 +167,9 @@ Common decision / PG decision where different: [READY FOR RELEASE.]
 Exact common tested SHA — 1d268dbe3e01d90f67935c187498554590cfb8eb. The full suite passed all 58 tests on this commit. See Part C for the test details on previous suite before fixes.
 Exact PG tested SHA or not applicable: N/A
 Final submitted SHA / repository URL: The submitted SHA is pending until the final changes are merged.
-Evidence-only later commit and difference explanation: [response]
+Evidence-only later commit and difference explanation: [Unidentified]
 Executable changes after testing and re-verification — After the earlier 38-test run, the practitioner listing fix and new tests were merged. The focused test passed, and the full rerun passed all 58 tests. If the code changes again before submission, we will rerun the tests and record the new SHA.
-Source ZIP name / SHA correspondence / extracted comparison: [response]
+Source ZIP name / SHA correspondence / extracted comparison: [N/A - Repository Only Submission.]
 
 
 ## L Submission package verification
@@ -189,12 +189,12 @@ Source ZIP name / SHA correspondence / extracted comparison: [response]
 - [ ] Mixed-group common protection and candidate upload routing checked.
 - [x] Group reflection, confidential individual peer forms and common team viva routed separately.
 
-Confirmed assessment item/upload route: [response]
-Deadline/timezone: [response]
-Repository access arrangement: [response]
-Mixed-candidate upload arrangement: [response]
-Oral/video recording/accessibility arrangements: [response]
-Remaining administration or release dependency: [response]
+Confirmed assessment item/upload route: [Github Repository Link submitted via Canvas]
+Deadline/timezone: [09/11/2026 11:59pm AEST]
+Repository access arrangement: [Public Github Repository]
+Mixed-candidate upload arrangement: [Single submission from Group Leader (@LoserWithAGame)]
+Oral/video recording/accessibility arrangements: [Individually Arranged]
+Remaining administration or release dependency: [None Identified]
 
 
 ## M Formative questions
@@ -239,7 +239,7 @@ Remaining administration or release dependency: [response]
 | Domain model and architecture | [The main things tracked within this program are the Patient's ID and Name, the Practitioner's ID, Name, and Specialty, and the Appointment's Practitioner ID, Patient ID, Time and Date, and ID. This means that the Appointment gathers the data of the Practitioner and Patient from the other objects. As for the Architecture, this program uses an Object Oriented Architecture, as it uses objects to identify, store, and find the Patient, Practitioner, and Appointment.] |
 | Design trade-off | [The only design trade-off that we had to make was to trade a GUI for a TUI as that was what the Client requested. Other than that we achieved all of the functional, and design requirements.] |
 | Meaningful test and its limits / 100 percent coverage | [The test for FR-06, Cancel Appointment. This test ensured that it was possible to cancel an appointment, in review of the tests provided, this has 100% Test Coverage.] |
-| Diagnosed defect and verification | [response] |
+| Diagnosed defect and verification | [There were two diagnosed defects: Practitioner conflict logic incorrectly used;Appointment lookup incorrectly excluded cancelled records. Verification found in Stage08] |
 | Shared store and session-state/query responsibilities | [The data is being stored in a List of Objects for each type: Patient; Practitioner; Appointment. This is responsible for searching and finding the Object in question or register new objects. This is all temporary storage, which means the program only keeps information while it is running, this will need to be addressed in the future.] |
 | What would break if session-state lookup/query responsibilities changed? | [The program is separated into modules to allows for easier understanding, debugging, and fixing. Which is why there are multiple objects, functions, and storage lists, as using a single list to store all Practitioners, Patients, and Appointments, would confuse the finding program and make the entire program function slower.] |
 | Why cancellation is domain behaviour / conflict coordination is service behaviour | [Cancellation changes the domain itself, switching one property from SCHEDULED to CANCELLED, whereas Conflict coordination checks multiple Domains to verify if there is a conflict, which is why it is a service behaviour.] |
@@ -253,8 +253,8 @@ Remaining administration or release dependency: [response]
 
 Optional bounded-change practice only: validation rule, focused test, safe error-message change, explicit-input query or agreed status rule with test. Explain expected impact before editing, make a small change, run the test, and identify evidence to inspect if unsure. No live AI unless explicitly permitted. Preserve the submitted candidate.
 
-Practice question/change and reasoning: [response or not undertaken]
-Separate reflection / peer / common team viva evidence links and routing: [response]
+Practice question/change and reasoning: [Not undertaken]
+Separate reflection / peer / common team viva evidence links and routing: [Found through Cadmus]
 No further coding stage. Later corrections use the published assessment process.
 
 
